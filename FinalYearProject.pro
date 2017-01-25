@@ -6,6 +6,9 @@
 
 QT       += core gui
 
+# included to allow use of libpcap
+LIBS += -lpcap
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = FinalYearProject
