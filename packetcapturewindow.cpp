@@ -103,9 +103,22 @@ void PacketCaptureWindow::on_button_capture_stream_clicked()
     PacketTracer packetTracer;
 
     // capture 10 packets, call packetHandler() each time
-    //pcap_loop(handle, 10, testFunction, NULL);
+    pcap_loop(handle, 10, captured_packet, NULL);
 }
 
-void PacketCaptureWindow::testFunction() {
-    qDebug() << "This is a test";
+void PacketCaptureWindow::captured_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *packet) {
+    static int packetCount = 1;
+
+    /* declare pointers to packet headers */
+    const struct sniff_ethernet *ethernet_header;  /* The ethernet header [1] */
+    const struct sniff_ip *ip_header;              /* The IP header */
+    const struct sniff_tcp *tcp_header;			/* The TCP header */
+    const char *payload;					/* Packet payload */
+
+    int ip_length;
+    int tcp_length;
+    int payload_length;
+
+    qDebug() << "Packet number:" << packetCount;
+    packetCount++;
 }

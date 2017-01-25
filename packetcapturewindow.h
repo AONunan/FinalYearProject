@@ -16,8 +16,7 @@ public:
     explicit PacketCaptureWindow(QWidget *parent = 0);
     ~PacketCaptureWindow();
 
-    void testFunction();
-
+    static void captured_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *packet);
 
 
 private slots:
