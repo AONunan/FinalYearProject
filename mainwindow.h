@@ -15,6 +15,9 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+private slots:
+    void on_button_packet_tracer_clicked();
+
 private:
     Ui::MainWindow *ui;
 };
