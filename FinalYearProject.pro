@@ -13,8 +13,13 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    packetcapturewindow.cpp \
+    packettracer.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    packetcapturewindow.h \
+    packettracer.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    packetcapturewindow.ui
