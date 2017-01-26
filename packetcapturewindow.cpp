@@ -3,6 +3,8 @@
 #include <QDebug>
 #include "packettracer.h"
 
+
+
 PacketCaptureWindow::PacketCaptureWindow(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::PacketCaptureWindow)
@@ -46,7 +48,7 @@ PacketCaptureWindow::~PacketCaptureWindow()
 
 void PacketCaptureWindow::on_button_applyFilter_clicked()
 {
-    char filter_exp[] = "port 443";
+    char filter_exp[] = "port 80";
 
     if (pcap_compile(handle, &fp, filter_exp, 0, net) == -1) {
         qDebug() << stderr;
@@ -82,7 +84,7 @@ void PacketCaptureWindow::on_button_capture_packet_clicked()
     packet = pcap_next(handle, &header);
     /* Print its length */
     int header_length = header.len;
-    QString value = QString( QString::number(header_length));
+    QString value = QString(QString::number(header_length));
     ui->listWidget_packets->addItem(value);
 }
 
@@ -107,18 +109,65 @@ void PacketCaptureWindow::on_button_capture_stream_clicked()
 }
 
 void PacketCaptureWindow::captured_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *packet) {
+    qDebug() << "**************************************************";
+
+    QString packetDetails = "";
+
     static int packetCount = 1;
 
     /* declare pointers to packet headers */
-    const struct sniff_ethernet *ethernet_header;  /* The ethernet header [1] */
-    const struct sniff_ip *ip_header;              /* The IP header */
-    const struct sniff_tcp *tcp_header;			/* The TCP header */
+    const struct sniff_ethernet *ethernet;  /* The ethernet header [1] */
+    const struct sniff_ip *ip;			/* The IP header */
+    const struct sniff_tcp *tcp;			/* The TCP header */
     const char *payload;					/* Packet payload */
 
-    int ip_length;
-    int tcp_length;
-    int payload_length;
+    int size_ip;
+    int size_tcp;
+    int size_payload;
 
     qDebug() << "Packet number:" << packetCount;
     packetCount++;
+
+    /* define ethernet header */
+    ethernet = (struct sniff_ethernet*)(packet);
+
+    /* define/compute ip header offset */
+    ip = (struct sniff_ip*)(packet + SIZE_ETHERNET);
+    size_ip = IP_HL(ip)*4;
+    qDebug() << "IP header length" << size_ip << "bytes";
+    /*if (size_ip < 20) {
+        qDebug() << "   * Invalid IP header length:" << size_ip << " bytes";
+        return;
+    }*/
+
+    /* print source and destination IP addresses */
+    qDebug() << "Source IP:" << inet_ntoa(ip->ip_src);
+    qDebug() << "Destination IP:" << inet_ntoa(ip->ip_dst);
+    /* determine protocol */
+    switch(ip->ip_p) {
+    case IPPROTO_TCP:
+        qDebug() << "Protocol: TCP";
+        break;
+    case IPPROTO_UDP:
+        qDebug() << "Protocol: UDP";
+        return;
+    case IPPROTO_ICMP:
+        qDebug() << "Protocol: ICMP";
+        return;
+    case IPPROTO_IP:
+        qDebug() << "Protocol: IP";
+        return;
+    default:
+        qDebug() << "Protocol: unknown";
+        return;
+    }
+
+
+    /* define/compute tcp header offset */
+    tcp = (struct sniff_tcp*)(packet + SIZE_ETHERNET + size_ip);
+    size_tcp = TH_OFF(tcp)*4;
+}
+
+void PacketCaptureWindow::testFunction() {
+    qDebug() << "I have been called by the packet handler";
 }

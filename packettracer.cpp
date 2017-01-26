@@ -56,24 +56,7 @@ void PacketTracer::openForSniffing(char* dev, pcap_t* handle) {
 }
 
 void PacketTracer::applyFilter(pcap_t* handle, struct bpf_program* fpPtr, bpf_u_int32 net) {
-    // pcap_compile(handle, &fp, filter_exp, 0, net)
 
-    /*
-     * handle YES
-     * fpPtr YES
-     * filter_exp NO
-     * net NO
-     */
-
-    //QString filter_exp = "port 443";
-    char filter_exp[] = "port 443";
-
-    /*if (pcap_compile(handle, fpPtr, filter_exp, 0, net) == -1) {
-        qDebug() << stderr;
-        qDebug() << "Couldn't parse filter:" << pcap_geterr(handle);
-    } else {
-        qDebug() << "Filter compiled";
-    }*/
 }
 
 QString PacketTracer::getFilterExpression(QString source_host, QString dest_host, QString source_port, QString dest_port) {
