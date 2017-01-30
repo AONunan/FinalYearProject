@@ -16,6 +16,7 @@ public:
     void applyFilter(pcap_t *handle, bpf_program *fpPtr, bpf_u_int32 net);
     QString getFilterExpression(QString source_host, QString dest_host, QString source_port, QString dest_port);
     void packetHandler(u_char *args, const pcap_pkthdr *header, const u_char *packet);
+    void print_payload(const u_char *payload, int len);
 private:
 
 };

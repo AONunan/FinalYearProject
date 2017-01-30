@@ -48,7 +48,7 @@ PacketCaptureWindow::~PacketCaptureWindow()
 
 void PacketCaptureWindow::on_button_applyFilter_clicked()
 {
-    char filter_exp[] = "port 80";
+    char filter_exp[] = "port 443";
 
     if (pcap_compile(handle, &fp, filter_exp, 0, net) == -1) {
         qDebug() << stderr;
@@ -119,7 +119,7 @@ void PacketCaptureWindow::captured_packet(u_char *args, const struct pcap_pkthdr
     const struct sniff_ethernet *ethernet;  /* The ethernet header [1] */
     const struct sniff_ip *ip;			/* The IP header */
     const struct sniff_tcp *tcp;			/* The TCP header */
-    const char *payload;					/* Packet payload */
+    const u_char *payload;					/* Packet payload */
 
     int size_ip;
     int size_tcp;
@@ -166,6 +166,33 @@ void PacketCaptureWindow::captured_packet(u_char *args, const struct pcap_pkthdr
     /* define/compute tcp header offset */
     tcp = (struct sniff_tcp*)(packet + SIZE_ETHERNET + size_ip);
     size_tcp = TH_OFF(tcp)*4;
+    qDebug() << "TCP header length" << size_tcp << "bytes";
+    if (size_tcp < 20) {
+        qDebug() << "   * Invalid TCP header length" << size_tcp << "bytes";
+        return;
+    }
+
+    qDebug() << "Source port:" << ntohs(tcp->th_sport);
+    qDebug() << "Destination port:" << ntohs(tcp->th_dport);
+
+    /* define/compute tcp payload (segment) offset */
+    payload = (u_char *)(packet + SIZE_ETHERNET + size_ip + size_tcp);
+
+    /* compute tcp payload (segment) size */
+    size_payload = ntohs(ip->ip_len) - (size_ip + size_tcp);
+
+    /*
+     * Print payload data; it might be binary, so don't just
+     * treat it as a string.
+     */
+
+//    if (size_payload > 0) {
+//        qDebug() << "   Payload:" << size_payload << "bytes";
+//        //packetCaptureWindow.print_payload(payload, size_payload);
+//    }
+
+
+    return;
 }
 
 void PacketCaptureWindow::testFunction() {

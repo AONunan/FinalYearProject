@@ -83,3 +83,7 @@ QString PacketTracer::getFilterExpression(QString source_host, QString dest_host
 void PacketTracer::packetHandler(u_char *args, const struct pcap_pkthdr *header, const u_char *packet) {
     qDebug() << "You captured a packet";
 }
+
+void PacketTracer::print_payload(const u_char *payload, int len) {
+
+}

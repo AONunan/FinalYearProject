@@ -58,7 +58,6 @@ public:
 
     static void captured_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *packet);
     void testFunction();
-
 private slots:
     void on_button_applyFilter_clicked();
     void on_button_close_handle_clicked();
