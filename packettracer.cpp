@@ -85,5 +85,5 @@ void PacketTracer::packetHandler(u_char *args, const struct pcap_pkthdr *header,
 }
 
 void PacketTracer::print_payload(const u_char *payload, int len) {
-
+    qDebug() << "I have been called!";
 }

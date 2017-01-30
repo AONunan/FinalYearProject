@@ -3,7 +3,7 @@
 
 #include <QDialog>
 #include <pcap.h>
-
+#include "packettracer.h"
 
 
 #include <string.h>
@@ -66,6 +66,8 @@ private slots:
     void on_button_capture_stream_clicked();
 
 private:
+    PacketTracer packetTracer;
+
     Ui::PacketCaptureWindow *ui;
 
     char *dev;

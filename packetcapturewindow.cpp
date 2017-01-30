@@ -1,7 +1,6 @@
 #include "packetcapturewindow.h"
 #include "ui_packetcapturewindow.h"
 #include <QDebug>
-#include "packettracer.h"
 
 
 
@@ -11,7 +10,7 @@ PacketCaptureWindow::PacketCaptureWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    PacketTracer packetTracer;
+    //PacketTracer packetTracer;
     packetTracer.testFunction();
 
     // set the network interface device
@@ -78,8 +77,6 @@ void PacketCaptureWindow::on_button_close_handle_clicked()
 
 void PacketCaptureWindow::on_button_capture_packet_clicked()
 {
-    PacketTracer packetTracer;
-
     qDebug() << "Grabbing a single packet.";
     packet = pcap_next(handle, &header);
     /* Print its length */
@@ -91,7 +88,6 @@ void PacketCaptureWindow::on_button_capture_packet_clicked()
 void PacketCaptureWindow::on_pushButton_test_clicked()
 {
     // TODO: Complete filter settings
-    PacketTracer packetTracer;
     QString source_host = ui->lineEdit_src_host->text();
     QString dest_host = ui->lineEdit_dst_host->text();
     QString source_port = ui->lineEdit_src_port->text();
@@ -147,7 +143,7 @@ void PacketCaptureWindow::captured_packet(u_char *args, const struct pcap_pkthdr
     switch(ip->ip_p) {
     case IPPROTO_TCP:
         qDebug() << "Protocol: TCP";
-        break;
+        break; // continue below if protocol = TCP
     case IPPROTO_UDP:
         qDebug() << "Protocol: UDP";
         return;
@@ -186,15 +182,14 @@ void PacketCaptureWindow::captured_packet(u_char *args, const struct pcap_pkthdr
      * treat it as a string.
      */
 
-//    if (size_payload > 0) {
-//        qDebug() << "   Payload:" << size_payload << "bytes";
-//        //packetCaptureWindow.print_payload(payload, size_payload);
-//    }
+    PacketTracer packetTracer;
 
+    if (size_payload > 0) {
+        qDebug() << "Payload:" << size_payload << "bytes";
+        packetTracer.print_payload(payload, size_payload);
+    }
 
     return;
 }
 
-void PacketCaptureWindow::testFunction() {
-    qDebug() << "I have been called by the packet handler";
-}
+
