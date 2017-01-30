@@ -17,6 +17,7 @@ public:
     QString getFilterExpression(QString source_host, QString dest_host, QString source_port, QString dest_port);
     void packetHandler(u_char *args, const pcap_pkthdr *header, const u_char *packet);
     void print_payload(const u_char *payload, int len);
+    void print_hex_ascii_line(const u_char *payload, int len, int offset);
 private:
 
 };
