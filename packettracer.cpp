@@ -96,36 +96,34 @@ void PacketTracer::print_payload(const u_char *payload, int len) {
         return;
 
     qDebug() << "Len:" << len;
-    qDebug() << "Line width:" << line_width;
 
     // If length of data will fit on a single line
     if (len <= line_width) {
         print_hex_ascii_line(ch, len, offset);
-        return;
-    }
+    } else {
+        // Otherwise, data takes up multiple lines
+        for ( ;; ) {
+            // Calculate current line length
+            line_len = line_width % len_rem;
 
-    // Otherwise, data takes up multiple lines
-    for ( ;; ) {
-        // Calculate current line length
-        line_len = line_width % len_rem;
+            // Print line
+            print_hex_ascii_line(ch, line_len, offset);
 
-        // Print line
-        print_hex_ascii_line(ch, line_len, offset);
+            // Calculate total remaining
+            len_rem = len_rem - line_len;
 
-        // Calculate total remaining
-        len_rem = len_rem - line_len;
+            // Move pointer to remaining bytes to print
+            ch = ch + line_len;
 
-        // Move pointer to remaining bytes to print
-        ch = ch + line_len;
+            // Add offset
+            offset = offset + line_width;
 
-        // Add offset
-        offset = offset + line_width;
-
-        // Check if nearing end of data
-        if (len_rem <= line_width) {
-            // Print last line
-            print_hex_ascii_line(ch, len_rem, offset);
-            break;
+            // Check if nearing end of data
+            if (len_rem <= line_width) {
+                // Print last line
+                print_hex_ascii_line(ch, len_rem, offset);
+                break;
+            }
         }
     }
 }
