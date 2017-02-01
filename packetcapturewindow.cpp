@@ -47,8 +47,9 @@ PacketCaptureWindow::~PacketCaptureWindow()
 
 void PacketCaptureWindow::on_button_applyFilter_clicked()
 {
-    char filter_exp[] = "port 443";
+    char filter_exp[] = "tcp";
 
+    // Compile filter expression
     if (pcap_compile(handle, &fp, filter_exp, 0, net) == -1) {
         qDebug() << stderr;
         qDebug() << "Couldn't parse filter:" << pcap_geterr(handle);
@@ -56,6 +57,7 @@ void PacketCaptureWindow::on_button_applyFilter_clicked()
         qDebug() << "Filter compiled";
     }
 
+    // Set filter expression
     // TODO: Move to packettracer.cpp
     if (pcap_setfilter(handle, &fp) == -1) {
         qDebug() << stderr;
@@ -69,7 +71,7 @@ void PacketCaptureWindow::on_button_applyFilter_clicked()
 
 void PacketCaptureWindow::on_button_close_handle_clicked()
 {
-    /* And close the session */
+    // Close handle
     pcap_close(handle);
 
     PacketCaptureWindow::close();
@@ -79,10 +81,13 @@ void PacketCaptureWindow::on_button_capture_packet_clicked()
 {
     qDebug() << "Grabbing a single packet.";
     packet = pcap_next(handle, &header);
-    /* Print its length */
+
+    // Find header length
     int header_length = header.len;
-    QString value = QString(QString::number(header_length));
-    ui->listWidget_packets->addItem(value);
+    QString header_length_string = QString(QString::number(header_length));
+
+    // Display header length in window
+    ui->listWidget_packets->addItem(header_length_string);
 }
 
 void PacketCaptureWindow::on_pushButton_test_clicked()
@@ -100,7 +105,7 @@ void PacketCaptureWindow::on_button_capture_stream_clicked()
 {
     PacketTracer packetTracer;
 
-    // capture 10 packets, call packetHandler() each time
+    // Capture 10 packets, call captured_packet() each time
     pcap_loop(handle, 10, captured_packet, NULL);
 }
 
@@ -111,35 +116,36 @@ void PacketCaptureWindow::captured_packet(u_char *args, const struct pcap_pkthdr
 
     static int packetCount = 1;
 
-    /* declare pointers to packet headers */
-    const struct sniff_ethernet *ethernet;  /* The ethernet header [1] */
-    const struct sniff_ip *ip;			/* The IP header */
-    const struct sniff_tcp *tcp;			/* The TCP header */
-    const u_char *payload;					/* Packet payload */
+    const struct sniff_ethernet *ethernet; // Pointer to beginning of Ethernet header
+    const struct sniff_ip *ip; // Pointer to beginning of IP header
+    const struct sniff_tcp *tcp; // Pointer to beginning of TCP header
+    const u_char *payload; // Pointer to beginning of packet payload
 
-    int size_ip;
-    int size_tcp;
-    int size_payload;
+    int size_ip; // Length of IP header
+    int size_tcp; // Length of TCP header
+    int size_payload; // Length of packet payload
 
     qDebug() << "Packet number:" << packetCount;
     packetCount++;
 
-    /* define ethernet header */
+    // Define Ethernet header
     ethernet = (struct sniff_ethernet*)(packet);
 
-    /* define/compute ip header offset */
+    // Define IP header
     ip = (struct sniff_ip*)(packet + SIZE_ETHERNET);
+
+    // Calculate IP header length (i.e. offset)
     size_ip = IP_HL(ip)*4;
     qDebug() << "IP header length" << size_ip << "bytes";
-    /*if (size_ip < 20) {
+    if (size_ip < 20) {
         qDebug() << "   * Invalid IP header length:" << size_ip << " bytes";
         return;
-    }*/
+    }
 
-    /* print source and destination IP addresses */
     qDebug() << "Source IP:" << inet_ntoa(ip->ip_src);
     qDebug() << "Destination IP:" << inet_ntoa(ip->ip_dst);
-    /* determine protocol */
+
+    // Find protocol in use
     switch(ip->ip_p) {
     case IPPROTO_TCP:
         qDebug() << "Protocol: TCP";
@@ -158,9 +164,12 @@ void PacketCaptureWindow::captured_packet(u_char *args, const struct pcap_pkthdr
         return;
     }
 
+    // If from here down is executed, we must be dealing with TCP
 
-    /* define/compute tcp header offset */
+    // Define IP header
     tcp = (struct sniff_tcp*)(packet + SIZE_ETHERNET + size_ip);
+
+    // Calculate TCP header length (i.e. offset)
     size_tcp = TH_OFF(tcp)*4;
     qDebug() << "TCP header length" << size_tcp << "bytes";
     if (size_tcp < 20) {
@@ -171,19 +180,15 @@ void PacketCaptureWindow::captured_packet(u_char *args, const struct pcap_pkthdr
     qDebug() << "Source port:" << ntohs(tcp->th_sport);
     qDebug() << "Destination port:" << ntohs(tcp->th_dport);
 
-    /* define/compute tcp payload (segment) offset */
+    // Define packet payload
     payload = (u_char *)(packet + SIZE_ETHERNET + size_ip + size_tcp);
 
-    /* compute tcp payload (segment) size */
+    // Calculate payload length
     size_payload = ntohs(ip->ip_len) - (size_ip + size_tcp);
-
-    /*
-     * Print payload data; it might be binary, so don't just
-     * treat it as a string.
-     */
 
     PacketTracer packetTracer;
 
+    // Make call to function that will display packet payload
     if (size_payload > 0) {
         qDebug() << "Payload:" << size_payload << "bytes";
         packetTracer.print_payload(payload, size_payload);

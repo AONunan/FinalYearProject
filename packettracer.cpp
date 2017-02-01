@@ -86,37 +86,44 @@ void PacketTracer::packetHandler(u_char *args, const struct pcap_pkthdr *header,
 
 void PacketTracer::print_payload(const u_char *payload, int len) {
     int len_rem = len;
-    int line_width = 16;			/* number of bytes per line */
+    int line_width = 16; // Number of bytes in each line
     int line_len;
-    int offset = 0;					/* zero-based offset counter */
-    const u_char *ch = payload;
+    int offset = 0; // zero-based offset counter
+    const u_char *ch = payload; // Each character of the payload
 
+    // Check for error
     if (len <= 0)
         return;
 
     qDebug() << "Len:" << len;
     qDebug() << "Line width:" << line_width;
-    /* data fits on one line */
+
+    // If length of data will fit on a single line
     if (len <= line_width) {
         print_hex_ascii_line(ch, len, offset);
         return;
     }
 
-    /* data spans multiple lines */
+    // Otherwise, data takes up multiple lines
     for ( ;; ) {
-        /* compute current line length */
+        // Calculate current line length
         line_len = line_width % len_rem;
-        /* print line */
+
+        // Print line
         print_hex_ascii_line(ch, line_len, offset);
-        /* compute total remaining */
+
+        // Calculate total remaining
         len_rem = len_rem - line_len;
-        /* shift pointer to remaining bytes to print */
+
+        // Move pointer to remaining bytes to print
         ch = ch + line_len;
-        /* add offset */
+
+        // Add offset
         offset = offset + line_width;
-        /* check if we have line width chars or less */
+
+        // Check if nearing end of data
         if (len_rem <= line_width) {
-            /* print last line and get out */
+            // Print last line
             print_hex_ascii_line(ch, len_rem, offset);
             break;
         }

@@ -185,10 +185,10 @@
   <widget class="QListWidget" name="listWidget_packets">
    <property name="geometry">
     <rect>
-     <x>220</x>
-     <y>360</y>
-     <width>471</width>
-     <height>192</height>
+     <x>20</x>
+     <y>331</y>
+     <width>831</width>
+     <height>221</height>
     </rect>
    </property>
   </widget>
