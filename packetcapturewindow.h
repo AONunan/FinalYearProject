@@ -73,7 +73,7 @@ private:
     char *dev;
     char errbuf[PCAP_ERRBUF_SIZE];
     pcap_t *handle;                     // Session handle
-    struct bpf_program fp;              // The compiled filter expression
+    struct bpf_program filter_expression;              // The compiled filter expression
     //char filter_exp[] = "port 443";	// The filter expression
     bpf_u_int32 mask;                   // The netmask of our sniffing device
     bpf_u_int32 net;                    // The IP of our sniffing device
