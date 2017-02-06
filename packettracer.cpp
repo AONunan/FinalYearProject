@@ -2,6 +2,7 @@
 #include <QDebug>
 #include "pcap.h"
 #include "packetcapturewindow.h"
+//#include <QByteArray>
 
 // Constructor
 PacketTracer::PacketTracer()
@@ -129,5 +130,22 @@ void PacketTracer::print_payload(const u_char *payload, int len) {
 }
 
 void PacketTracer::print_hex_ascii_line(const u_char *payload, int len, int offset) {
-    qDebug() << "#";
+
+    int i;
+    int gap;
+    QString valueInHex;
+    int temp;
+
+    const u_char *ch;
+    qDebug() << "Offset:" << offset;
+
+    ch = payload;
+
+    for(i = 0; i < len; i++) {
+
+        temp = *ch;
+        valueInHex = QString("%1").arg(temp , 0, 16);
+        qDebug() << "Payload = " << valueInHex;
+        ch++;
+    }
 }

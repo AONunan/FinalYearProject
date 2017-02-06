@@ -29,7 +29,7 @@ PacketCaptureWindow::PacketCaptureWindow(QWidget *parent) :
         qDebug() << "Net and mask set";
     }
 
-    // open the handle
+    // Open the handle
     ///////////////packetTracer.openForSniffing(dev, handle);
     handle = pcap_open_live(dev, BUFSIZ, 1, 1000, errbuf);
     if (handle == NULL) {
@@ -192,9 +192,9 @@ void PacketCaptureWindow::captured_packet(u_char *args, const struct pcap_pkthdr
     if (size_payload > 0) {
         qDebug() << "Payload:" << size_payload << "bytes";
         packetTracer.print_payload(payload, size_payload);
+    } else {
+        qDebug() << "Payload size is 0";
     }
 
     return;
 }
-
-
