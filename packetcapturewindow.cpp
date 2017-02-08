@@ -1,14 +1,16 @@
 #include "packetcapturewindow.h"
 #include "ui_packetcapturewindow.h"
 #include <QDebug>
+#include "packet.h"
 
-
+int Packet::count = 0;
 
 PacketCaptureWindow::PacketCaptureWindow(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::PacketCaptureWindow)
 {
     ui->setupUi(this);
+
 
     //PacketTracer packetTracer;
     packetTracer.test_function();
@@ -108,6 +110,7 @@ void PacketCaptureWindow::on_button_capture_stream_clicked()
 }
 
 void PacketCaptureWindow::captured_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *packet) {
+    Packet working_packet;
     qDebug() << "**************************************************";
 
     QString packetDetails = "";
@@ -193,6 +196,10 @@ void PacketCaptureWindow::captured_packet(u_char *args, const struct pcap_pkthdr
     } else {
         qDebug() << "Payload size is 0";
     }
+
+    working_packet.set_ip_header(ip_length);
+    working_packet.set_tcp_header(tcp_length);
+    working_packet.set_payload(payload_length);
 
     return;
 }
