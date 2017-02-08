@@ -16,7 +16,7 @@ void PacketTracer::test_function() {
 
 char* PacketTracer::get_network_interface_device() {
     char *dev = NULL;
-    char errbuf[PCAP_ERRBUF_SIZE]; // to hold any possible error messages
+    char errbuf[PCAP_ERRBUF_SIZE]; // To hold any error messages
 
     dev = pcap_lookupdev(errbuf);
 
@@ -100,7 +100,7 @@ void PacketTracer::print_payload(const u_char *payload, int payload_length) {
     } else {
         // Otherwise, data takes up multiple lines
         for ( ;; ) {
-            // Calculate current line length
+            // Get length of current line
             line_length = line_width % remaining_length;
 
             // Print line

@@ -47,7 +47,7 @@ PacketCaptureWindow::~PacketCaptureWindow()
 
 void PacketCaptureWindow::on_button_applyFilter_clicked()
 {
-    char filter_exp[] = "tcp";
+    char filter_exp[] = "ip";
 
     // Compile filter expression
     if (pcap_compile(handle, &filter_expression, filter_exp, 0, net) == -1) {
@@ -171,7 +171,7 @@ void PacketCaptureWindow::captured_packet(u_char *args, const struct pcap_pkthdr
     tcp_length = TH_OFF(tcpPtr)*4;
     qDebug() << "TCP header length" << tcp_length << "bytes";
     if (tcp_length < 20) {
-        qDebug() << "   * Invalid TCP header length" << tcp_length << "bytes";
+        qDebug() << "Invalid TCP header length" << tcp_length << "bytes";
         return;
     }
 
