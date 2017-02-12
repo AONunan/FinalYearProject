@@ -4,12 +4,32 @@
 #include "packet.h"
 
 int Packet::count = 0;
+int* PacketCaptureWindow::arrayPtr;
+int* PacketCaptureWindow::testingPtr;
 
 PacketCaptureWindow::PacketCaptureWindow(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::PacketCaptureWindow)
 {
     ui->setupUi(this);
+
+    my_array[0] = 76;
+    my_array[1] = 95;
+    my_array[2] = 22;
+
+    testing = 769522;
+
+    testingPtr = &testing;
+    arrayPtr = &my_array[0];
+
+
+    qDebug() << "my_array:" << my_array;
+    qDebug() << "arrayPtr:" << arrayPtr;
+//    qDebug() << "testing:" << testing;
+//    qDebug() << "&testing:" << &testing;
+//    qDebug() << "testingPtr:" << testingPtr;
+//    qDebug() << "*testingPtr:" << *testingPtr;
+
 
 
     //PacketTracer packetTracer;
@@ -77,6 +97,8 @@ void PacketCaptureWindow::on_button_close_handle_clicked()
     pcap_close(handle);
 
     PacketCaptureWindow::close();
+
+    qDebug() << "****TeSTING **** testing:" << testing;
 }
 
 void PacketCaptureWindow::on_button_capture_packet_clicked()
@@ -112,6 +134,14 @@ void PacketCaptureWindow::on_button_capture_stream_clicked()
 void PacketCaptureWindow::captured_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *packet) {
     Packet working_packet;
     qDebug() << "**************************************************";
+
+//    qDebug() << "___testingPtr:" << testingPtr;
+//    qDebug() << "___*testingPtr:" << *testingPtr;
+//    *testingPtr = 9999;
+
+    qDebug() << "___arrayPtr:" << arrayPtr;
+    qDebug() << "___*arrayPtr:" << *arrayPtr;
+    qDebug() << "___*arrayPtr+1:" << *(arrayPtr+1);
 
     QString packetDetails = "";
 
