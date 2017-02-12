@@ -62,6 +62,7 @@ public:
 
     static int** arrayPtr;
     static Packet* packetPtr;
+    void captured_packet_2();
 private slots:
     void on_button_applyFilter_clicked();
     void on_button_close_handle_clicked();

@@ -119,6 +119,8 @@ void PacketCaptureWindow::on_button_capture_packet_clicked()
     int header_length = header.len;
     QString header_length_string = QString(QString::number(header_length));
 
+    captured_packet_2();
+
     // Display header length in window
     ui->listWidget_packets->addItem(header_length_string);
 }
@@ -152,6 +154,25 @@ void PacketCaptureWindow::on_button_capture_stream_clicked()
     pcap_loop(handle, number_of_packets, captured_packet, NULL);
 
     // TODO: Once finished capturing packets, display on screen
+}
+
+void PacketCaptureWindow::captured_packet_2() {
+    int header_length = header.len;
+    qDebug() << "***" << header_length;
+
+
+    const struct sniff_ethernet *ethernetPtr; // Pointer to beginning of Ethernet header
+    const struct sniff_ip *ipPtr; // Pointer to beginning of IP header
+    const struct sniff_tcp *tcpPtr; // Pointer to beginning of TCP header
+    const u_char *payload; // Pointer to beginning of packet payload
+
+    int ip_length; // Length of IP header
+    int tcp_length; // Length of TCP header
+    int payload_length; // Length of packet payload
+
+    // Define Ethernet header
+    ethernetPtr = (struct sniff_ethernet*)(packet);
+
 }
 
 void PacketCaptureWindow::captured_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *packet) {
