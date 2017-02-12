@@ -5,7 +5,6 @@
 
 int Packet::count = 0;
 int* PacketCaptureWindow::arrayPtr;
-int* PacketCaptureWindow::testingPtr;
 
 PacketCaptureWindow::PacketCaptureWindow(QWidget *parent) :
     QDialog(parent),
@@ -13,22 +12,15 @@ PacketCaptureWindow::PacketCaptureWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    my_array[0] = 76;
-    my_array[1] = 95;
-    my_array[2] = 22;
+    packet_array[0] = 76;
+    packet_array[1] = 95;
+    packet_array[2] = 22;
 
-    testing = 769522;
-
-    testingPtr = &testing;
-    arrayPtr = &my_array[0];
+    arrayPtr = &packet_array[0];
 
 
-    qDebug() << "my_array:" << my_array;
+    qDebug() << "packet_array:" << packet_array;
     qDebug() << "arrayPtr:" << arrayPtr;
-//    qDebug() << "testing:" << testing;
-//    qDebug() << "&testing:" << &testing;
-//    qDebug() << "testingPtr:" << testingPtr;
-//    qDebug() << "*testingPtr:" << *testingPtr;
 
 
 
@@ -97,8 +89,6 @@ void PacketCaptureWindow::on_button_close_handle_clicked()
     pcap_close(handle);
 
     PacketCaptureWindow::close();
-
-    qDebug() << "****TeSTING **** testing:" << testing;
 }
 
 void PacketCaptureWindow::on_button_capture_packet_clicked()
@@ -128,7 +118,9 @@ void PacketCaptureWindow::on_pushButton_test_clicked()
 void PacketCaptureWindow::on_button_capture_stream_clicked()
 {
     // Capture 10 packets, call captured_packet() each time
-    pcap_loop(handle, 10, captured_packet, NULL);
+    pcap_loop(handle, 5, captured_packet, NULL);
+
+    // TODO: Once finished capturing packets, display on screen
 }
 
 void PacketCaptureWindow::captured_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *packet) {

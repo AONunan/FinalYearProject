@@ -134,7 +134,7 @@ void PacketTracer::get_hex_ascii(const u_char *payload, int length, int offset) 
     int temp;
 
     const u_char *ch;
-    qDebug() << "Offset:" << offset;
+    //qDebug() << "Offset:" << offset;
 
     ch = payload;
 
