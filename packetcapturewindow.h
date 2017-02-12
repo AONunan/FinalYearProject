@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <pcap.h>
 #include "packettracer.h"
+#include "packet.h"
 
 
 #include <string.h>
@@ -60,6 +61,7 @@ public:
     void testFunction();
 
     static int** arrayPtr;
+    static Packet* packetPtr;
 private slots:
     void on_button_applyFilter_clicked();
     void on_button_close_handle_clicked();
@@ -70,7 +72,8 @@ private slots:
 private:
     PacketTracer packetTracer;
 
-    int* packet_array[5];
+    int* int_array[3];
+    Packet* packet_array;
 
     int var1;
     int var2;
@@ -78,6 +81,9 @@ private:
     int* ptr1;
     int* ptr2;
     int* ptr3;
+
+    //Packet packet1, packet2, packet3, packet4, packet5;
+    //Packet* packetPtr1, packetPtr2, packetPtr3, packetPtr4, packetPtr5;
 
     Ui::PacketCaptureWindow *ui;
 

@@ -3,8 +3,8 @@
 
 Packet::Packet()
 {
-    qDebug() << "New packet created";
-    testing();
+    //qDebug() << "New packet created";
+    //testing();
 
 }
 
@@ -14,6 +14,15 @@ void Packet::testing() {
     qDebug() << "# Packet payload length:" << payload_length;
     qDebug() << "# Packet count:" << Packet::count;
     Packet::count++;
+}
+
+void Packet::set_identifier(QString name) {
+    identifier = name;
+}
+
+QString Packet::get_identifier() {
+    QString name = "Packet name is:" + identifier;
+    return name;
 }
 
 void Packet::set_ip_header(int length) {

@@ -5,6 +5,7 @@
 
 int Packet::count = 0;
 int** PacketCaptureWindow::arrayPtr;
+Packet* PacketCaptureWindow::packetPtr;
 
 PacketCaptureWindow::PacketCaptureWindow(QWidget *parent) :
     QDialog(parent),
@@ -20,20 +21,20 @@ PacketCaptureWindow::PacketCaptureWindow(QWidget *parent) :
     ptr2 = &var2;
     ptr3 = &var3;
 
-    packet_array[0] = ptr1;
-    packet_array[1] = ptr2;
-    packet_array[2] = ptr3;
+    int_array[0] = ptr1;
+    int_array[1] = ptr2;
+    int_array[2] = ptr3;
 
-    arrayPtr = packet_array;
+    arrayPtr = int_array;
 
-    qDebug() << "packet_array:" << packet_array;
+    qDebug() << "int_array:" << int_array;
     qDebug() << "ptr1:" << ptr1;
     qDebug() << "ptr2:" << ptr2;
-    qDebug() << "packet_array[0]:" << packet_array[0];
-    qDebug() << "*packet_array[0]:" << *packet_array[0];
+    qDebug() << "int_array[0]:" << int_array[0];
+    qDebug() << "*int_array[0]:" << *int_array[0];
 
 
-    //arrayPtr = &packet_array;
+    //arrayPtr = &int_array;
 
 
     qDebug() << "arrayPtr:" << arrayPtr;
@@ -79,7 +80,7 @@ PacketCaptureWindow::~PacketCaptureWindow()
 
 void PacketCaptureWindow::on_button_applyFilter_clicked()
 {
-    char filter_exp[] = "ip";
+    char filter_exp[] = "tcp";
 
     // Compile filter expression
     if (pcap_compile(handle, &filter_expression, filter_exp, 0, net) == -1) {
@@ -124,9 +125,6 @@ void PacketCaptureWindow::on_button_capture_packet_clicked()
 
 void PacketCaptureWindow::on_pushButton_test_clicked()
 {
-
-    qDebug() << "New value:" << *packet_array[0];
-    qDebug() << "New value2:" << *packet_array[1];
     // TODO: Complete filter settings
     QString source_host = ui->lineEdit_src_host->text();
     QString dest_host = ui->lineEdit_dst_host->text();
@@ -138,35 +136,33 @@ void PacketCaptureWindow::on_pushButton_test_clicked()
 
 void PacketCaptureWindow::on_button_capture_stream_clicked()
 {
+    // Number of packets to capture
+    int number_of_packets = 5;
+
+    // Create an array to store a pointer to each packet
+    packet_array = new Packet[number_of_packets];
+
+    // Set the static pointer "packetPtr" to the beginning of the array
+    packetPtr = packet_array;
+
+    qDebug() << "packetPtr:" << packetPtr;
+
     // Capture 10 packets, call captured_packet() each time
-    pcap_loop(handle, 5, captured_packet, NULL);
+    qDebug() << "About to call pcap_loop";
+    pcap_loop(handle, number_of_packets, captured_packet, NULL);
 
     // TODO: Once finished capturing packets, display on screen
 }
 
 void PacketCaptureWindow::captured_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *packet) {
-    Packet working_packet;
     qDebug() << "**************************************************";
-
-//    qDebug() << "___testingPtr:" << testingPtr;
-//    qDebug() << "___*testingPtr:" << *testingPtr;
-//    *testingPtr = 9999;
+    Packet working_packet;
 
     qDebug() << "___arrayPtr:" << arrayPtr;
     qDebug() << "___*arrayPtr:" << *arrayPtr;
     qDebug() << "___**arrayPtr:" << **arrayPtr;
-    qDebug() << "___*(arrayPtr+1):" << *(arrayPtr+1);
 
-    int* temp = *arrayPtr;
-
-    qDebug() << "temp:" << temp;
-    qDebug() << "&temp:" << &temp;
-    qDebug() << "*temp:" << *temp;
-
-    //*temp = 8686;
-    //*(temp+1) = 520;
-
-    static int packetCount = 1;
+    static int packetCount = 0;
 
     const struct sniff_ethernet *ethernetPtr; // Pointer to beginning of Ethernet header
     const struct sniff_ip *ipPtr; // Pointer to beginning of IP header
@@ -251,6 +247,22 @@ void PacketCaptureWindow::captured_packet(u_char *args, const struct pcap_pkthdr
     working_packet.set_ip_header(ip_length);
     working_packet.set_tcp_header(tcp_length);
     working_packet.set_payload(payload_length);
+
+    if(packetCount == 1) {
+        working_packet.set_identifier("packet_a");
+    } else if(packetCount == 2) {
+        working_packet.set_identifier("packet_b");
+    } else if(packetCount == 3) {
+        working_packet.set_identifier("packet_c");
+    } else if(packetCount == 4) {
+        working_packet.set_identifier("packet_d");
+    } else {
+        working_packet.set_identifier("packet_other");
+    }
+
+    qDebug() << working_packet.get_identifier();
+
+    *packetPtr = working_packet;
 
     return;
 }
