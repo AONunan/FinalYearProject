@@ -4,7 +4,7 @@
 #include "packet.h"
 
 int Packet::count = 0;
-int* PacketCaptureWindow::arrayPtr;
+int** PacketCaptureWindow::arrayPtr;
 
 PacketCaptureWindow::PacketCaptureWindow(QWidget *parent) :
     QDialog(parent),
@@ -12,15 +12,33 @@ PacketCaptureWindow::PacketCaptureWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    packet_array[0] = 76;
-    packet_array[1] = 95;
-    packet_array[2] = 22;
+    var1 = 76;
+    var2 = 95;
+    var3 = 22;
 
-    arrayPtr = &packet_array[0];
+    ptr1 = &var1;
+    ptr2 = &var2;
+    ptr3 = &var3;
 
+    packet_array[0] = ptr1;
+    packet_array[1] = ptr2;
+    packet_array[2] = ptr3;
+
+    arrayPtr = packet_array;
 
     qDebug() << "packet_array:" << packet_array;
+    qDebug() << "ptr1:" << ptr1;
+    qDebug() << "ptr2:" << ptr2;
+    qDebug() << "packet_array[0]:" << packet_array[0];
+    qDebug() << "*packet_array[0]:" << *packet_array[0];
+
+
+    //arrayPtr = &packet_array;
+
+
     qDebug() << "arrayPtr:" << arrayPtr;
+    qDebug() << "*arrayPtr:" << *arrayPtr;
+    qDebug() << "**(arrayPtr+1):" << **(arrayPtr+1);
 
 
 
@@ -106,6 +124,9 @@ void PacketCaptureWindow::on_button_capture_packet_clicked()
 
 void PacketCaptureWindow::on_pushButton_test_clicked()
 {
+
+    qDebug() << "New value:" << *packet_array[0];
+    qDebug() << "New value2:" << *packet_array[1];
     // TODO: Complete filter settings
     QString source_host = ui->lineEdit_src_host->text();
     QString dest_host = ui->lineEdit_dst_host->text();
@@ -133,9 +154,17 @@ void PacketCaptureWindow::captured_packet(u_char *args, const struct pcap_pkthdr
 
     qDebug() << "___arrayPtr:" << arrayPtr;
     qDebug() << "___*arrayPtr:" << *arrayPtr;
-    qDebug() << "___*arrayPtr+1:" << *(arrayPtr+1);
+    qDebug() << "___**arrayPtr:" << **arrayPtr;
+    qDebug() << "___*(arrayPtr+1):" << *(arrayPtr+1);
 
-    QString packetDetails = "";
+    int* temp = *arrayPtr;
+
+    qDebug() << "temp:" << temp;
+    qDebug() << "&temp:" << &temp;
+    qDebug() << "*temp:" << *temp;
+
+    //*temp = 8686;
+    //*(temp+1) = 520;
 
     static int packetCount = 1;
 

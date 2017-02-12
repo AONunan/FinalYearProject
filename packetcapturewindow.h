@@ -59,7 +59,7 @@ public:
     static void captured_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *packet);
     void testFunction();
 
-    static int* arrayPtr;
+    static int** arrayPtr;
 private slots:
     void on_button_applyFilter_clicked();
     void on_button_close_handle_clicked();
@@ -70,7 +70,14 @@ private slots:
 private:
     PacketTracer packetTracer;
 
-    int packet_array[5];
+    int* packet_array[5];
+
+    int var1;
+    int var2;
+    int var3;
+    int* ptr1;
+    int* ptr2;
+    int* ptr3;
 
     Ui::PacketCaptureWindow *ui;
 
