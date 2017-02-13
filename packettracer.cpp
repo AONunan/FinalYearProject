@@ -144,7 +144,7 @@ void PacketTracer::get_hex_ascii(const u_char *payload, int length, int offset) 
         value_in_hex = QString("%1").arg(temp , 0, 16);
 
         // PAYLOAD CONTENTS
-        //qDebug() << "Payload = " << value_in_hex;
+        //qDebug() << "Payload:" << value_in_hex;
         //qDebug() << value_in_hex.toUtf8();
         ch++;
     }

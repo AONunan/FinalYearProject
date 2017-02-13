@@ -112,17 +112,12 @@ void PacketCaptureWindow::on_button_close_handle_clicked()
 
 void PacketCaptureWindow::on_button_capture_packet_clicked()
 {
-    qDebug() << "Grabbing a single packet.";
+    // Fetch single packet
     packet = pcap_next(handle, &header);
 
-    // Find header length
-    int header_length = header.len;
-    QString header_length_string = QString(QString::number(header_length));
 
     captured_packet_2();
 
-    // Display header length in window
-    ui->listWidget_packets->addItem(header_length_string);
 }
 
 void PacketCaptureWindow::on_pushButton_test_clicked()
@@ -136,54 +131,16 @@ void PacketCaptureWindow::on_pushButton_test_clicked()
     qDebug() << "The chosen filter express is:" << new_filter_expression;
 }
 
-void PacketCaptureWindow::on_button_capture_stream_clicked()
-{
-    // Number of packets to capture
-    int number_of_packets = 5;
-
-    // Create an array to store a pointer to each packet
-    packet_array = new Packet[number_of_packets];
-
-    // Set the static pointer "packetPtr" to the beginning of the array
-    packetPtr = packet_array;
-
-    qDebug() << "packetPtr:" << packetPtr;
-
-    // Capture 10 packets, call captured_packet() each time
-    qDebug() << "About to call pcap_loop";
-    pcap_loop(handle, number_of_packets, captured_packet, NULL);
-
-    // TODO: Once finished capturing packets, display on screen
-}
-
 void PacketCaptureWindow::captured_packet_2() {
-    int header_length = header.len;
-    qDebug() << "***" << header_length;
-
-
-    const struct sniff_ethernet *ethernetPtr; // Pointer to beginning of Ethernet header
-    const struct sniff_ip *ipPtr; // Pointer to beginning of IP header
-    const struct sniff_tcp *tcpPtr; // Pointer to beginning of TCP header
-    const u_char *payload; // Pointer to beginning of packet payload
-
-    int ip_length; // Length of IP header
-    int tcp_length; // Length of TCP header
-    int payload_length; // Length of packet payload
-
-    // Define Ethernet header
-    ethernetPtr = (struct sniff_ethernet*)(packet);
-
-}
-
-void PacketCaptureWindow::captured_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *packet) {
     qDebug() << "**************************************************";
     Packet working_packet;
 
-    qDebug() << "___arrayPtr:" << arrayPtr;
-    qDebug() << "___*arrayPtr:" << *arrayPtr;
-    qDebug() << "___**arrayPtr:" << **arrayPtr;
+    int header_length = header.len;
+    QString header_length_string = "Header length: " + QString(QString::number(header_length));
 
-    static int packetCount = 0;
+    // Display header length in window
+    ui->listWidget_packets->addItem(header_length_string);
+
 
     const struct sniff_ethernet *ethernetPtr; // Pointer to beginning of Ethernet header
     const struct sniff_ip *ipPtr; // Pointer to beginning of IP header
@@ -193,9 +150,6 @@ void PacketCaptureWindow::captured_packet(u_char *args, const struct pcap_pkthdr
     int ip_length; // Length of IP header
     int tcp_length; // Length of TCP header
     int payload_length; // Length of packet payload
-
-    qDebug() << "Packet number:" << packetCount;
-    packetCount++;
 
     // Define Ethernet header
     ethernetPtr = (struct sniff_ethernet*)(packet);
@@ -213,6 +167,7 @@ void PacketCaptureWindow::captured_packet(u_char *args, const struct pcap_pkthdr
 
     qDebug() << "Source IP:" << inet_ntoa(ipPtr->ip_src);
     qDebug() << "Destination IP:" << inet_ntoa(ipPtr->ip_dst);
+
 
     // Find protocol in use
     switch(ipPtr->ip_p) {
@@ -232,6 +187,7 @@ void PacketCaptureWindow::captured_packet(u_char *args, const struct pcap_pkthdr
         qDebug() << "Protocol: unknown";
         return;
     }
+
 
     // If from here down is executed, we must be dealing with TCP
 
@@ -255,7 +211,8 @@ void PacketCaptureWindow::captured_packet(u_char *args, const struct pcap_pkthdr
     // Calculate payload length
     payload_length = ntohs(ipPtr->ip_len) - (ip_length + tcp_length);
 
-    PacketTracer packetTracer;
+
+    //PacketTracer packetTracer;
 
     // Make call to function that will display packet payload
     if (payload_length > 0) {
@@ -269,21 +226,5 @@ void PacketCaptureWindow::captured_packet(u_char *args, const struct pcap_pkthdr
     working_packet.set_tcp_header(tcp_length);
     working_packet.set_payload(payload_length);
 
-    if(packetCount == 1) {
-        working_packet.set_identifier("packet_a");
-    } else if(packetCount == 2) {
-        working_packet.set_identifier("packet_b");
-    } else if(packetCount == 3) {
-        working_packet.set_identifier("packet_c");
-    } else if(packetCount == 4) {
-        working_packet.set_identifier("packet_d");
-    } else {
-        working_packet.set_identifier("packet_other");
-    }
-
-    qDebug() << working_packet.get_identifier();
-
-    *packetPtr = working_packet;
-
-    return;
+    working_packet.testing();
 }
