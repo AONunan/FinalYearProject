@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "packetcapturewindow.h"
+#include "packecapturewindow.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),

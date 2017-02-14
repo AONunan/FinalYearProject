@@ -1,4 +1,4 @@
-#include "packetcapturewindow.h"
+#include "packecapturewindow.h"
 #include "ui_packetcapturewindow.h"
 #include <QDebug>
 
