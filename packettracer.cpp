@@ -1,6 +1,5 @@
 #include "packettracer.h"
 #include <QDebug>
-//#include <QByteArray>
 
 #include "packet.h"
 
@@ -40,8 +39,9 @@ void PacketTracer::set_mask_and_ip(char* dev, bpf_u_int32* netPtr, bpf_u_int32* 
     }
 }
 
-void PacketTracer::open_for_sniffing(char* dev, pcap_t* handle) {
+pcap_t * PacketTracer::open_for_sniffing(char* dev) {
     char errbuf[PCAP_ERRBUF_SIZE];
+    pcap_t *handle;
 
     handle = pcap_open_live(dev, BUFSIZ, 1, 1000, errbuf);
     if (handle == NULL) {
@@ -50,6 +50,8 @@ void PacketTracer::open_for_sniffing(char* dev, pcap_t* handle) {
     } else {
         qDebug() << "Device is open for sniffing";
     }
+
+    return handle;
 }
 
 void PacketTracer::apply_filter(pcap_t *handle, bpf_program *filter_expression, bpf_u_int32 net) {

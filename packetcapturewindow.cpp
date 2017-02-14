@@ -18,25 +18,10 @@ PacketCaptureWindow::PacketCaptureWindow(QWidget *parent) :
     ui->label_interface->setText(dev);
 
     // set network ID and subnet mask
-    ///////////////packetTracer.setMaskAndIp(dev, &net, &mask);
-    if (pcap_lookupnet(dev, &net, &mask, errbuf) == -1) {
-        qDebug() << stderr;
-        qDebug() << "Can't get netmask for device:" << dev;
-        net = 0;
-        mask = 0;
-    } else {
-        qDebug() << "Net and mask set";
-    }
+    packetTracer.set_mask_and_ip(dev, &net, &mask);
 
     // Open the handle
-    ///////////////packetTracer.openForSniffing(dev, handle);
-    handle = pcap_open_live(dev, BUFSIZ, 1, 1000, errbuf);
-    if (handle == NULL) {
-        qDebug() << stderr;
-        qDebug() << "Couldn't open device:" << errbuf;
-    } else {
-        qDebug() << "Device is open for sniffing";
-    }
+    handle = packetTracer.open_for_sniffing(dev);
 }
 
 PacketCaptureWindow::~PacketCaptureWindow()
