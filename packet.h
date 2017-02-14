@@ -2,12 +2,11 @@
 #define PACKET_H
 
 #include <QString> // TODO: remove once finished with identifier
+#include <QByteArray>
 
 #define ETHER_ADDR_LEN	6       /* Ethernet addresses are 6 bytes */
 
 
-#include <string.h>
-#include <stdlib.h>
 #include <ctype.h>
 #include <errno.h>
 #include <sys/types.h>
@@ -19,17 +18,20 @@ class Packet
 {
 public:
     Packet();
-    void display_packet_info();
-    void set_ip_header(int length);
-    void set_tcp_header(int length);
-    void set_payload(int length);
-    void set_identifier(QString name);
-    QString get_identifier();
+    int getIp_header_length() const;
+    void setIp_header_length(int value);
+
+    int getPayload_length() const;
+    void setPayload_length(int value);
+
+    QString getPayload() const;
+    void setPayload(const QString &value);
+
 private:
-    QString identifier;
     int ip_header_length;
-    int tcp_header_length;
     int payload_length;
+    QString payload;
+    QByteArray byte_array;
 
     // Ethernet stuff
     u_char ethernet_destination_address[ETHER_ADDR_LEN];

@@ -5,8 +5,6 @@
 #include <QString>
 #include <pcap.h>
 
-#include <string.h>
-#include <stdlib.h>
 #include <ctype.h>
 #include <errno.h>
 #include <sys/types.h>

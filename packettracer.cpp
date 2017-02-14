@@ -1,7 +1,8 @@
 #include "packettracer.h"
 #include <QDebug>
+#include <QByteArray>
 
-#include "packet.h"
+#include "tcppacket.h"
 
 // Constructor
 PacketTracer::PacketTracer()
@@ -67,6 +68,7 @@ void PacketTracer::apply_filter(pcap_t *handle, bpf_program *filter_expressionPt
 void PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet) {
     qDebug() << "**************************************************";
     Packet working_packet;
+    TcpPacket tcp_packet;
 
     int total_header_length = header->len;
 
@@ -89,8 +91,10 @@ void PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet) {
     ip_header_length = ((ipPtr->version) & 0x0f) * 4;
     qDebug() << "IP header length" << ip_header_length << "bytes";
     if (ip_header_length < 20) {
-        qDebug() << "   * Invalid IP header length:" << ip_header_length << " bytes";
+        qDebug() << "Invalid IP header length:" << ip_header_length << " bytes";
         return;
+    } else {
+        tcp_packet.setIp_header_length(ip_header_length);
     }
 
     qDebug() << "Source IP:" << inet_ntoa(ipPtr->source_address);
@@ -128,6 +132,8 @@ void PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet) {
     if (tcp_header_length < 20) {
         qDebug() << "Invalid TCP header length" << tcp_header_length << "bytes";
         return;
+    } else {
+        tcp_packet.setTcp_header_length(tcp_header_length);
     }
 
     qDebug() << "Source port:" << ntohs(tcpPtr->source_port);
@@ -139,44 +145,38 @@ void PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet) {
     // Calculate payload length
     payload_length = ntohs(ipPtr->length) - (ip_header_length + tcp_header_length);
 
-
-    //PacketTracer packetTracer;
+    qDebug() << "Payload length:" << payload_length;
 
     // Make call to function that will display packet payload
     if (payload_length > 0) {
-        qDebug() << "Payload:" << payload_length << "bytes";
+        tcp_packet.setPayload_length(payload_length);
         print_payload(payload, payload_length);
     } else {
         qDebug() << "Payload size is 0";
     }
 
-    working_packet.set_ip_header(ip_header_length);
-    working_packet.set_tcp_header(tcp_header_length);
-    working_packet.set_payload(payload_length);
-
-    working_packet.display_packet_info();
-
 }
 
 void PacketTracer::print_payload(const u_char *payload, int payload_length) {
+    qDebug() << "Beggining payload printing...";
     int remaining_length = payload_length;
     int line_width = 16; // Number of bytes in each line
     int line_length;
     int offset = 0; // zero-based offset counter
     const u_char *next_char = payload; // Each character of the payload
+    int i;
 
-    // Check for error
-    if (payload_length <= 0)
-        return;
-
-    qDebug() << "Len:" << payload_length;
+    /*for(i = 0; i < payload_length; i++) {
+        qDebug() << "Entering for loop";
+        get_hex_ascii(next_char, line_length, offset);
+    }*/
 
     // If length of data will fit on a single line
     if (payload_length <= line_width) {
         get_hex_ascii(next_char, payload_length, offset);
     } else {
         // Otherwise, data takes up multiple lines
-        for ( ;; ) {
+        while(true) {
             // Get length of current line
             line_length = line_width % remaining_length;
 
@@ -220,7 +220,7 @@ void PacketTracer::get_hex_ascii(const u_char *payload, int length, int offset) 
         value_in_hex = QString("%1").arg(temp , 0, 16);
 
         // PAYLOAD CONTENTS
-        //qDebug() << "Payload:" << value_in_hex;
+        qDebug() << "Payload:" << value_in_hex;
         ch++;
     }
 }

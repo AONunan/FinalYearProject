@@ -3,36 +3,35 @@
 
 Packet::Packet()
 {
-    //qDebug() << "New packet created";
-    //testing();
-
-}
-
-void Packet::display_packet_info() {
-    qDebug() << "# Packet IP header length:" << ip_header_length;
-    qDebug() << "# Packet TCP header length:" << tcp_header_length;
-    qDebug() << "# Packet payload length:" << payload_length;
-    qDebug() << "# Packet count:" << Packet::count;
     Packet::count++;
 }
 
-void Packet::set_identifier(QString name) {
-    identifier = name;
+int Packet::getIp_header_length() const
+{
+    return ip_header_length;
 }
 
-QString Packet::get_identifier() {
-    QString name = "Packet name is:" + identifier;
-    return name;
+void Packet::setIp_header_length(int value)
+{
+    ip_header_length = value;
 }
 
-void Packet::set_ip_header(int length) {
-    ip_header_length = length;
+int Packet::getPayload_length() const
+{
+    return payload_length;
 }
 
-void Packet::set_tcp_header(int length) {
-    tcp_header_length = length;
+void Packet::setPayload_length(int value)
+{
+    payload_length = value;
 }
 
-void Packet::set_payload(int length) {
-    payload_length = length;
+QString Packet::getPayload() const
+{
+    return payload;
+}
+
+void Packet::setPayload(const QString &value)
+{
+    payload = value;
 }

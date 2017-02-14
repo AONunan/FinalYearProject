@@ -9,7 +9,12 @@ public:
     TcpPacket();
 
 
+    int getTcp_header_length() const;
+    void setTcp_header_length(int value);
+
 private:
+    int tcp_header_length;
+
     typedef u_int tcp_seq;
 
     u_short tcp_source_port;
