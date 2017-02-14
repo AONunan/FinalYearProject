@@ -1,17 +1,13 @@
 #include "packettracer.h"
 #include <QDebug>
-#include "pcap.h"
-#include "packetcapturewindow.h"
 //#include <QByteArray>
+
+#include "packet.h"
 
 // Constructor
 PacketTracer::PacketTracer()
 {
 
-}
-
-void PacketTracer::test_function() {
-    qDebug() << "I am a test function in packettracer.cpp";
 }
 
 char* PacketTracer::get_network_interface_device() {
@@ -79,6 +75,102 @@ QString PacketTracer::get_filter_expression(QString source_host, QString dest_ho
 
     QString new_filter_expression = source_filter_expression + destination_filter_expression;
     return new_filter_expression;
+}
+
+void PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet) {
+    qDebug() << "**************************************************";
+    Packet working_packet;
+
+//    int header_length = header.len;
+    int header_length = header->len;
+    QString header_length_string = "Header length: " + QString(QString::number(header_length));
+
+    const struct sniff_ethernet *ethernetPtr; // Pointer to beginning of Ethernet header
+    const struct sniff_ip *ipPtr; // Pointer to beginning of IP header
+    const struct sniff_tcp *tcpPtr; // Pointer to beginning of TCP header
+    const u_char *payload; // Pointer to beginning of packet payload
+
+    int ip_length; // Length of IP header
+    int tcp_length; // Length of TCP header
+    int payload_length; // Length of packet payload
+
+    // Define Ethernet header
+    ethernetPtr = (struct sniff_ethernet*)(packet);
+
+    // Define IP header
+    ipPtr = (struct sniff_ip*)(packet + SIZE_ETHERNET);
+
+    // Calculate IP header length (i.e. offset)
+    ip_length = ((ipPtr->ip_vhl) & 0x0f) * 4;
+    qDebug() << "IP header length" << ip_length << "bytes";
+    if (ip_length < 20) {
+        qDebug() << "   * Invalid IP header length:" << ip_length << " bytes";
+        return;
+    }
+
+    qDebug() << "Source IP:" << inet_ntoa(ipPtr->ip_src);
+    qDebug() << "Destination IP:" << inet_ntoa(ipPtr->ip_dst);
+
+
+    // Find protocol in use
+    switch(ipPtr->ip_p) {
+    case IPPROTO_TCP:
+        qDebug() << "Protocol: TCP";
+        break; // continue below if protocol = TCP
+    case IPPROTO_UDP:
+        qDebug() << "Protocol: UDP";
+        return;
+    case IPPROTO_ICMP:
+        qDebug() << "Protocol: ICMP";
+        return;
+    case IPPROTO_IP:
+        qDebug() << "Protocol: IP";
+        return;
+    default:
+        qDebug() << "Protocol: unknown";
+        return;
+    }
+
+
+    // If from here down is executed, we must be dealing with TCP
+
+    // Define IP header
+    tcpPtr = (struct sniff_tcp*)(packet + SIZE_ETHERNET + ip_length);
+
+    // Calculate TCP header length (i.e. offset)
+    tcp_length = ((tcpPtr->th_offx2 & 0xf0) >> 4) * 4;
+    qDebug() << "TCP header length" << tcp_length << "bytes";
+    if (tcp_length < 20) {
+        qDebug() << "Invalid TCP header length" << tcp_length << "bytes";
+        return;
+    }
+
+    qDebug() << "Source port:" << ntohs(tcpPtr->th_sport);
+    qDebug() << "Destination port:" << ntohs(tcpPtr->th_dport);
+
+    // Define packet payload
+    payload = (u_char *)(packet + SIZE_ETHERNET + ip_length + tcp_length);
+
+    // Calculate payload length
+    payload_length = ntohs(ipPtr->ip_len) - (ip_length + tcp_length);
+
+
+    //PacketTracer packetTracer;
+
+    // Make call to function that will display packet payload
+    if (payload_length > 0) {
+        qDebug() << "Payload:" << payload_length << "bytes";
+        print_payload(payload, payload_length);
+    } else {
+        qDebug() << "Payload size is 0";
+    }
+
+    working_packet.set_ip_header(ip_length);
+    working_packet.set_tcp_header(tcp_length);
+    working_packet.set_payload(payload_length);
+
+    working_packet.testing();
+
 }
 
 void PacketTracer::print_payload(const u_char *payload, int payload_length) {
