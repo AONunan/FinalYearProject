@@ -12,12 +12,11 @@ PacketCaptureWindow::PacketCaptureWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    // set the network interface device
+    // Set the network interface device
     dev = packetTracer.get_network_interface_device();
-
     ui->label_interface->setText(dev);
 
-    // set network ID and subnet mask
+    // Set network ID and subnet mask
     packetTracer.set_mask_and_ip(dev, &net, &mask);
 
     // Open the handle
@@ -58,15 +57,4 @@ void PacketCaptureWindow::on_button_capture_packet_clicked()
     // Process captured packet
     packetTracer.captured_packet(&header, packet);
     // TODO: update UI
-}
-
-void PacketCaptureWindow::on_pushButton_test_clicked()
-{
-    // TODO: Complete filter settings
-    QString source_host = ui->lineEdit_src_host->text();
-    QString dest_host = ui->lineEdit_dst_host->text();
-    QString source_port = ui->lineEdit_src_port->text();
-    QString dest_port = ui->lineEdit_dst_port->text();
-    QString new_filter_expression = packetTracer.get_filter_expression(source_host, dest_host, source_port, dest_port);
-    qDebug() << "The chosen filter express is:" << new_filter_expression;
 }
