@@ -144,6 +144,9 @@
    </property>
   </widget>
   <widget class="QPushButton" name="button_capture_packet">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>340</x>

@@ -8,7 +8,7 @@ Packet::Packet()
 
 }
 
-void Packet::testing() {
+void Packet::display_packet_info() {
     qDebug() << "# Packet IP header length:" << ip_header_length;
     qDebug() << "# Packet TCP header length:" << tcp_header_length;
     qDebug() << "# Packet payload length:" << payload_length;

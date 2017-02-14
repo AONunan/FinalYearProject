@@ -8,7 +8,7 @@ class Packet
 {
 public:
     Packet();
-    void testing();
+    void display_packet_info();
     void set_ip_header(int length);
     void set_tcp_header(int length);
     void set_payload(int length);

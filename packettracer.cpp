@@ -52,8 +52,25 @@ void PacketTracer::open_for_sniffing(char* dev, pcap_t* handle) {
     }
 }
 
-void PacketTracer::apply_filter(pcap_t* handle, struct bpf_program* fpPtr, bpf_u_int32 net) {
+void PacketTracer::apply_filter(pcap_t *handle, bpf_program *filter_expression, bpf_u_int32 net) {
 
+    char filter_exp[] = "tcp";
+
+    // Compile filter expression
+    if (pcap_compile(handle, filter_expression, filter_exp, 0, net) == -1) {
+        qDebug() << stderr;
+        qDebug() << "Couldn't parse filter:" << pcap_geterr(handle);
+    } else {
+        qDebug() << "Filter compiled";
+    }
+
+    // Set filter expression
+    if (pcap_setfilter(handle, filter_expression) == -1) {
+        qDebug() << stderr;
+        qDebug() << "Couldn't install filter:" << pcap_geterr(handle);
+    } else {
+        qDebug() << "Filter set";
+    }
 }
 
 QString PacketTracer::get_filter_expression(QString source_host, QString dest_host, QString source_port, QString dest_port) {
@@ -169,7 +186,7 @@ void PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet) {
     working_packet.set_tcp_header(tcp_length);
     working_packet.set_payload(payload_length);
 
-    working_packet.testing();
+    working_packet.display_packet_info();
 
 }
 

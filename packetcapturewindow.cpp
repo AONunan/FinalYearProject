@@ -46,26 +46,10 @@ PacketCaptureWindow::~PacketCaptureWindow()
 
 void PacketCaptureWindow::on_button_applyFilter_clicked()
 {
-    char filter_exp[] = "tcp";
-
-    // Compile filter expression
-    if (pcap_compile(handle, &filter_expression, filter_exp, 0, net) == -1) {
-        qDebug() << stderr;
-        qDebug() << "Couldn't parse filter:" << pcap_geterr(handle);
-    } else {
-        qDebug() << "Filter compiled";
-    }
-
-    // Set filter expression
-    // TODO: Move to packettracer.cpp
-    if (pcap_setfilter(handle, &filter_expression) == -1) {
-        qDebug() << stderr;
-        qDebug() << "Couldn't install filter:" << pcap_geterr(handle);
-    } else {
-        qDebug() << "Filter set";
-    }
+    packetTracer.apply_filter(handle, &filter_expression, net);
 
     ui->button_applyFilter->setEnabled(false);
+    ui->button_capture_packet->setEnabled(true);
 }
 
 void PacketCaptureWindow::on_button_close_handle_clicked()
