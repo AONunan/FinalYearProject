@@ -25,14 +25,11 @@
 #define ETHER_ADDR_LEN	6       /* Ethernet addresses are 6 bytes */
 
 
-#define IP_RF 0x8000			/* reserved fragment flag */
-#define IP_DF 0x4000			/* dont fragment flag */
-#define IP_MF 0x2000			/* more fragments flag */
-#define IP_OFFMASK 0x1fff	/* mask for fragmenting bits */
-#define IP_HL(ip)			   (((ip)->ip_vhl) & 0x0f)
-#define IP_V(ip)				(((ip)->ip_vhl) >> 4)
+#define IP_RF 0x8000            /* reserved fragment flag */
+#define IP_DF 0x4000            /* dont fragment flag */
+#define IP_MF 0x2000            /* more fragments flag */
+#define IP_OFFMASK 0x1fff       /* mask for fragmenting bits */
 
-#define TH_OFF(th)	  (((th)->th_offx2 & 0xf0) >> 4)
 #define TH_FIN  0x01
 #define TH_SYN  0x02
 #define TH_RST  0x04
@@ -60,31 +57,16 @@ public:
     static void captured_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *packet);
     void testFunction();
 
-    static int** arrayPtr;
     static Packet* packetPtr;
-    void captured_packet_2();
+    void captured_packet();
 private slots:
     void on_button_applyFilter_clicked();
     void on_button_close_handle_clicked();
     void on_button_capture_packet_clicked();
     void on_pushButton_test_clicked();
-    void on_button_capture_stream_clicked();
 
 private:
     PacketTracer packetTracer;
-
-    int* int_array[3];
-    Packet* packet_array;
-
-    int var1;
-    int var2;
-    int var3;
-    int* ptr1;
-    int* ptr2;
-    int* ptr3;
-
-    //Packet packet1, packet2, packet3, packet4, packet5;
-    //Packet* packetPtr1, packetPtr2, packetPtr3, packetPtr4, packetPtr5;
 
     Ui::PacketCaptureWindow *ui;
 

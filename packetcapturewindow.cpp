@@ -4,44 +4,12 @@
 #include "packet.h"
 
 int Packet::count = 0;
-int** PacketCaptureWindow::arrayPtr;
-Packet* PacketCaptureWindow::packetPtr;
 
 PacketCaptureWindow::PacketCaptureWindow(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::PacketCaptureWindow)
 {
     ui->setupUi(this);
-
-    var1 = 76;
-    var2 = 95;
-    var3 = 22;
-
-    ptr1 = &var1;
-    ptr2 = &var2;
-    ptr3 = &var3;
-
-    int_array[0] = ptr1;
-    int_array[1] = ptr2;
-    int_array[2] = ptr3;
-
-    arrayPtr = int_array;
-
-    qDebug() << "int_array:" << int_array;
-    qDebug() << "ptr1:" << ptr1;
-    qDebug() << "ptr2:" << ptr2;
-    qDebug() << "int_array[0]:" << int_array[0];
-    qDebug() << "*int_array[0]:" << *int_array[0];
-
-
-    //arrayPtr = &int_array;
-
-
-    qDebug() << "arrayPtr:" << arrayPtr;
-    qDebug() << "*arrayPtr:" << *arrayPtr;
-    qDebug() << "**(arrayPtr+1):" << **(arrayPtr+1);
-
-
 
     //PacketTracer packetTracer;
     packetTracer.test_function();
@@ -112,12 +80,16 @@ void PacketCaptureWindow::on_button_close_handle_clicked()
 
 void PacketCaptureWindow::on_button_capture_packet_clicked()
 {
-    // Fetch single packet
-    packet = pcap_next(handle, &header);
+    packet = 0;
 
+    // Packets sometimes return as 0, causing errors. Loop until non-0 value returned
+    while(packet == 0) {
+        // Fetch single packet
+        packet = pcap_next(handle, &header);
+    }
 
-    captured_packet_2();
-
+    // Process captured packet
+    captured_packet();
 }
 
 void PacketCaptureWindow::on_pushButton_test_clicked()
@@ -131,7 +103,7 @@ void PacketCaptureWindow::on_pushButton_test_clicked()
     qDebug() << "The chosen filter express is:" << new_filter_expression;
 }
 
-void PacketCaptureWindow::captured_packet_2() {
+void PacketCaptureWindow::captured_packet() {
     qDebug() << "**************************************************";
     Packet working_packet;
 
@@ -158,7 +130,7 @@ void PacketCaptureWindow::captured_packet_2() {
     ipPtr = (struct sniff_ip*)(packet + SIZE_ETHERNET);
 
     // Calculate IP header length (i.e. offset)
-    ip_length = IP_HL(ipPtr)*4;
+    ip_length = ((ipPtr->ip_vhl) & 0x0f) * 4;
     qDebug() << "IP header length" << ip_length << "bytes";
     if (ip_length < 20) {
         qDebug() << "   * Invalid IP header length:" << ip_length << " bytes";
@@ -195,7 +167,7 @@ void PacketCaptureWindow::captured_packet_2() {
     tcpPtr = (struct sniff_tcp*)(packet + SIZE_ETHERNET + ip_length);
 
     // Calculate TCP header length (i.e. offset)
-    tcp_length = TH_OFF(tcpPtr)*4;
+    tcp_length = ((tcpPtr->th_offx2 & 0xf0) >> 4) * 4;
     qDebug() << "TCP header length" << tcp_length << "bytes";
     if (tcp_length < 20) {
         qDebug() << "Invalid TCP header length" << tcp_length << "bytes";
