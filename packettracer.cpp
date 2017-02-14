@@ -19,8 +19,6 @@ char* PacketTracer::get_network_interface_device() {
         qDebug() << stderr;
         qDebug() << "Couldn't find default device:" << errbuf;
         exit(EXIT_FAILURE);
-    } else {
-        qDebug() << "Device found";
     }
 
     return dev;
@@ -34,8 +32,6 @@ void PacketTracer::set_mask_and_ip(char* dev, bpf_u_int32* netPtr, bpf_u_int32* 
         qDebug() << "Can't get netmask for device:" << dev;
         netPtr = 0;
         maskPtr = 0;
-    } else {
-        qDebug() << "Net and mask set";
     }
 }
 
@@ -47,92 +43,62 @@ pcap_t * PacketTracer::open_for_sniffing(char* dev) {
     if (handle == NULL) {
         qDebug() << stderr;
         qDebug() << "Couldn't open device:" << errbuf;
-    } else {
-        qDebug() << "Device is open for sniffing";
     }
 
     return handle;
 }
 
-void PacketTracer::apply_filter(pcap_t *handle, bpf_program *filter_expression, bpf_u_int32 net) {
-
-    char filter_exp[] = "tcp";
+void PacketTracer::apply_filter(pcap_t *handle, bpf_program *filter_expressionPtr, bpf_u_int32 net) {
+    char filter_expession_string[] = "tcp";
 
     // Compile filter expression
-    if (pcap_compile(handle, filter_expression, filter_exp, 0, net) == -1) {
+    if (pcap_compile(handle, filter_expressionPtr, filter_expession_string, 0, net) == -1) {
         qDebug() << stderr;
         qDebug() << "Couldn't parse filter:" << pcap_geterr(handle);
-    } else {
-        qDebug() << "Filter compiled";
     }
 
     // Set filter expression
-    if (pcap_setfilter(handle, filter_expression) == -1) {
+    if (pcap_setfilter(handle, filter_expressionPtr) == -1) {
         qDebug() << stderr;
         qDebug() << "Couldn't install filter:" << pcap_geterr(handle);
-    } else {
-        qDebug() << "Filter set";
     }
-}
-
-QString PacketTracer::get_filter_expression(QString source_host, QString dest_host, QString source_port, QString dest_port) {
-    QString source_filter_expression = "";
-    QString destination_filter_expression = "";
-    bool expression_has_text = false; // Checks if there is already text in the expression
-
-    if(source_host != "") {
-        source_filter_expression.append(expression_has_text ? " " : "");
-        source_filter_expression.append("host " + source_host);
-        expression_has_text = true;
-    }
-
-    if(source_port != "") {
-        source_filter_expression.append(expression_has_text ? " " : "");
-        source_filter_expression.append("port " + source_port);
-        expression_has_text = true;
-    }
-
-    QString new_filter_expression = source_filter_expression + destination_filter_expression;
-    return new_filter_expression;
 }
 
 void PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet) {
     qDebug() << "**************************************************";
     Packet working_packet;
 
-//    int header_length = header.len;
-    int header_length = header->len;
-    QString header_length_string = "Header length: " + QString(QString::number(header_length));
+    int total_header_length = header->len;
 
-    const struct sniff_ethernet *ethernetPtr; // Pointer to beginning of Ethernet header
-    const struct sniff_ip *ipPtr; // Pointer to beginning of IP header
-    const struct sniff_tcp *tcpPtr; // Pointer to beginning of TCP header
+    const struct ethernet_header *ethernetPtr; // Pointer to beginning of Ethernet header
+    const struct ip_header *ipPtr; // Pointer to beginning of IP header
+    const struct tcp_header *tcpPtr; // Pointer to beginning of TCP header
     const u_char *payload; // Pointer to beginning of packet payload
 
-    int ip_length; // Length of IP header
-    int tcp_length; // Length of TCP header
+    int ip_header_length; // Length of IP header
+    int tcp_header_length; // Length of TCP header
     int payload_length; // Length of packet payload
 
-    // Define Ethernet header
-    ethernetPtr = (struct sniff_ethernet*)(packet);
+    // Define Ethernet header, same as pointer to packet
+    ethernetPtr = (struct ethernet_header*)(packet);
 
-    // Define IP header
-    ipPtr = (struct sniff_ip*)(packet + SIZE_ETHERNET);
+    // Define IP header, same as pointer plus ethernet length
+    ipPtr = (struct ip_header*)(packet + SIZE_ETHERNET);
 
     // Calculate IP header length (i.e. offset)
-    ip_length = ((ipPtr->ip_vhl) & 0x0f) * 4;
-    qDebug() << "IP header length" << ip_length << "bytes";
-    if (ip_length < 20) {
-        qDebug() << "   * Invalid IP header length:" << ip_length << " bytes";
+    ip_header_length = ((ipPtr->version) & 0x0f) * 4;
+    qDebug() << "IP header length" << ip_header_length << "bytes";
+    if (ip_header_length < 20) {
+        qDebug() << "   * Invalid IP header length:" << ip_header_length << " bytes";
         return;
     }
 
-    qDebug() << "Source IP:" << inet_ntoa(ipPtr->ip_src);
-    qDebug() << "Destination IP:" << inet_ntoa(ipPtr->ip_dst);
+    qDebug() << "Source IP:" << inet_ntoa(ipPtr->source_address);
+    qDebug() << "Destination IP:" << inet_ntoa(ipPtr->destination_address);
 
 
     // Find protocol in use
-    switch(ipPtr->ip_p) {
+    switch(ipPtr->protocol) {
     case IPPROTO_TCP:
         qDebug() << "Protocol: TCP";
         break; // continue below if protocol = TCP
@@ -153,25 +119,25 @@ void PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet) {
 
     // If from here down is executed, we must be dealing with TCP
 
-    // Define IP header
-    tcpPtr = (struct sniff_tcp*)(packet + SIZE_ETHERNET + ip_length);
+    // Define TCP header, equals packet pointer plus ethernet size plus ip size
+    tcpPtr = (struct tcp_header*)(packet + SIZE_ETHERNET + ip_header_length);
 
     // Calculate TCP header length (i.e. offset)
-    tcp_length = ((tcpPtr->th_offx2 & 0xf0) >> 4) * 4;
-    qDebug() << "TCP header length" << tcp_length << "bytes";
-    if (tcp_length < 20) {
-        qDebug() << "Invalid TCP header length" << tcp_length << "bytes";
+    tcp_header_length = ((tcpPtr->offset & 0xf0) >> 4) * 4;
+    qDebug() << "TCP header length" << tcp_header_length << "bytes";
+    if (tcp_header_length < 20) {
+        qDebug() << "Invalid TCP header length" << tcp_header_length << "bytes";
         return;
     }
 
-    qDebug() << "Source port:" << ntohs(tcpPtr->th_sport);
-    qDebug() << "Destination port:" << ntohs(tcpPtr->th_dport);
+    qDebug() << "Source port:" << ntohs(tcpPtr->source_port);
+    qDebug() << "Destination port:" << ntohs(tcpPtr->destination_port);
 
     // Define packet payload
-    payload = (u_char *)(packet + SIZE_ETHERNET + ip_length + tcp_length);
+    payload = (u_char *)(packet + SIZE_ETHERNET + ip_header_length + tcp_header_length);
 
     // Calculate payload length
-    payload_length = ntohs(ipPtr->ip_len) - (ip_length + tcp_length);
+    payload_length = ntohs(ipPtr->length) - (ip_header_length + tcp_header_length);
 
 
     //PacketTracer packetTracer;
@@ -184,8 +150,8 @@ void PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet) {
         qDebug() << "Payload size is 0";
     }
 
-    working_packet.set_ip_header(ip_length);
-    working_packet.set_tcp_header(tcp_length);
+    working_packet.set_ip_header(ip_header_length);
+    working_packet.set_tcp_header(tcp_header_length);
     working_packet.set_payload(payload_length);
 
     working_packet.display_packet_info();

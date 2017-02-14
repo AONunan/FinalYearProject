@@ -23,6 +23,8 @@ private slots:
     void on_button_close_handle_clicked();
     void on_button_capture_packet_clicked();
 
+    void on_pushButton_filterSettings_clicked();
+
 private:
     PacketTracer packetTracer;
 

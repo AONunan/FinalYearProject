@@ -58,3 +58,8 @@ void PacketCaptureWindow::on_button_capture_packet_clicked()
     packetTracer.captured_packet(&header, packet);
     // TODO: update UI
 }
+
+void PacketCaptureWindow::on_pushButton_filterSettings_clicked()
+{
+
+}
