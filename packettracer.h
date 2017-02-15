@@ -5,6 +5,8 @@
 #include <QString>
 #include <pcap.h>
 
+#include "tcppacket.h"
+
 #include <ctype.h>
 #include <errno.h>
 #include <sys/types.h>
@@ -44,7 +46,7 @@ public:
     void apply_filter(pcap_t *handle, bpf_program *filter_expressionPtr, bpf_u_int32 net);
     void print_payload(const u_char *payload, int payload_length);
     void get_hex_ascii(const u_char *payload, int length, int offset);
-    void captured_packet(pcap_pkthdr *header, const u_char *packet);
+    TcpPacket captured_packet(pcap_pkthdr *header, const u_char *packet);
 private:
 
     // Ethernet header

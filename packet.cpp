@@ -3,6 +3,7 @@
 
 Packet::Packet()
 {
+    payload_length = 0;
     Packet::count++;
 }
 

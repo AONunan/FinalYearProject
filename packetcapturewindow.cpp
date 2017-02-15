@@ -1,6 +1,7 @@
 #include "packecapturewindow.h"
 #include "ui_packetcapturewindow.h"
 #include <QDebug>
+#include <QTableWidget>
 
 #include "packet.h"
 
@@ -21,6 +22,9 @@ PacketCaptureWindow::PacketCaptureWindow(QWidget *parent) :
 
     // Open the handle
     handle = packetTracer.open_for_sniffing(dev);
+
+    row_count = 0;
+
 }
 
 PacketCaptureWindow::~PacketCaptureWindow()
@@ -46,6 +50,8 @@ void PacketCaptureWindow::on_button_close_handle_clicked()
 
 void PacketCaptureWindow::on_button_capture_packet_clicked()
 {
+
+    TcpPacket my_captured_packet;
     packet = 0;
 
     // Packets sometimes return as 0, causing errors. Loop until non-0 value returned
@@ -55,8 +61,19 @@ void PacketCaptureWindow::on_button_capture_packet_clicked()
     }
 
     // Process captured packet
-    packetTracer.captured_packet(&header, packet);
+    my_captured_packet = packetTracer.captured_packet(&header, packet);
+
     // TODO: update UI
+    update_table(my_captured_packet, row_count);
+
+}
+
+void PacketCaptureWindow::update_table(TcpPacket packet, int row) {
+    ui->tableWidget_packets->setRowCount(row_count + 1); // Add a new row
+    ui->tableWidget_packets->setItem(row, 0, new QTableWidgetItem("Test"));
+    ui->tableWidget_packets->setItem(row, 3, new QTableWidgetItem(packet.getPayload_length()));
+
+    row_count++;
 }
 
 void PacketCaptureWindow::on_pushButton_filterSettings_clicked()

@@ -18,17 +18,19 @@ public:
     explicit PacketCaptureWindow(QWidget *parent = 0);
     ~PacketCaptureWindow();
 
+    void update_table(TcpPacket packet, int row);
 private slots:
     void on_button_applyFilter_clicked();
     void on_button_close_handle_clicked();
     void on_button_capture_packet_clicked();
-
     void on_pushButton_filterSettings_clicked();
 
 private:
     PacketTracer packetTracer;
 
     Ui::PacketCaptureWindow *ui;
+
+    int row_count; // Keep track of current row to populate with packet details
 
     char *dev;
     char errbuf[PCAP_ERRBUF_SIZE];

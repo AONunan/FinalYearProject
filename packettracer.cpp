@@ -65,10 +65,10 @@ void PacketTracer::apply_filter(pcap_t *handle, bpf_program *filter_expressionPt
     }
 }
 
-void PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet) {
+TcpPacket PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet) {
     qDebug() << "**************************************************";
-    Packet working_packet;
-    TcpPacket tcp_packet;
+    //Packet working_packet;
+    TcpPacket current_packet;
 
     int total_header_length = header->len;
 
@@ -92,9 +92,9 @@ void PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet) {
     qDebug() << "IP header length" << ip_header_length << "bytes";
     if (ip_header_length < 20) {
         qDebug() << "Invalid IP header length:" << ip_header_length << " bytes";
-        return;
+        return current_packet;
     } else {
-        tcp_packet.setIp_header_length(ip_header_length);
+        current_packet.setIp_header_length(ip_header_length);
     }
 
     qDebug() << "Source IP:" << inet_ntoa(ipPtr->source_address);
@@ -108,16 +108,16 @@ void PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet) {
         break; // continue below if protocol = TCP
     case IPPROTO_UDP:
         qDebug() << "Protocol: UDP";
-        return;
+        return current_packet;
     case IPPROTO_ICMP:
         qDebug() << "Protocol: ICMP";
-        return;
+        return current_packet;
     case IPPROTO_IP:
         qDebug() << "Protocol: IP";
-        return;
+        return current_packet;
     default:
         qDebug() << "Protocol: unknown";
-        return;
+        return current_packet;
     }
 
 
@@ -131,9 +131,9 @@ void PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet) {
     qDebug() << "TCP header length" << tcp_header_length << "bytes";
     if (tcp_header_length < 20) {
         qDebug() << "Invalid TCP header length" << tcp_header_length << "bytes";
-        return;
+        return current_packet;
     } else {
-        tcp_packet.setTcp_header_length(tcp_header_length);
+        current_packet.setTcp_header_length(tcp_header_length);
     }
 
     qDebug() << "Source port:" << ntohs(tcpPtr->source_port);
@@ -149,11 +149,13 @@ void PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet) {
 
     // Make call to function that will display packet payload
     if (payload_length > 0) {
-        tcp_packet.setPayload_length(payload_length);
+        current_packet.setPayload_length(payload_length);
         print_payload(payload, payload_length);
     } else {
         qDebug() << "Payload size is 0";
     }
+
+    return current_packet;
 
 }
 
