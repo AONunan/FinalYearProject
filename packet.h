@@ -21,6 +21,9 @@ public:
     int getIp_header_length() const;
     void setIp_header_length(int value);
 
+    int getTcp_header_length() const;
+    void setTcp_header_length(int value);
+
     int getPayload_length() const;
     void setPayload_length(int value);
 
@@ -29,6 +32,7 @@ public:
 
 private:
     int ip_header_length;
+    int tcp_header_length;
     int payload_length;
     QString payload;
     QByteArray byte_array;
@@ -48,6 +52,17 @@ private:
     u_char ip_protocol;
     u_short ip_checksum;
     struct in_addr ip_source_address, ip_destination_address;
+
+    // TCP stuff
+    u_short tcp_source_port;
+    u_short tcp_destination_port;
+    u_int tcp_sequence_number;
+    u_int tcp_acknowledgement_number;
+    u_char tcp_offset; // data offset, rsvd
+    u_char tcp_flags;
+    u_short tcp_window;
+    u_short tcp_checksum;
+    u_short tcp_urgent_pointer;
 
     static int count;
 };

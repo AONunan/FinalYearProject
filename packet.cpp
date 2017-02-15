@@ -17,6 +17,16 @@ void Packet::setIp_header_length(int value)
     ip_header_length = value;
 }
 
+int Packet::getTcp_header_length() const
+{
+    return tcp_header_length;
+}
+
+void Packet::setTcp_header_length(int value)
+{
+    tcp_header_length = value;
+}
+
 int Packet::getPayload_length() const
 {
     return payload_length;

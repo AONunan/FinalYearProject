@@ -18,7 +18,7 @@ public:
     explicit PacketCaptureWindow(QWidget *parent = 0);
     ~PacketCaptureWindow();
 
-    void update_table(TcpPacket packet, int row);
+    void update_table(Packet packet, int row);
 private slots:
     void on_button_applyFilter_clicked();
     void on_button_close_handle_clicked();

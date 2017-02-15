@@ -2,7 +2,7 @@
 #include <QDebug>
 #include <QByteArray>
 
-#include "tcppacket.h"
+#include "packet.h"
 
 // Constructor
 PacketTracer::PacketTracer()
@@ -65,10 +65,10 @@ void PacketTracer::apply_filter(pcap_t *handle, bpf_program *filter_expressionPt
     }
 }
 
-TcpPacket PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet) {
+Packet PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet) {
     qDebug() << "**************************************************";
     //Packet working_packet;
-    TcpPacket current_packet;
+    Packet current_packet;
 
     int total_header_length = header->len;
 

@@ -19,14 +19,12 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     packetcapturewindow.cpp \
     packettracer.cpp \
-    packet.cpp \
-    tcppacket.cpp
+    packet.cpp
 
 HEADERS  += mainwindow.h \
     packettracer.h \
     packet.h \
-    packecapturewindow.h \
-    tcppacket.h
+    packecapturewindow.h
 
 FORMS    += mainwindow.ui \
     packetcapturewindow.ui

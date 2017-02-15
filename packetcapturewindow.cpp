@@ -51,7 +51,7 @@ void PacketCaptureWindow::on_button_close_handle_clicked()
 void PacketCaptureWindow::on_button_capture_packet_clicked()
 {
 
-    TcpPacket my_captured_packet;
+    Packet my_captured_packet;
     packet = 0;
 
     // Packets sometimes return as 0, causing errors. Loop until non-0 value returned
@@ -68,7 +68,7 @@ void PacketCaptureWindow::on_button_capture_packet_clicked()
 
 }
 
-void PacketCaptureWindow::update_table(TcpPacket packet, int row) {
+void PacketCaptureWindow::update_table(Packet packet, int row) {
     ui->tableWidget_packets->setRowCount(row_count + 1); // Add a new row
     ui->tableWidget_packets->setItem(row, 0, new QTableWidgetItem("Test"));
     ui->tableWidget_packets->setItem(row, 3, new QTableWidgetItem(packet.getPayload_length()));
