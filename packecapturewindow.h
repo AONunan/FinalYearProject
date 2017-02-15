@@ -18,12 +18,14 @@ public:
     explicit PacketCaptureWindow(QWidget *parent = 0);
     ~PacketCaptureWindow();
 
-    void update_table(Packet packet, int row);
+    void update_table(Packet packet);
 private slots:
     void on_button_applyFilter_clicked();
     void on_button_close_handle_clicked();
     void on_button_capture_packet_clicked();
     void on_pushButton_filterSettings_clicked();
+
+    void on_tableWidget_packets_cellDoubleClicked(int row, int column);
 
 private:
     PacketTracer packetTracer;

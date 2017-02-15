@@ -5,6 +5,12 @@
 
 #include "packet.h"
 
+// These correspond to the columns in the table
+#define HEADER_PACKET_COUNT 0
+#define HEADER_TIMESTAMP 1
+#define HEADER_PROTOCOL 2
+#define HEADER_PAYLOAD_LENGTH 3
+
 int Packet::count = 0;
 
 PacketCaptureWindow::PacketCaptureWindow(QWidget *parent) :
@@ -50,8 +56,8 @@ void PacketCaptureWindow::on_button_close_handle_clicked()
 
 void PacketCaptureWindow::on_button_capture_packet_clicked()
 {
-
     Packet my_captured_packet;
+
     packet = 0;
 
     // Packets sometimes return as 0, causing errors. Loop until non-0 value returned
@@ -64,16 +70,24 @@ void PacketCaptureWindow::on_button_capture_packet_clicked()
     my_captured_packet = packetTracer.captured_packet(&header, packet);
 
     // TODO: update UI
-    update_table(my_captured_packet, row_count);
+    update_table(my_captured_packet);
 
 }
 
-void PacketCaptureWindow::update_table(Packet packet, int row) {
+void PacketCaptureWindow::update_table(Packet packet) {
     ui->tableWidget_packets->setRowCount(row_count + 1); // Add a new row
-    ui->tableWidget_packets->setItem(row, 0, new QTableWidgetItem("Test"));
-    ui->tableWidget_packets->setItem(row, 3, new QTableWidgetItem(packet.getPayload_length()));
+    ui->tableWidget_packets->setItem(row_count, HEADER_PACKET_COUNT, new QTableWidgetItem("Test"));
+
+    ui->tableWidget_packets->setItem(row_count, HEADER_PROTOCOL, new QTableWidgetItem(packet.getProtocol()));
+    ui->tableWidget_packets->setItem(row_count, HEADER_PAYLOAD_LENGTH, new QTableWidgetItem(QString::number(packet.getPayload_length())));
+
+    qDebug() << "# Packet payload length:" << packet.getPayload_length();
 
     row_count++;
+}
+
+void PacketCaptureWindow::on_tableWidget_packets_cellDoubleClicked(int row, int column) {
+    qDebug() << "You double clicked on row" << row << "and column" << column;
 }
 
 void PacketCaptureWindow::on_pushButton_filterSettings_clicked()

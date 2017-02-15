@@ -3,6 +3,9 @@
 
 Packet::Packet()
 {
+    total_header_length = 0;
+    ip_header_length = 0;
+    tcp_header_length = 0;
     payload_length = 0;
     Packet::count++;
 }
@@ -45,4 +48,24 @@ QString Packet::getPayload() const
 void Packet::setPayload(const QString &value)
 {
     payload = value;
+}
+
+QString Packet::getProtocol() const
+{
+    return protocol;
+}
+
+void Packet::setProtocol(const QString &value)
+{
+    protocol = value;
+}
+
+int Packet::getTotal_header_length() const
+{
+    return total_header_length;
+}
+
+void Packet::setTotal_header_length(int value)
+{
+    total_header_length = value;
 }

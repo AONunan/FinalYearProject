@@ -67,12 +67,9 @@ void PacketTracer::apply_filter(pcap_t *handle, bpf_program *filter_expressionPt
 
 Packet PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet) {
     qDebug() << "**************************************************";
-    //Packet working_packet;
     Packet current_packet;
 
-    int total_header_length = header->len;
-
-    const struct ethernet_header *ethernetPtr; // Pointer to beginning of Ethernet header
+    //const struct ethernet_header *ethernetPtr; // Pointer to beginning of Ethernet header
     const struct ip_header *ipPtr; // Pointer to beginning of IP header
     const struct tcp_header *tcpPtr; // Pointer to beginning of TCP header
     const u_char *payload; // Pointer to beginning of packet payload
@@ -82,7 +79,7 @@ Packet PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet) 
     int payload_length; // Length of packet payload
 
     // Define Ethernet header, same as pointer to packet
-    ethernetPtr = (struct ethernet_header*)(packet);
+    //ethernetPtr = (struct ethernet_header*)(packet);
 
     // Define IP header, same as pointer plus ethernet length
     ipPtr = (struct ip_header*)(packet + SIZE_ETHERNET);
@@ -104,19 +101,19 @@ Packet PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet) 
     // Find protocol in use
     switch(ipPtr->protocol) {
     case IPPROTO_TCP:
-        qDebug() << "Protocol: TCP";
+        current_packet.setProtocol("TCP");
         break; // continue below if protocol = TCP
     case IPPROTO_UDP:
-        qDebug() << "Protocol: UDP";
+        current_packet.setProtocol("UDP");
         return current_packet;
     case IPPROTO_ICMP:
-        qDebug() << "Protocol: ICMP";
+        current_packet.setProtocol("ICMP");
         return current_packet;
     case IPPROTO_IP:
-        qDebug() << "Protocol: IP";
+        current_packet.setProtocol("IP");
         return current_packet;
     default:
-        qDebug() << "Protocol: unknown";
+        current_packet.setProtocol("unknown");
         return current_packet;
     }
 
@@ -155,6 +152,11 @@ Packet PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet) 
         qDebug() << "Payload size is 0";
     }
 
+    current_packet.setTotal_header_length(header->len);
+    current_packet.setIp_header_length(ip_header_length);
+    current_packet.setTcp_header_length(tcp_header_length);
+    current_packet.setPayload_length(payload_length);
+
     return current_packet;
 
 }
@@ -166,9 +168,11 @@ void PacketTracer::print_payload(const u_char *payload, int payload_length) {
     int line_length;
     int offset = 0; // zero-based offset counter
     const u_char *next_char = payload; // Each character of the payload
-    int i;
 
-    /*for(i = 0; i < payload_length; i++) {
+
+    /*int i;
+
+    for(i = 0; i < payload_length; i++) {
         qDebug() << "Entering for loop";
         get_hex_ascii(next_char, line_length, offset);
     }*/
@@ -217,12 +221,11 @@ void PacketTracer::get_hex_ascii(const u_char *payload, int length, int offset) 
     ch = payload;
 
     for(i = 0; i < length; i++) {
-
         temp = *ch;
         value_in_hex = QString("%1").arg(temp , 0, 16);
 
         // PAYLOAD CONTENTS
-        qDebug() << "Payload:" << value_in_hex;
+        //qDebug() << "Payload:" << value_in_hex;
         ch++;
     }
 }

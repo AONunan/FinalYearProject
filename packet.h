@@ -30,10 +30,18 @@ public:
     QString getPayload() const;
     void setPayload(const QString &value);
 
+    QString getProtocol() const;
+    void setProtocol(const QString &value);
+
+    int getTotal_header_length() const;
+    void setTotal_header_length(int value);
+
 private:
+    int total_header_length;
     int ip_header_length;
     int tcp_header_length;
     int payload_length;
+    QString protocol;
     QString payload;
     QByteArray byte_array;
 
