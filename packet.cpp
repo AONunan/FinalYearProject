@@ -7,6 +7,7 @@ Packet::Packet()
     ip_header_length = 0;
     tcp_header_length = 0;
     payload_length = 0;
+    protocol = "unknown";
     Packet::count++;
 }
 

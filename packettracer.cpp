@@ -77,6 +77,8 @@ Packet PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet, 
     int tcp_header_length; // Length of TCP header
     int payload_length; // Length of packet payload
 
+    working_packet.setTotal_header_length(header->len);
+
     // Define Ethernet header, same as pointer to packet
     //ethernetPtr = (struct ethernet_header*)(packet);
 
@@ -85,6 +87,8 @@ Packet PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet, 
 
     // Calculate IP header length (i.e. offset)
     ip_header_length = ((ipPtr->version) & 0x0f) * 4;
+    working_packet.setIp_header_length(ip_header_length);
+
     qDebug() << "IP header length" << ip_header_length << "bytes";
     if (ip_header_length < 20) {
         qDebug() << "Invalid IP header length:" << ip_header_length << " bytes";
@@ -124,6 +128,8 @@ Packet PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet, 
 
     // Calculate TCP header length (i.e. offset)
     tcp_header_length = ((tcpPtr->offset & 0xf0) >> 4) * 4;
+    working_packet.setTcp_header_length(tcp_header_length);
+
     qDebug() << "TCP header length" << tcp_header_length << "bytes";
     if (tcp_header_length < 20) {
         qDebug() << "Invalid TCP header length" << tcp_header_length << "bytes";
@@ -140,6 +146,7 @@ Packet PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet, 
 
     // Calculate payload length
     payload_length = ntohs(ipPtr->length) - (ip_header_length + tcp_header_length);
+    working_packet.setPayload_length(payload_length);
 
     qDebug() << "Payload length:" << payload_length;
 
@@ -150,11 +157,6 @@ Packet PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet, 
     } else {
         qDebug() << "Payload size is 0";
     }
-
-    working_packet.setTotal_header_length(header->len);
-    working_packet.setIp_header_length(ip_header_length);
-    working_packet.setTcp_header_length(tcp_header_length);
-    working_packet.setPayload_length(payload_length);
 
     return working_packet;
 
