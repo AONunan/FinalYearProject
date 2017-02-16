@@ -115,8 +115,14 @@
    <property name="frameShape">
     <enum>QFrame::StyledPanel</enum>
    </property>
+   <property name="editTriggers">
+    <set>QAbstractItemView::NoEditTriggers</set>
+   </property>
    <property name="alternatingRowColors">
     <bool>false</bool>
+   </property>
+   <property name="selectionBehavior">
+    <enum>QAbstractItemView::SelectRows</enum>
    </property>
    <property name="rowCount">
     <number>0</number>

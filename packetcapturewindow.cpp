@@ -79,6 +79,7 @@ void PacketCaptureWindow::update_table(Packet packet) {
     //ui->tableWidget_packets->setItem(row_count, HEADER_PACKET_COUNT, new QTableWidgetItem("Test"));
     ui->tableWidget_packets->setItem(row_count, HEADER_PACKET_COUNT, new QTableWidgetItem(QString::number(packet.getCount())));
 
+    //ui->tableWidget_packets->setItem(row_count, 1, new QTableWidgetItem("Test").setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled));
     ui->tableWidget_packets->setItem(row_count, HEADER_PROTOCOL, new QTableWidgetItem(packet.getProtocol()));
     ui->tableWidget_packets->setItem(row_count, HEADER_PAYLOAD_LENGTH, new QTableWidgetItem(QString::number(packet.getPayload_length())));
 
