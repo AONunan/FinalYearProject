@@ -18,6 +18,7 @@ class Packet
 {
 public:
     Packet();
+
     int getIp_header_length() const;
     void setIp_header_length(int value);
 
@@ -36,7 +37,11 @@ public:
     int getTotal_header_length() const;
     void setTotal_header_length(int value);
 
+    static int getCount();
+
 private:
+    static int count;
+
     int total_header_length;
     int ip_header_length;
     int tcp_header_length;
@@ -71,8 +76,6 @@ private:
     u_short tcp_window;
     u_short tcp_checksum;
     u_short tcp_urgent_pointer;
-
-    static int count;
 };
 
 #endif // PACKET_H

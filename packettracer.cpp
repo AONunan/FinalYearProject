@@ -65,9 +65,8 @@ void PacketTracer::apply_filter(pcap_t *handle, bpf_program *filter_expressionPt
     }
 }
 
-Packet PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet) {
+Packet PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet, Packet working_packet) {
     qDebug() << "**************************************************";
-    Packet current_packet;
 
     //const struct ethernet_header *ethernetPtr; // Pointer to beginning of Ethernet header
     const struct ip_header *ipPtr; // Pointer to beginning of IP header
@@ -89,9 +88,9 @@ Packet PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet) 
     qDebug() << "IP header length" << ip_header_length << "bytes";
     if (ip_header_length < 20) {
         qDebug() << "Invalid IP header length:" << ip_header_length << " bytes";
-        return current_packet;
+        return working_packet;
     } else {
-        current_packet.setIp_header_length(ip_header_length);
+        working_packet.setIp_header_length(ip_header_length);
     }
 
     qDebug() << "Source IP:" << inet_ntoa(ipPtr->source_address);
@@ -101,20 +100,20 @@ Packet PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet) 
     // Find protocol in use
     switch(ipPtr->protocol) {
     case IPPROTO_TCP:
-        current_packet.setProtocol("TCP");
+        working_packet.setProtocol("TCP");
         break; // continue below if protocol = TCP
     case IPPROTO_UDP:
-        current_packet.setProtocol("UDP");
-        return current_packet;
+        working_packet.setProtocol("UDP");
+        return working_packet;
     case IPPROTO_ICMP:
-        current_packet.setProtocol("ICMP");
-        return current_packet;
+        working_packet.setProtocol("ICMP");
+        return working_packet;
     case IPPROTO_IP:
-        current_packet.setProtocol("IP");
-        return current_packet;
+        working_packet.setProtocol("IP");
+        return working_packet;
     default:
-        current_packet.setProtocol("unknown");
-        return current_packet;
+        working_packet.setProtocol("unknown");
+        return working_packet;
     }
 
 
@@ -128,9 +127,9 @@ Packet PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet) 
     qDebug() << "TCP header length" << tcp_header_length << "bytes";
     if (tcp_header_length < 20) {
         qDebug() << "Invalid TCP header length" << tcp_header_length << "bytes";
-        return current_packet;
+        return working_packet;
     } else {
-        current_packet.setTcp_header_length(tcp_header_length);
+        working_packet.setTcp_header_length(tcp_header_length);
     }
 
     qDebug() << "Source port:" << ntohs(tcpPtr->source_port);
@@ -146,18 +145,18 @@ Packet PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet) 
 
     // Make call to function that will display packet payload
     if (payload_length > 0) {
-        current_packet.setPayload_length(payload_length);
+        working_packet.setPayload_length(payload_length);
         print_payload(payload, payload_length);
     } else {
         qDebug() << "Payload size is 0";
     }
 
-    current_packet.setTotal_header_length(header->len);
-    current_packet.setIp_header_length(ip_header_length);
-    current_packet.setTcp_header_length(tcp_header_length);
-    current_packet.setPayload_length(payload_length);
+    working_packet.setTotal_header_length(header->len);
+    working_packet.setIp_header_length(ip_header_length);
+    working_packet.setTcp_header_length(tcp_header_length);
+    working_packet.setPayload_length(payload_length);
 
-    return current_packet;
+    return working_packet;
 
 }
 

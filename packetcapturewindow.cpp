@@ -67,7 +67,7 @@ void PacketCaptureWindow::on_button_capture_packet_clicked()
     }
 
     // Process captured packet
-    my_captured_packet = packetTracer.captured_packet(&header, packet);
+    my_captured_packet = packetTracer.captured_packet(&header, packet, my_captured_packet);
 
     // TODO: update UI
     update_table(my_captured_packet);
@@ -76,7 +76,8 @@ void PacketCaptureWindow::on_button_capture_packet_clicked()
 
 void PacketCaptureWindow::update_table(Packet packet) {
     ui->tableWidget_packets->setRowCount(row_count + 1); // Add a new row
-    ui->tableWidget_packets->setItem(row_count, HEADER_PACKET_COUNT, new QTableWidgetItem("Test"));
+    //ui->tableWidget_packets->setItem(row_count, HEADER_PACKET_COUNT, new QTableWidgetItem("Test"));
+    ui->tableWidget_packets->setItem(row_count, HEADER_PACKET_COUNT, new QTableWidgetItem(QString::number(packet.getCount())));
 
     ui->tableWidget_packets->setItem(row_count, HEADER_PROTOCOL, new QTableWidgetItem(packet.getProtocol()));
     ui->tableWidget_packets->setItem(row_count, HEADER_PAYLOAD_LENGTH, new QTableWidgetItem(QString::number(packet.getPayload_length())));

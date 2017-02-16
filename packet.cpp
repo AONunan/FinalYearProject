@@ -69,3 +69,8 @@ void Packet::setTotal_header_length(int value)
 {
     total_header_length = value;
 }
+
+int Packet::getCount()
+{
+    return count;
+}
