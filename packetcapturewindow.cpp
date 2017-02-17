@@ -4,12 +4,15 @@
 #include <QTableWidget>
 
 #include "packet.h"
+#include "packetinfodialog.h"
 
 // These correspond to the columns in the table
 #define HEADER_PACKET_COUNT 0
 #define HEADER_TIMESTAMP 1
 #define HEADER_PROTOCOL 2
-#define HEADER_PAYLOAD_LENGTH 3
+#define HEADER_SRC_HOST 3
+#define HEADER_DST_HOST 4
+#define HEADER_PAYLOAD_LENGTH 5
 
 int Packet::count = 0;
 
@@ -79,7 +82,8 @@ void PacketCaptureWindow::update_table(Packet packet) {
     ui->tableWidget_packets->scrollToBottom();
     //ui->tableWidget_packets->setItem(row_count, HEADER_PACKET_COUNT, new QTableWidgetItem("Test"));
     ui->tableWidget_packets->setItem(row_count, HEADER_PACKET_COUNT, new QTableWidgetItem(QString::number(packet.getCount())));
-
+    ui->tableWidget_packets->setItem(row_count, HEADER_PROTOCOL, new QTableWidgetItem(packet.getProtocol()));
+    //ui->tableWidget_packets->setItem(row_count, HEADER_SRC_HOST, new QTableWidgetItem(packet));
     ui->tableWidget_packets->setItem(row_count, HEADER_PROTOCOL, new QTableWidgetItem(packet.getProtocol()));
     ui->tableWidget_packets->setItem(row_count, HEADER_PAYLOAD_LENGTH, new QTableWidgetItem(QString::number(packet.getPayload_length())));
 
@@ -90,6 +94,11 @@ void PacketCaptureWindow::update_table(Packet packet) {
 
 void PacketCaptureWindow::on_tableWidget_packets_cellDoubleClicked(int row, int column) {
     qDebug() << "You double clicked on row" << row << "and column" << column;
+
+    // Open dialog with packet details with an argument
+    PacketInfoDialog infoDialog("Test");
+    infoDialog.setModal(true);
+    infoDialog.exec();
 }
 
 void PacketCaptureWindow::on_pushButton_filterSettings_clicked()

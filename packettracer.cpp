@@ -98,6 +98,9 @@ Packet PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet, 
     }
 
     qDebug() << "Source IP:" << inet_ntoa(ipPtr->source_address);
+    // TODO: Convert to QString
+    ///////QString s_host = QString::number(ntohs(ipPtr->source_address));
+    ///////qDebug() << "s_host:" << s_host;
     qDebug() << "Destination IP:" << inet_ntoa(ipPtr->destination_address);
 
 
