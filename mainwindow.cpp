@@ -8,14 +8,11 @@
 #include "packetinfodialog.h"
 
 // These correspond to the columns in the table
-#define HEADER_PACKET_COUNT 0
-#define HEADER_TIMESTAMP 1
-#define HEADER_PROTOCOL 2
-#define HEADER_SRC_HOST 3
-#define HEADER_DST_HOST 4
-#define HEADER_PAYLOAD_LENGTH 5
-
-int Packet::count = 0;
+#define HEADER_TIMESTAMP 0
+#define HEADER_PROTOCOL 1
+#define HEADER_SRC_HOST 2
+#define HEADER_DST_HOST 3
+#define HEADER_PAYLOAD_LENGTH 4
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -60,20 +57,35 @@ void MainWindow::on_button_close_handle_clicked()
 void MainWindow::on_button_capture_packet_clicked()
 {
     Packet my_captured_packet;
+    int i;
 
-    packet = 0;
+    // Get number of packets required from spinbox
+    int no_of_packets = ui->spinBox_no_of_packets->value();
 
-    // Packets sometimes return as 0, causing errors. Loop until non-0 value returned
-    while(packet == 0) {
-        // Fetch single packet
-        packet = pcap_next(handle, &header);
+    for(i = 0; i < no_of_packets; i++) {
+        packet = 0;
+
+        // Packets sometimes return as 0, causing errors. Loop until non-0 value returned
+        while(packet == 0) {
+            // Fetch single packet
+            packet = pcap_next(handle, &header);
+        }
+
+        // Process captured packet
+        my_captured_packet = packetTracer.captured_packet(&header, packet, my_captured_packet);
+
+        //ui->label_app_status->setText(QString::number(i));
+        status_bar_message = QString("Captured %1 of %2.").arg(QString::number(i + 1), QString::number(no_of_packets));
+        ui->statusBar->showMessage(status_bar_message);
+
+        update_table(my_captured_packet);
+
+        // Update the UI
+        QCoreApplication::processEvents();
     }
 
-    // Process captured packet
-    my_captured_packet = packetTracer.captured_packet(&header, packet, my_captured_packet);
-
-    // TODO: update UI
-    update_table(my_captured_packet);
+    status_bar_message = QString("Finished capturing %1 packets.").arg(QString::number(no_of_packets));
+    ui->statusBar->showMessage(status_bar_message);
 
 }
 
@@ -81,7 +93,6 @@ void MainWindow::update_table(Packet packet) {
     ui->tableWidget_packets->setRowCount(row_count + 1); // Add a new row
     ui->tableWidget_packets->scrollToBottom();
     //ui->tableWidget_packets->setItem(row_count, HEADER_PACKET_COUNT, new QTableWidgetItem("Test"));
-    ui->tableWidget_packets->setItem(row_count, HEADER_PACKET_COUNT, new QTableWidgetItem(QString::number(packet.getCount())));
     ui->tableWidget_packets->setItem(row_count, HEADER_PROTOCOL, new QTableWidgetItem(packet.getProtocol()));
     //ui->tableWidget_packets->setItem(row_count, HEADER_SRC_HOST, new QTableWidgetItem(packet));
     ui->tableWidget_packets->setItem(row_count, HEADER_PROTOCOL, new QTableWidgetItem(packet.getProtocol()));
@@ -103,5 +114,6 @@ void MainWindow::on_tableWidget_packets_cellDoubleClicked(int row, int column) {
 
 void MainWindow::on_pushButton_filterSettings_clicked()
 {
-
+    qDebug() << "You selected:" << ui->spinBox_no_of_packets->value();
+    ui->statusBar->showMessage("This is a test");
 }

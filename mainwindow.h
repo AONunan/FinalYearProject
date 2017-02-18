@@ -35,6 +35,7 @@ private:
     PacketTracer packetTracer;
 
     int row_count; // Keep track of current row to populate with packet details
+    QString status_bar_message;
 
     char *dev;
     char errbuf[PCAP_ERRBUF_SIZE];

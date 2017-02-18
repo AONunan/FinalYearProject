@@ -131,7 +131,7 @@
      <number>0</number>
     </property>
     <property name="columnCount">
-     <number>6</number>
+     <number>5</number>
     </property>
     <attribute name="horizontalHeaderStretchLastSection">
      <bool>true</bool>
@@ -139,11 +139,6 @@
     <attribute name="verticalHeaderStretchLastSection">
      <bool>false</bool>
     </attribute>
-    <column>
-     <property name="text">
-      <string>Packet count</string>
-     </property>
-    </column>
     <column>
      <property name="text">
       <string>Timestamp</string>
@@ -183,25 +178,12 @@
      <string>Close</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_app_status">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
-      <y>370</y>
-      <width>201</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>TextLabel</string>
-    </property>
-   </widget>
    <widget class="QSpinBox" name="spinBox_no_of_packets">
     <property name="geometry">
      <rect>
       <x>580</x>
       <y>10</y>
-      <width>44</width>
+      <width>51</width>
       <height>27</height>
      </rect>
     </property>
@@ -210,6 +192,9 @@
     </property>
     <property name="minimum">
      <number>1</number>
+    </property>
+    <property name="maximum">
+     <number>1000</number>
     </property>
    </widget>
   </widget>
