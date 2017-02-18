@@ -16,8 +16,7 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
-{
+    ui(new Ui::MainWindow) {
     ui->setupUi(this);
 
     // Set the network interface device
@@ -33,29 +32,25 @@ MainWindow::MainWindow(QWidget *parent) :
     row_count = 0;
 }
 
-MainWindow::~MainWindow()
-{
+MainWindow::~MainWindow() {
     delete ui;
 }
 
-void MainWindow::on_button_applyFilter_clicked()
-{
+void MainWindow::on_button_applyFilter_clicked() {
     packetTracer.apply_filter(handle, &filter_expression, net);
 
     ui->button_applyFilter->setEnabled(false);
     ui->button_capture_packet->setEnabled(true);
 }
 
-void MainWindow::on_button_close_handle_clicked()
-{
+void MainWindow::on_button_close_handle_clicked() {
     // Close handle
     pcap_close(handle);
 
     MainWindow::close();
 }
 
-void MainWindow::on_button_capture_packet_clicked()
-{
+void MainWindow::on_button_capture_packet_clicked() {
     Packet my_captured_packet;
     int i;
 
@@ -112,8 +107,6 @@ void MainWindow::on_tableWidget_packets_cellDoubleClicked(int row, int column) {
     infoDialog.exec();
 }
 
-void MainWindow::on_pushButton_filterSettings_clicked()
-{
-    qDebug() << "You selected:" << ui->spinBox_no_of_packets->value();
-    ui->statusBar->showMessage("This is a test");
+void MainWindow::on_pushButton_filterSettings_clicked() {
+
 }

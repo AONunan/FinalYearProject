@@ -14,8 +14,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-class Packet
-{
+class Packet {
 public:
     Packet();
 

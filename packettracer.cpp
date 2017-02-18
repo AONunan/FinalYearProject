@@ -5,8 +5,7 @@
 #include "packet.h"
 
 // Constructor
-PacketTracer::PacketTracer()
-{
+PacketTracer::PacketTracer() {
 
 }
 

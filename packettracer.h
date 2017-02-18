@@ -36,8 +36,7 @@
 #define TCP_FLAGS		(TCP_FIN|TCP_SYN|TCP_RST|TCP_ACK|TCP_URG|TCP_ECE|TCP_CWR)
 
 
-class PacketTracer
-{
+class PacketTracer {
 public:
     PacketTracer();
     char* get_network_interface_device();

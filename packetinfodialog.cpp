@@ -3,13 +3,11 @@
 
 PacketInfoDialog::PacketInfoDialog(const QString my_var, QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::PacketInfoDialog)
-{
+    ui(new Ui::PacketInfoDialog) {
     ui->setupUi(this);
     ui->label->setText(my_var);
 }
 
-PacketInfoDialog::~PacketInfoDialog()
-{
+PacketInfoDialog::~PacketInfoDialog() {
     delete ui;
 }
