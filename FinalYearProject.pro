@@ -17,7 +17,6 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    packetcapturewindow.cpp \
     packettracer.cpp \
     packet.cpp \
     packetinfodialog.cpp
@@ -25,9 +24,7 @@ SOURCES += main.cpp\
 HEADERS  += mainwindow.h \
     packettracer.h \
     packet.h \
-    packecapturewindow.h \
     packetinfodialog.h
 
 FORMS    += mainwindow.ui \
-    packetcapturewindow.ui \
     packetinfodialog.ui
