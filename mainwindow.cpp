@@ -1,11 +1,11 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-//#include "packecapturewindow.h"
 #include <QDebug>
 #include <QTableWidget>
 
 #include "packet.h"
 #include "packetinfodialog.h"
+#include "statwindow.h"
 
 // These correspond to the columns in the table
 #define HEADER_TIMESTAMP 0
@@ -109,4 +109,11 @@ void MainWindow::on_tableWidget_packets_cellDoubleClicked(int row, int column) {
 
 void MainWindow::on_pushButton_filterSettings_clicked() {
 
+}
+
+void MainWindow::on_pushButton_statistics_clicked() {
+    // Open dialog with packet details with an argument
+    StatWindow statWindow;
+    statWindow.setModal(true);
+    statWindow.exec();
 }

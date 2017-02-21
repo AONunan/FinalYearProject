@@ -28,6 +28,8 @@ private slots:
     void on_tableWidget_packets_cellDoubleClicked(int row, int column);
 
 
+    void on_pushButton_statistics_clicked();
+
 private:
     Ui::MainWindow *ui;
 
