@@ -37,6 +37,7 @@ public:
     void setTotal_header_length(int value);
 
     time_t getCurrent_time() const;
+    void setCurrent_time(const time_t &value);
 
 private:
     int total_header_length;

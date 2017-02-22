@@ -67,6 +67,8 @@ void PacketTracer::apply_filter(pcap_t *handle, bpf_program *filter_expressionPt
 Packet PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet, Packet working_packet) {
     qDebug() << "**************************************************";
 
+    working_packet.setCurrent_time(time(0));
+
     //const struct ethernet_header *ethernetPtr; // Pointer to beginning of Ethernet header
     const struct ip_header *ipPtr; // Pointer to beginning of IP header
     const struct tcp_header *tcpPtr; // Pointer to beginning of TCP header

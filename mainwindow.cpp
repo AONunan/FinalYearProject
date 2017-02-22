@@ -95,15 +95,20 @@ void MainWindow::on_button_capture_packet_clicked() {
 }
 
 void MainWindow::update_table(Packet packet) {
-    ui->tableWidget_packets->setRowCount(row_count + 1); // Add a new row
+    // Get current time
+    tm *ltm;
+    long long_Time = (long)packet.getCurrent_time();
+    ltm = localtime(&long_Time);
+
+    // Create new row and scroll to bottom of table
+    ui->tableWidget_packets->setRowCount(row_count + 1);
     ui->tableWidget_packets->scrollToBottom();
-    //ui->tableWidget_packets->setItem(row_count, HEADER_PACKET_COUNT, new QTableWidgetItem("Test"));
+
+    ui->tableWidget_packets->setItem(row_count, HEADER_TIMESTAMP, new QTableWidgetItem(QString("%1:%2:%3").arg(ltm->tm_hour, 2, 10, QChar('0')).arg(ltm->tm_min, 2, 10, QChar('0')).arg(ltm->tm_sec, 2, 10, QChar('0')))); // Add the timestamp in the format HH:MM:SS. The arguments pad the digits with zeros
     ui->tableWidget_packets->setItem(row_count, HEADER_PROTOCOL, new QTableWidgetItem(packet.getProtocol()));
     //ui->tableWidget_packets->setItem(row_count, HEADER_SRC_HOST, new QTableWidgetItem(packet));
     ui->tableWidget_packets->setItem(row_count, HEADER_PROTOCOL, new QTableWidgetItem(packet.getProtocol()));
     ui->tableWidget_packets->setItem(row_count, HEADER_PAYLOAD_LENGTH, new QTableWidgetItem(QString::number(packet.getPayload_length())));
-
-    qDebug() << "# Packet payload length:" << packet.getPayload_length();
 
     row_count++;
 }

@@ -7,7 +7,7 @@ Packet::Packet() {
     tcp_header_length = 0;
     payload_length = 0;
     protocol = "unknown";
-    current_time = time(0);
+    current_time = 0;
 }
 
 int Packet::getIp_header_length() const {
@@ -61,4 +61,9 @@ void Packet::setTotal_header_length(int value) {
 time_t Packet::getCurrent_time() const
 {
     return current_time;
+}
+
+void Packet::setCurrent_time(const time_t &value)
+{
+    current_time = value;
 }
