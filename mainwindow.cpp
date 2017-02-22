@@ -83,13 +83,9 @@ void MainWindow::on_button_capture_packet_clicked() {
         ui->statusBar->showMessage(status_bar_message);
     }
 
-    // TODO: Change to length of captured_packets array. Otherwise errors will occur!!!
-    /*for(i = 0; i < 10; i++) {
-        update_table(captured_packets[i]);
-    }*/
-
     // Add each item in the vector to the UI
     for(i = captured_packets_vect.length() - no_of_packets; i < captured_packets_vect.length(); i++) {
+        qDebug() << "**** Adding item:" << i;
         update_table(captured_packets_vect[i]);
     }
 
@@ -149,5 +145,13 @@ void MainWindow::on_pushButton_statistics_clicked() {
 }
 
 void MainWindow::on_pushButton_clear_clicked() {
+    // Empty the vector
+    captured_packets_vect.clear();
 
+    // Reset the row count
+    row_count = 0;
+
+    // Clear the table
+    ui->tableWidget_packets->clearContents();
+    ui->tableWidget_packets->setRowCount(0);
 }
