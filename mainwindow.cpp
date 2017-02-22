@@ -75,21 +75,22 @@ void MainWindow::on_button_capture_packet_clicked() {
         // Process captured packet
         my_captured_packet = packetTracer.captured_packet(&header, packet, my_captured_packet);
 
+        // Store the captured packet in vector
+        captured_packets_vect.append(my_captured_packet);
+
         //ui->label_app_status->setText(QString::number(i));
         status_bar_message = QString("Captured %1 of %2.").arg(QString::number(i + 1), QString::number(no_of_packets));
         ui->statusBar->showMessage(status_bar_message);
-
-        if(i < 10) {
-            captured_packets[i] = my_captured_packet;
-        }
-
-        // Update the UI
-        //QCoreApplication::processEvents();
     }
 
     // TODO: Change to length of captured_packets array. Otherwise errors will occur!!!
-    for(i = 0; i < 10; i++) {
+    /*for(i = 0; i < 10; i++) {
         update_table(captured_packets[i]);
+    }*/
+
+    // Add each item in the vector to the UI
+    for(i = captured_packets_vect.length() - no_of_packets; i < captured_packets_vect.length(); i++) {
+        update_table(captured_packets_vect[i]);
     }
 
     status_bar_message = QString("Finished capturing %1 packets.").arg(QString::number(no_of_packets));
@@ -121,20 +122,18 @@ void MainWindow::on_tableWidget_packets_cellDoubleClicked(int row, int column) {
 }
 
 void MainWindow::on_pushButton_filterSettings_clicked() {
-    int i;
-    qDebug() << "Size of array:" << sizeof(captured_packets);
-
+    int i; // Counter
 
     QDateTime timestamp;
     tm *ltm;
 
-    for(i = 0; i < 10; i++) {
+    for(i = 0; i < captured_packets_vect.length(); i++) {
         qDebug() << "-------";
-        qDebug() << "Protocol:" << captured_packets[i].getProtocol();
-        qDebug() << "Time:" << captured_packets[i].getCurrent_time();
-        timestamp.setTime_t(captured_packets[i].getCurrent_time());
+        qDebug() << "Protocol:" << captured_packets_vect[i].getProtocol();
+        qDebug() << "Time:" << captured_packets_vect[i].getCurrent_time();
+        timestamp.setTime_t(captured_packets_vect[i].getCurrent_time());
         qDebug() << timestamp.toString(Qt::SystemLocaleShortDate);
-        long long_Time = (long)captured_packets[i].getCurrent_time();
+        long long_Time = (long)captured_packets_vect[i].getCurrent_time();
         ltm = localtime(&long_Time);
         qDebug() << "Hour   :" << ltm->tm_hour;
         qDebug() << "Minute :" << ltm->tm_min;
@@ -147,4 +146,8 @@ void MainWindow::on_pushButton_statistics_clicked() {
     StatWindow statWindow;
     statWindow.setModal(true);
     statWindow.exec();
+}
+
+void MainWindow::on_pushButton_clear_clicked() {
+
 }

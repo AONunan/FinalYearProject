@@ -30,6 +30,8 @@ private slots:
 
     void on_pushButton_statistics_clicked();
 
+    void on_pushButton_clear_clicked();
+
 private:
     Ui::MainWindow *ui;
 
@@ -37,7 +39,7 @@ private:
 
     int row_count; // Keep track of current row to populate with packet details
     QString status_bar_message;
-    Packet captured_packets[10];
+    QVector<Packet> captured_packets_vect;
 
     char *dev;
     char errbuf[PCAP_ERRBUF_SIZE];
