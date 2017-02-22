@@ -96,11 +96,9 @@ Packet PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet, 
         working_packet.setIp_header_length(ip_header_length);
     }
 
-    qDebug() << "Source IP:" << inet_ntoa(ipPtr->source_address);
+    //qDebug() << "Source IP:" << inet_ntoa(ipPtr->source_address);
     // TODO: Convert to QString
-    ///////QString s_host = QString::number(ntohs(ipPtr->source_address));
-    ///////qDebug() << "s_host:" << s_host;
-    qDebug() << "Destination IP:" << inet_ntoa(ipPtr->destination_address);
+    //qDebug() << "Destination IP:" << inet_ntoa(ipPtr->destination_address);
 
 
     // Find protocol in use
@@ -140,8 +138,8 @@ Packet PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet, 
         working_packet.setTcp_header_length(tcp_header_length);
     }
 
-    qDebug() << "Source port:" << ntohs(tcpPtr->source_port);
-    qDebug() << "Destination port:" << ntohs(tcpPtr->destination_port);
+//    qDebug() << "Source port:" << ntohs(tcpPtr->source_port);
+//    qDebug() << "Destination port:" << ntohs(tcpPtr->destination_port);
 
     // Define packet payload
     payload = (u_char *)(packet + SIZE_ETHERNET + ip_header_length + tcp_header_length);
@@ -150,7 +148,7 @@ Packet PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet, 
     payload_length = ntohs(ipPtr->length) - (ip_header_length + tcp_header_length);
     working_packet.setPayload_length(payload_length);
 
-    qDebug() << "Payload length:" << payload_length;
+//    qDebug() << "Payload length:" << payload_length;
 
     // Make call to function that will display packet payload
     if (payload_length > 0) {

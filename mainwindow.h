@@ -37,6 +37,7 @@ private:
 
     int row_count; // Keep track of current row to populate with packet details
     QString status_bar_message;
+    Packet captured_packets[10];
 
     char *dev;
     char errbuf[PCAP_ERRBUF_SIZE];

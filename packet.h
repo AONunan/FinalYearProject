@@ -36,6 +36,8 @@ public:
     int getTotal_header_length() const;
     void setTotal_header_length(int value);
 
+    time_t getCurrent_time() const;
+
 private:
     int total_header_length;
     int ip_header_length;
@@ -44,6 +46,7 @@ private:
     QString protocol;
     QString payload;
     QByteArray byte_array;
+    time_t current_time;
 
     // Ethernet stuff
     u_char ethernet_destination_address[ETHER_ADDR_LEN];

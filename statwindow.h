@@ -15,6 +15,7 @@ public:
     explicit StatWindow(QWidget *parent = 0);
     ~StatWindow();
 
+    void display_tcp_vs_udp();
 private:
     Ui::StatWindow *ui;
 };
