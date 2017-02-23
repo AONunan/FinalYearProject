@@ -17,19 +17,15 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-
     void update_table(Packet packet);
-
+    void capture_loop();
 private slots:
     void on_button_applyFilter_clicked();
     void on_button_close_handle_clicked();
     void on_button_capture_packet_clicked();
     void on_pushButton_filterSettings_clicked();
-    void on_tableWidget_packets_cellDoubleClicked(int row, int column);
-
-
+    void on_tableWidget_packets_cellDoubleClicked(int row);
     void on_pushButton_statistics_clicked();
-
     void on_pushButton_clear_clicked();
 
 private:
@@ -38,14 +34,14 @@ private:
     PacketTracer packetTracer;
 
     int row_count; // Keep track of current row to populate with packet details
-    QString status_bar_message;
     QVector<Packet> captured_packets_vect;
+    bool currently_capturing_packets; // Flag set to TRUE when running packet capture
+    bool break_out_of_capture; // Flag to interrupt packet capture
 
     char *dev;
     char errbuf[PCAP_ERRBUF_SIZE];
     pcap_t *handle;                     // Session handle
     struct bpf_program filter_expression;              // The compiled filter expression
-    //char filter_exp[] = "port 443";	// The filter expression
     bpf_u_int32 mask;                   // The netmask of our sniffing device
     bpf_u_int32 net;                    // The IP of our sniffing device
     struct pcap_pkthdr header;          // The header that pcap gives us

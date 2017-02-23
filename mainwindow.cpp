@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QTableWidget>
 #include <QDateTime>
+#include <thread>
 
 #include "packet.h"
 #include "packetinfodialog.h"
@@ -31,6 +32,8 @@ MainWindow::MainWindow(QWidget *parent) :
     handle = packetTracer.open_for_sniffing(dev);
 
     row_count = 0;
+    currently_capturing_packets = false;
+    break_out_of_capture = false;
 }
 
 MainWindow::~MainWindow() {
@@ -52,14 +55,31 @@ void MainWindow::on_button_close_handle_clicked() {
 }
 
 void MainWindow::on_button_capture_packet_clicked() {
-    status_bar_message = "Waiting for first packet.";
-    ui->statusBar->showMessage(status_bar_message);
+    if(!currently_capturing_packets) {
+        currently_capturing_packets = true;
+
+        // TODO: Implement multithreading to allow use of UI while loop is running
+        capture_loop();
+
+        currently_capturing_packets = false;
+    } else {
+        qDebug() << "Setting flag to break out of loop.";
+        break_out_of_capture = true;
+    }
+
+}
+
+void MainWindow::capture_loop() {
+    ui->statusBar->showMessage("Waiting for first packet.");
 
     Packet my_captured_packet;
     int i;
 
     // Get number of packets required from spinbox
     int no_of_packets = ui->spinBox_no_of_packets->value();
+
+    qDebug() << "Value of bool:" << break_out_of_capture;
+    ui->button_capture_packet->setText("Cancel");
 
     for(i = 0; i < no_of_packets; i++) {
         // TODO: Add loading symbol to window while packets are being captured.
@@ -78,24 +98,27 @@ void MainWindow::on_button_capture_packet_clicked() {
         // Store the captured packet in vector
         captured_packets_vect.append(my_captured_packet);
 
-        //ui->label_app_status->setText(QString::number(i));
-        status_bar_message = QString("Captured %1 of %2.").arg(QString::number(i + 1), QString::number(no_of_packets));
-        ui->statusBar->showMessage(status_bar_message);
+        ui->statusBar->showMessage(QString("Captured %1 of %2.").arg(QString::number(i + 1)).arg(QString::number(no_of_packets)));
+
+        if(break_out_of_capture) {
+            qDebug() << "Breaking out of loop.";
+            break;
+        }
+        break_out_of_capture = false;
     }
 
-    // Add each item in the vector to the UI
+    // Add each newly captured packet in the vector to the UI
     for(i = captured_packets_vect.length() - no_of_packets; i < captured_packets_vect.length(); i++) {
-        qDebug() << "**** Adding item:" << i;
         update_table(captured_packets_vect[i]);
     }
 
-    status_bar_message = QString("Finished capturing %1 packets.").arg(QString::number(no_of_packets));
-    ui->statusBar->showMessage(status_bar_message);
+    ui->button_capture_packet->setText("Capture");
 
+    ui->statusBar->showMessage(QString("Finished capturing %1 packets.").arg(QString::number(no_of_packets)));
 }
 
 void MainWindow::update_table(Packet packet) {
-    // Get current time
+    // Get packet timestamp
     tm *ltm;
     long long_Time = (long)packet.getCurrent_time();
     ltm = localtime(&long_Time);
@@ -113,11 +136,11 @@ void MainWindow::update_table(Packet packet) {
     row_count++;
 }
 
-void MainWindow::on_tableWidget_packets_cellDoubleClicked(int row, int column) {
-    qDebug() << "You double clicked on row" << row << "and column" << column;
+void MainWindow::on_tableWidget_packets_cellDoubleClicked(int row) {
+    qDebug() << "You double clicked on row" << row;
 
     // Open dialog with packet details with an argument
-    PacketInfoDialog infoDialog("Test");
+    PacketInfoDialog infoDialog(captured_packets_vect[row]);
     infoDialog.setModal(true);
     infoDialog.exec();
 }
@@ -160,3 +183,4 @@ void MainWindow::on_pushButton_clear_clicked() {
     ui->tableWidget_packets->clearContents();
     ui->tableWidget_packets->setRowCount(0);
 }
+

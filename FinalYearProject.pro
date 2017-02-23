@@ -8,6 +8,7 @@ QT       += core gui charts
 
 # included to allow use of libpcap
 LIBS += -lpcap
+LIBS += -pthread
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
