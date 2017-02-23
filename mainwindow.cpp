@@ -8,6 +8,7 @@
 #include "packet.h"
 #include "packetinfodialog.h"
 #include "statwindow.h"
+#include "filtersettingswindow.h"
 
 // These correspond to the columns in the table
 #define HEADER_TIMESTAMP 0
@@ -146,23 +147,10 @@ void MainWindow::on_tableWidget_packets_cellDoubleClicked(int row) {
 }
 
 void MainWindow::on_pushButton_filterSettings_clicked() {
-    int i; // Counter
-
-    QDateTime timestamp;
-    tm *ltm;
-
-    for(i = 0; i < captured_packets_vect.length(); i++) {
-        qDebug() << "-------";
-        qDebug() << "Protocol:" << captured_packets_vect[i].getProtocol();
-        qDebug() << "Time:" << captured_packets_vect[i].getCurrent_time();
-        timestamp.setTime_t(captured_packets_vect[i].getCurrent_time());
-        qDebug() << timestamp.toString(Qt::SystemLocaleShortDate);
-        long long_Time = (long)captured_packets_vect[i].getCurrent_time();
-        ltm = localtime(&long_Time);
-        qDebug() << "Hour   :" << ltm->tm_hour;
-        qDebug() << "Minute :" << ltm->tm_min;
-        qDebug() << "Second :" << ltm->tm_sec;
-    }
+    // Open filter settings window
+    FilterSettingsWindow filterStatWindow;
+    filterStatWindow.setModal(true);
+    filterStatWindow.exec();
 }
 
 void MainWindow::on_pushButton_statistics_clicked() {
