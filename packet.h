@@ -1,8 +1,8 @@
 #ifndef PACKET_H
 #define PACKET_H
 
-#include <QString> // TODO: remove once finished with identifier
-#include <QByteArray>
+#include <QString>
+#include <QVector>
 
 #define ETHER_ADDR_LEN	6       /* Ethernet addresses are 6 bytes */
 
@@ -39,14 +39,16 @@ public:
     time_t getCurrent_time() const;
     void setCurrent_time(const time_t &value);
 
+    QVector<short> getPayload_vect() const;
+    void setPayload_vect(const QVector<short> &value);
+
 private:
     int total_header_length;
     int ip_header_length;
     int tcp_header_length;
     int payload_length;
+    QVector<short> payload_vect;
     QString protocol;
-    QString payload;
-    QByteArray byte_array;
     time_t current_time;
 
     // Ethernet stuff

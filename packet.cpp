@@ -34,14 +34,6 @@ void Packet::setPayload_length(int value) {
     payload_length = value;
 }
 
-QString Packet::getPayload() const {
-    return payload;
-}
-
-void Packet::setPayload(const QString &value) {
-    payload = value;
-}
-
 QString Packet::getProtocol() const {
     return protocol;
 }
@@ -66,4 +58,14 @@ time_t Packet::getCurrent_time() const
 void Packet::setCurrent_time(const time_t &value)
 {
     current_time = value;
+}
+
+QVector<short> Packet::getPayload_vect() const
+{
+    return payload_vect;
+}
+
+void Packet::setPayload_vect(const QVector<short> &value)
+{
+    payload_vect = value;
 }

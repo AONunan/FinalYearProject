@@ -1,6 +1,8 @@
 #include "packetinfodialog.h"
 #include "ui_packetinfodialog.h"
 
+#include <QDebug>
+
 PacketInfoDialog::PacketInfoDialog(const Packet packet, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::PacketInfoDialog) {
@@ -14,6 +16,14 @@ PacketInfoDialog::PacketInfoDialog(const Packet packet, QWidget *parent) :
     ui->label_ip_length->setText(QString::number(packet.getIp_header_length()));
     ui->label_tcp_length->setText(QString::number(packet.getTcp_header_length()));
     ui->label_payload_length->setText(QString::number(packet.getPayload_length()));
+
+    int i;
+
+    for(i = 0; i < packet.getPayload_vect().length(); i++) {
+        qDebug() << "...";
+        qDebug() << packet.getPayload_vect()[i];
+        qDebug() << QString("%1").arg(packet.getPayload_vect()[i], 2, 16, QChar('0'));
+    }
 }
 
 PacketInfoDialog::~PacketInfoDialog() {
