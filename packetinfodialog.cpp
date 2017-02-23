@@ -27,8 +27,9 @@ PacketInfoDialog::~PacketInfoDialog() {
 void PacketInfoDialog::on_pushButton_print_payload_clicked()
 {
     int i;
+    qDebug() << "Payload vect length:" << displayed_packet.getPayload_vect().length();
 
     for(i = 0; i < displayed_packet.getPayload_vect().length(); i++) {
-        qDebug() << QString("%1").arg(displayed_packet.getPayload_vect()[i], 2, 16, QChar('0'));
+        qDebug() << QString("%1").arg(displayed_packet.getPayload_vect()[i], 2, 16, QChar('0')).toUpper();
     }
 }

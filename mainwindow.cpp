@@ -79,7 +79,7 @@ void MainWindow::capture_loop() {
     // Get number of packets required from spinbox
     int no_of_packets = ui->spinBox_no_of_packets->value();
 
-    qDebug() << "Value of bool:" << break_out_of_capture;
+    //qDebug() << "Value of bool:" << break_out_of_capture;
     ui->button_capture_packet->setText("Cancel");
 
     for(i = 0; i < no_of_packets; i++) {
@@ -101,11 +101,12 @@ void MainWindow::capture_loop() {
 
         ui->statusBar->showMessage(QString("Captured %1 of %2.").arg(QString::number(i + 1)).arg(QString::number(no_of_packets)));
 
-        if(break_out_of_capture) {
+        // TODO: Implement multithreading to allow breaking out of running loop
+        /*if(break_out_of_capture) {
             qDebug() << "Breaking out of loop.";
             break;
         }
-        break_out_of_capture = false;
+        break_out_of_capture = false;*/
     }
 
     // Add each newly captured packet in the vector to the UI
@@ -131,7 +132,8 @@ void MainWindow::update_table(Packet packet) {
     ui->tableWidget_packets->setItem(row_count, HEADER_TIMESTAMP, new QTableWidgetItem(QString("%1:%2:%3").arg(ltm->tm_hour, 2, 10, QChar('0')).arg(ltm->tm_min, 2, 10, QChar('0')).arg(ltm->tm_sec, 2, 10, QChar('0')))); // Add the timestamp in the format HH:MM:SS. The arguments pad the digits with zeros
     ui->tableWidget_packets->setItem(row_count, HEADER_PROTOCOL, new QTableWidgetItem(packet.getProtocol()));
     //ui->tableWidget_packets->setItem(row_count, HEADER_SRC_HOST, new QTableWidgetItem(packet));
-    ui->tableWidget_packets->setItem(row_count, HEADER_PROTOCOL, new QTableWidgetItem(packet.getProtocol()));
+    ui->tableWidget_packets->setItem(row_count, HEADER_SRC_HOST, new QTableWidgetItem(packet.getIp_source_address()));
+    ui->tableWidget_packets->setItem(row_count, HEADER_DST_HOST, new QTableWidgetItem(packet.getIp_destination_address()));
     ui->tableWidget_packets->setItem(row_count, HEADER_PAYLOAD_LENGTH, new QTableWidgetItem(QString::number(packet.getPayload_length())));
 
     row_count++;

@@ -2,6 +2,10 @@
 #include <QDebug>
 
 Packet::Packet() {
+    reset_values();
+}
+
+void Packet::reset_values() {
     total_header_length = 0;
     ip_header_length = 0;
     tcp_header_length = 0;
@@ -68,6 +72,15 @@ QVector<short> Packet::getPayload_vect() const
 void Packet::setPayload_vect(const QVector<short> &value)
 {
     payload_vect = value;
+}
+
+/*
+ * Necessary to clear vector with payload length 0.
+ * Otherwise it gets populated with payload content when it shouldn't
+ */
+void Packet::clearPayload_vect()
+{
+    payload_vect.clear();
 }
 
 u_short Packet::getTcp_source_port() const

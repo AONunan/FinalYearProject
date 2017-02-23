@@ -153,11 +153,11 @@ Packet PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet, 
         working_packet.setPayload_length(payload_length);
         working_packet.setPayload_vect(print_payload(payloadPtr, payload_length)); // Set the payload contents by calling print_payload()
     } else {
-        qDebug() << "Payload size is 0";
+        // Clear vector. Otherwise vectors that should be empty will have content
+        working_packet.clearPayload_vect();
     }
 
     return working_packet;
-
 }
 
 QVector<short> PacketTracer::print_payload(const u_char *payloadPtr, int payload_length) {

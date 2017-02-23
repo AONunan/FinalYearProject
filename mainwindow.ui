@@ -148,7 +148,7 @@
       </column>
       <column>
        <property name="text">
-        <string>Payload size</string>
+        <string>Payload size (bytes)</string>
        </property>
       </column>
      </widget>
