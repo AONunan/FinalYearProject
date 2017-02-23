@@ -221,6 +221,19 @@
     <string>TextLabel</string>
    </property>
   </widget>
+  <widget class="QPushButton" name="pushButton_print_payload">
+   <property name="geometry">
+    <rect>
+     <x>130</x>
+     <y>240</y>
+     <width>101</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Print payload</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

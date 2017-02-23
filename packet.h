@@ -48,6 +48,12 @@ public:
     u_short getTcp_destination_port() const;
     void setTcp_destination_port(const u_short &value);
 
+    QString getIp_source_address() const;
+    void setIp_source_address(const QString &value);
+
+    QString getIp_destination_address() const;
+    void setIp_destination_address(const QString &value);
+
 private:
     int total_header_length;
     int ip_header_length;
@@ -71,7 +77,8 @@ private:
     u_char ip_time_to_live;
     u_char ip_protocol;
     u_short ip_checksum;
-    struct in_addr ip_source_address, ip_destination_address;
+    QString ip_source_address;
+    QString ip_destination_address;
 
     // TCP stuff
     u_short tcp_source_port;

@@ -89,3 +89,23 @@ void Packet::setTcp_destination_port(const u_short &value)
 {
     tcp_destination_port = value;
 }
+
+QString Packet::getIp_source_address() const
+{
+    return ip_source_address;
+}
+
+void Packet::setIp_source_address(const QString &value)
+{
+    ip_source_address = value;
+}
+
+QString Packet::getIp_destination_address() const
+{
+    return ip_destination_address;
+}
+
+void Packet::setIp_destination_address(const QString &value)
+{
+    ip_destination_address = value;
+}

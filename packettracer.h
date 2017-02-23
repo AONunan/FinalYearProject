@@ -7,12 +7,12 @@
 
 #include "packet.h"
 
-#include <ctype.h>
-#include <errno.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
+//#include <ctype.h>
+//#include <errno.h>
+//#include <sys/types.h>
+#include <sys/socket.h> // For converting host addresses to readable format
+#include <netinet/in.h> // For converting host addresses to readable format
+#include <arpa/inet.h> // For converting ports to readable format
 
 
 #define SNAP_LEN 1518           /* default snap length (maximum bytes per packet to capture) */

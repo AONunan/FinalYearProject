@@ -98,10 +98,8 @@ Packet PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet, 
         working_packet.setIp_header_length(ip_header_length);
     }
 
-    //qDebug() << "Source IP:" << inet_ntoa(ipPtr->source_address);
-    // TODO: Convert to QString
-    //qDebug() << "Destination IP:" << inet_ntoa(ipPtr->destination_address);
-
+    working_packet.setIp_source_address(inet_ntoa(ipPtr->source_address));
+    working_packet.setIp_destination_address(inet_ntoa(ipPtr->destination_address));
 
     // Find protocol in use
     switch(ipPtr->protocol) {
