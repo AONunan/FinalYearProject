@@ -140,8 +140,8 @@ Packet PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet, 
         working_packet.setTcp_header_length(tcp_header_length);
     }
 
-//    qDebug() << "Source port:" << ntohs(tcpPtr->source_port);
-//    qDebug() << "Destination port:" << ntohs(tcpPtr->destination_port);
+    working_packet.setTcp_source_port(ntohs(tcpPtr->source_port));
+    working_packet.setTcp_destination_port(ntohs(tcpPtr->destination_port));
 
     // Define packet payloadPtr
     payloadPtr = (u_char *)(packet + SIZE_ETHERNET + ip_header_length + tcp_header_length);

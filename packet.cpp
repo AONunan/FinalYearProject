@@ -69,3 +69,23 @@ void Packet::setPayload_vect(const QVector<short> &value)
 {
     payload_vect = value;
 }
+
+u_short Packet::getTcp_source_port() const
+{
+    return tcp_source_port;
+}
+
+void Packet::setTcp_source_port(const u_short &value)
+{
+    tcp_source_port = value;
+}
+
+u_short Packet::getTcp_destination_port() const
+{
+    return tcp_destination_port;
+}
+
+void Packet::setTcp_destination_port(const u_short &value)
+{
+    tcp_destination_port = value;
+}

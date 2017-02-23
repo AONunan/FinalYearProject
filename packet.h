@@ -42,6 +42,12 @@ public:
     QVector<short> getPayload_vect() const;
     void setPayload_vect(const QVector<short> &value);
 
+    u_short getTcp_source_port() const;
+    void setTcp_source_port(const u_short &value);
+
+    u_short getTcp_destination_port() const;
+    void setTcp_destination_port(const u_short &value);
+
 private:
     int total_header_length;
     int ip_header_length;
