@@ -10,14 +10,33 @@ PacketInfoDialog::PacketInfoDialog(const Packet packet, QWidget *parent) :
 
     displayed_packet = packet;
 
-    ui->label_protocol->setText(displayed_packet.getProtocol());
-    ui->label_src_host->setText(displayed_packet.getIp_source_address());
-    ui->label_dst_host->setText(displayed_packet.getIp_destination_address());
-    ui->label_src_port->setText(QString::number(displayed_packet.getTcp_source_port()));
-    ui->label_dst_port->setText(QString::number(displayed_packet.getTcp_destination_port()));
-    ui->label_ip_length->setText(QString::number(displayed_packet.getIp_header_length()));
-    ui->label_tcp_length->setText(QString::number(displayed_packet.getTcp_header_length()));
-    ui->label_payload_length->setText(QString::number(displayed_packet.getPayload_length()));
+    // Set IP fields
+    ui->label_ip_version->setText(QString::number(displayed_packet.getIp_version()));
+    // TODO: Fill out length
+    ui->label_ip_type_of_service->setText(QString::number(displayed_packet.getIp_type_of_service()));
+    // TODO: Fill out length
+    ui->label_ip_id->setText(QString::number(displayed_packet.getIp_id()));
+    // TODO: Fill out flags
+    ui->label_ip_offset->setText(QString::number(displayed_packet.getIp_offset()));
+    ui->label_ip_ttl->setText(QString::number(displayed_packet.getIp_time_to_live()));
+    ui->label_ip_protocol->setText(QString::number(displayed_packet.getIp_protocol()));
+    ui->label_ip_checksum->setText(QString::number(displayed_packet.getIp_checksum()));
+    ui->label_ip_src_address->setText(displayed_packet.getIp_source_address());
+    ui->label_ip_dst_address->setText(displayed_packet.getIp_destination_address());
+    // TODO: Fill out options
+
+    // Set TCP fields
+    ui->label_tcp_src_port->setText(QString::number(displayed_packet.getTcp_source_port()));
+    ui->label_tcp_dst_port->setText(QString::number(displayed_packet.getTcp_destination_port()));
+    ui->label_tcp_sequence_number->setText(QString::number(displayed_packet.getTcp_sequence_number()));
+    ui->label_tcp_ack_number->setText(QString::number(displayed_packet.getTcp_acknowledgement_number()));
+    ui->label_tcp_offset->setText(QString::number(displayed_packet.getTcp_offset()));
+    ui->label_tcp_flags->setText(QString::number(displayed_packet.getTcp_flags()));
+    ui->label_tcp_window->setText(QString::number(displayed_packet.getTcp_window()));
+    ui->label_tcp_checksum->setText(QString::number(displayed_packet.getTcp_checksum()));
+    ui->label_tcp_urgent_ptr->setText(QString::number(displayed_packet.getTcp_urgent_pointer()));
+    // TODO: Fill out options
+
 }
 
 PacketInfoDialog::~PacketInfoDialog() {
