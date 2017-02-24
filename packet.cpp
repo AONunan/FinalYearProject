@@ -14,6 +14,156 @@ void Packet::reset_values() {
     current_time = 0;
 }
 
+u_int Packet::getTcp_sequence_number() const
+{
+    return tcp_sequence_number;
+}
+
+void Packet::setTcp_sequence_number(const u_int &value)
+{
+    tcp_sequence_number = value;
+}
+
+u_int Packet::getTcp_acknowledgement_number() const
+{
+    return tcp_acknowledgement_number;
+}
+
+void Packet::setTcp_acknowledgement_number(const u_int &value)
+{
+    tcp_acknowledgement_number = value;
+}
+
+u_char Packet::getTcp_offset() const
+{
+    return tcp_offset;
+}
+
+void Packet::setTcp_offset(const u_char &value)
+{
+    tcp_offset = value;
+}
+
+u_char Packet::getTcp_flags() const
+{
+    return tcp_flags;
+}
+
+void Packet::setTcp_flags(const u_char &value)
+{
+    tcp_flags = value;
+}
+
+u_short Packet::getTcp_window() const
+{
+    return tcp_window;
+}
+
+void Packet::setTcp_window(const u_short &value)
+{
+    tcp_window = value;
+}
+
+u_short Packet::getTcp_checksum() const
+{
+    return tcp_checksum;
+}
+
+void Packet::setTcp_checksum(const u_short &value)
+{
+    tcp_checksum = value;
+}
+
+u_short Packet::getTcp_urgent_pointer() const
+{
+    return tcp_urgent_pointer;
+}
+
+void Packet::setTcp_urgent_pointer(const u_short &value)
+{
+    tcp_urgent_pointer = value;
+}
+
+u_char Packet::getIp_version() const
+{
+    return ip_version;
+}
+
+void Packet::setIp_version(const u_char &value)
+{
+    ip_version = value;
+}
+
+u_char Packet::getIp_type_of_service() const
+{
+    return ip_type_of_service;
+}
+
+void Packet::setIp_type_of_service(const u_char &value)
+{
+    ip_type_of_service = value;
+}
+
+u_short Packet::getIp_length() const
+{
+    return ip_length;
+}
+
+void Packet::setIp_length(const u_short &value)
+{
+    ip_length = value;
+}
+
+u_short Packet::getIp_id() const
+{
+    return ip_id;
+}
+
+void Packet::setIp_id(const u_short &value)
+{
+    ip_id = value;
+}
+
+u_short Packet::getIp_offset() const
+{
+    return ip_offset;
+}
+
+void Packet::setIp_offset(const u_short &value)
+{
+    ip_offset = value;
+}
+
+u_char Packet::getIp_time_to_live() const
+{
+    return ip_time_to_live;
+}
+
+void Packet::setIp_time_to_live(const u_char &value)
+{
+    ip_time_to_live = value;
+}
+
+u_char Packet::getIp_protocol() const
+{
+    return ip_protocol;
+}
+
+void Packet::setIp_protocol(const u_char &value)
+{
+    ip_protocol = value;
+}
+
+u_short Packet::getIp_checksum() const
+{
+    return ip_checksum;
+}
+
+void Packet::setIp_checksum(const u_short &value)
+{
+    ip_checksum = value;
+}
+
 int Packet::getIp_header_length() const {
     return ip_header_length;
 }

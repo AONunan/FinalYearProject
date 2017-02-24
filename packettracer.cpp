@@ -98,8 +98,17 @@ Packet PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet, 
         working_packet.setIp_header_length(ip_header_length);
     }
 
+    // Set IP details
     working_packet.setIp_source_address(inet_ntoa(ipPtr->source_address));
     working_packet.setIp_destination_address(inet_ntoa(ipPtr->destination_address));
+    working_packet.setIp_version(ipPtr->version);
+    working_packet.setIp_type_of_service(ipPtr->type_of_service);
+    working_packet.setIp_length(ipPtr->length);
+    working_packet.setIp_id(ipPtr->id);
+    working_packet.setIp_offset(ipPtr->offset);
+    working_packet.setIp_time_to_live(ipPtr->time_to_live);
+    working_packet.setIp_protocol(ipPtr->protocol);
+    working_packet.setIp_checksum(ipPtr->checksum);
 
     // Find protocol in use
     switch(ipPtr->protocol) {
@@ -138,8 +147,16 @@ Packet PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet, 
         working_packet.setTcp_header_length(tcp_header_length);
     }
 
+    // Set TCP details
     working_packet.setTcp_source_port(ntohs(tcpPtr->source_port));
     working_packet.setTcp_destination_port(ntohs(tcpPtr->destination_port));
+    working_packet.setTcp_sequence_number(tcpPtr->sequence_number);
+    working_packet.setTcp_acknowledgement_number(tcpPtr->acknowledgement_number);
+    working_packet.setTcp_offset(tcpPtr->offset);
+    working_packet.setTcp_flags(tcpPtr->flags);
+    working_packet.setTcp_window(tcpPtr->window);
+    working_packet.setTcp_checksum(tcpPtr->checksum);
+    working_packet.setTcp_urgent_pointer(tcpPtr->urgent_pointer);
 
     // Define packet payloadPtr
     payloadPtr = (u_char *)(packet + SIZE_ETHERNET + ip_header_length + tcp_header_length);

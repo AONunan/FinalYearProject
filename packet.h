@@ -56,6 +56,51 @@ public:
     void setIp_destination_address(const QString &value);
 
     void reset_values();
+    u_int getTcp_sequence_number() const;
+    void setTcp_sequence_number(const u_int &value);
+
+    u_int getTcp_acknowledgement_number() const;
+    void setTcp_acknowledgement_number(const u_int &value);
+
+    u_char getTcp_offset() const;
+    void setTcp_offset(const u_char &value);
+
+    u_char getTcp_flags() const;
+    void setTcp_flags(const u_char &value);
+
+    u_short getTcp_window() const;
+    void setTcp_window(const u_short &value);
+
+    u_short getTcp_checksum() const;
+    void setTcp_checksum(const u_short &value);
+
+    u_short getTcp_urgent_pointer() const;
+    void setTcp_urgent_pointer(const u_short &value);
+
+    u_char getIp_version() const;
+    void setIp_version(const u_char &value);
+
+    u_char getIp_type_of_service() const;
+    void setIp_type_of_service(const u_char &value);
+
+    u_short getIp_length() const;
+    void setIp_length(const u_short &value);
+
+    u_short getIp_id() const;
+    void setIp_id(const u_short &value);
+
+    u_short getIp_offset() const;
+    void setIp_offset(const u_short &value);
+
+    u_char getIp_time_to_live() const;
+    void setIp_time_to_live(const u_char &value);
+
+    u_char getIp_protocol() const;
+    void setIp_protocol(const u_char &value);
+
+    u_short getIp_checksum() const;
+    void setIp_checksum(const u_short &value);
+
 private:
     int total_header_length;
     int ip_header_length;
@@ -71,6 +116,8 @@ private:
     u_short ethernet_type; // IP, ARP, RARP, etc
 
     // IP stuff
+    QString ip_source_address;
+    QString ip_destination_address;
     u_char ip_version; // version << 4 | header length >> 2
     u_char ip_type_of_service;
     u_short ip_length;
@@ -79,8 +126,6 @@ private:
     u_char ip_time_to_live;
     u_char ip_protocol;
     u_short ip_checksum;
-    QString ip_source_address;
-    QString ip_destination_address;
 
     // TCP stuff
     u_short tcp_source_port;
