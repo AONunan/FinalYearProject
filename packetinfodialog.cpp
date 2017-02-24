@@ -73,17 +73,33 @@ void PacketInfoDialog::show_header_details() {
 
     // Set IP fields
     ui->label_ip_version->setText(QString::number(displayed_packet.getIp_version()));
+
     ui->label_ip_header_length->setText(QString::number(displayed_packet.getIp_header_length())); // TODO: Fill out length
+    ui->label_ip_header_length->setToolTip(QString("(4 bits)\n\nThe length of the IP header, given in 32 bit words. In this case, the IP header = %1 * 32 = %2 bits (%3 bytes)").arg(displayed_packet.getIp_header_length()).arg(displayed_packet.getIp_header_length() * 32).arg(displayed_packet.getIp_header_length() * 32 / 8));
+
     ui->label_ip_type_of_service->setText(QString::number(displayed_packet.getIp_type_of_service()));
+    // Tool tip set in UI file
+
     ui->label_ip_total_length->setText(QString::number(displayed_packet.getIp_length())); // TODO: Fill out length
+
     ui->label_ip_id->setText(QString::number(displayed_packet.getIp_id()));
+    // Tool tip set in UI file
+
     // TODO: Fill out flags
+
     ui->label_ip_offset->setText(QString::number(displayed_packet.getIp_offset()));
+
     ui->label_ip_ttl->setText(QString::number(displayed_packet.getIp_time_to_live()));
+
     ui->label_ip_protocol->setText(QString::number(displayed_packet.getIp_protocol()));
+    ui->label_ip_protocol->setToolTip(QString("(8 bits)\n\n%1").arg(displayed_packet.getIp_protocol_string()));
+
     ui->label_ip_checksum->setText(QString::number(displayed_packet.getIp_checksum()));
+
     ui->label_ip_src_address->setText(displayed_packet.getIp_source_address());
+
     ui->label_ip_dst_address->setText(displayed_packet.getIp_destination_address());
+
     // TODO: Fill out options
 
     // Set TCP fields

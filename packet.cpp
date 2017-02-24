@@ -152,6 +152,56 @@ u_char Packet::getIp_protocol() const
 void Packet::setIp_protocol(const u_char &value)
 {
     ip_protocol = value;
+
+    switch(ip_protocol) {
+    case 1:
+        ip_protocol_string = "Internet Control Message Protocol (ICMP)";
+        break;
+    case 6:
+        ip_protocol_string = "Transmission Control Protocol (TCP)";
+        break;
+    case 17:
+        ip_protocol_string = "User Datagram Protocol (UDP)";
+        break;
+    case 47:
+        ip_protocol_string = "General Routing Encapsulation (PPTP data over GRE)";
+        break;
+    case 51:
+        ip_protocol_string = "Authentication Header (AH) IPSec";
+        break;
+    case 50:
+        ip_protocol_string = "Encapsulation Security Payload (ESP) IPSec";
+        break;
+    case 8:
+        ip_protocol_string = "Exterior Gateway Protocol (EGP)";
+        break;
+    case 3:
+        ip_protocol_string = "Gateway-Gateway Protocol (GGP)";
+        break;
+    case 20:
+        ip_protocol_string = "Host Monitoring Protocol (HMP)";
+        break;
+    case 88:
+        ip_protocol_string = "Internet Group Management Protocol (IGMP)";
+        break;
+    case 66:
+        ip_protocol_string = "MIT Remote Virtual Disk (RVD)";
+        break;
+    case 89:
+        ip_protocol_string = "OSPF Open Shortest Path First";
+        break;
+    case 12:
+        ip_protocol_string = "PARC Universal Packet Protocol (PUP)";
+        break;
+    case 27:
+        ip_protocol_string = "Reliable Datagram Protocol (RDP)";
+        break;
+    case 46:
+        ip_protocol_string = "Reservation Protocol (RSVP) QoS";
+        break;
+    default:
+        ip_protocol_string = "unknown";
+    }
 }
 
 u_short Packet::getIp_checksum() const
@@ -162,6 +212,11 @@ u_short Packet::getIp_checksum() const
 void Packet::setIp_checksum(const u_short &value)
 {
     ip_checksum = value;
+}
+
+QString Packet::getIp_protocol_string() const
+{
+    return ip_protocol_string;
 }
 
 int Packet::getIp_header_length() const {

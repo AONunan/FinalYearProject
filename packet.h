@@ -101,6 +101,8 @@ public:
     u_short getIp_checksum() const;
     void setIp_checksum(const u_short &value);
 
+    QString getIp_protocol_string() const;
+
 private:
     int total_header_length;
     int ip_header_length;
@@ -125,6 +127,7 @@ private:
     u_short ip_offset; // fragment offset field
     u_char ip_time_to_live;
     u_char ip_protocol;
+    QString ip_protocol_string;
     u_short ip_checksum;
 
     // TCP stuff

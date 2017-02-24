@@ -26,7 +26,7 @@
     <string>Print payload</string>
    </property>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>40</x>
@@ -329,6 +329,9 @@
       </property>
       <item>
        <widget class="QLabel" name="label_ip_id">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;(16 bits)&lt;/p&gt;&lt;p&gt;Used to identify the fragments of one datagram from those of another. This value is incremented each time an IP datagram is sent from source to the destination.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="styleSheet">
          <string notr="true">background-color: rgb(255, 255, 255);</string>
         </property>
@@ -384,6 +387,9 @@
       </property>
       <item>
        <widget class="QLabel" name="label_ip_ttl">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;(8 bits)&lt;/p&gt;&lt;p&gt;Time To Live.&lt;/p&gt;&lt;p&gt;The hop limit that limits the lifespan of a packet. Each router that receives the packet subtracts from the TTL.&lt;/p&gt;&lt;p&gt;Can be set to any value between 1 and 255&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="styleSheet">
          <string notr="true">background-color: rgb(255, 255, 255);</string>
         </property>
