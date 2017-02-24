@@ -10,11 +10,72 @@ PacketInfoDialog::PacketInfoDialog(const Packet packet, QWidget *parent) :
 
     displayed_packet = packet;
 
+    show_header_details();
+
+}
+
+PacketInfoDialog::~PacketInfoDialog() {
+    delete ui;
+}
+
+void PacketInfoDialog::on_pushButton_print_payload_clicked()
+{
+    int i;
+    qDebug() << "Payload vect length:" << displayed_packet.getPayload_vect().length();
+
+    for(i = 0; i < displayed_packet.getPayload_vect().length(); i++) {
+        qDebug() << QString("%1").arg(displayed_packet.getPayload_vect()[i], 2, 16, QChar('0')).toUpper();
+    }
+}
+
+void PacketInfoDialog::on_pushButton_change_view_clicked() {
+    if(currently_showing_field_names) {
+        show_header_details();
+    } else {
+        show_header_fields();
+    }
+}
+
+void PacketInfoDialog::show_header_fields() {
+    currently_showing_field_names = true;
+
+    // Set IP fields
+    ui->label_ip_version->setText("Version");
+    ui->label_ip_header_length->setText("Header Length");
+    ui->label_ip_type_of_service->setText("Type of Service");
+    ui->label_ip_total_length->setText("Total Length");
+    ui->label_ip_id->setText("Identification");
+    ui->label_ip_flags->setText("Flags");
+    ui->label_ip_offset->setText("Fragment Offset");
+    ui->label_ip_ttl->setText("Time To Live");
+    ui->label_ip_protocol->setText("Protocol");
+    ui->label_ip_checksum->setText("Header Checksum");
+    ui->label_ip_src_address->setText("Source Address");
+    ui->label_ip_dst_address->setText("Destination Address");
+    ui->label_ip_options->setText("Options");
+
+    // Set TCP fields
+    ui->label_tcp_src_port->setText("Source Port");
+    ui->label_tcp_dst_port->setText("Destination Port");
+    ui->label_tcp_sequence_number->setText("Sequence Number");
+    ui->label_tcp_ack_number->setText("Acknowledgement Number");
+    ui->label_tcp_offset->setText("Offset");
+    ui->label_tcp_reserved->setText("Reserved");
+    ui->label_tcp_flags->setText("Flags");
+    ui->label_tcp_window->setText("Window");
+    ui->label_tcp_checksum->setText("Checksum");
+    ui->label_tcp_urgent_ptr->setText("Urgent Pointer");
+    ui->label_tcp_options->setText("Options");
+}
+
+void PacketInfoDialog::show_header_details() {
+    currently_showing_field_names = false;
+
     // Set IP fields
     ui->label_ip_version->setText(QString::number(displayed_packet.getIp_version()));
-    // TODO: Fill out length
+    ui->label_ip_header_length->setText(QString::number(displayed_packet.getIp_header_length())); // TODO: Fill out length
     ui->label_ip_type_of_service->setText(QString::number(displayed_packet.getIp_type_of_service()));
-    // TODO: Fill out length
+    ui->label_ip_total_length->setText(QString::number(displayed_packet.getIp_length())); // TODO: Fill out length
     ui->label_ip_id->setText(QString::number(displayed_packet.getIp_id()));
     // TODO: Fill out flags
     ui->label_ip_offset->setText(QString::number(displayed_packet.getIp_offset()));
@@ -37,18 +98,4 @@ PacketInfoDialog::PacketInfoDialog(const Packet packet, QWidget *parent) :
     ui->label_tcp_urgent_ptr->setText(QString::number(displayed_packet.getTcp_urgent_pointer()));
     // TODO: Fill out options
 
-}
-
-PacketInfoDialog::~PacketInfoDialog() {
-    delete ui;
-}
-
-void PacketInfoDialog::on_pushButton_print_payload_clicked()
-{
-    int i;
-    qDebug() << "Payload vect length:" << displayed_packet.getPayload_vect().length();
-
-    for(i = 0; i < displayed_packet.getPayload_vect().length(); i++) {
-        qDebug() << QString("%1").arg(displayed_packet.getPayload_vect()[i], 2, 16, QChar('0')).toUpper();
-    }
 }
