@@ -60,6 +60,8 @@ void StatWindow::display_tcp_vs_udp(QVector<Packet> vect) {
         qDebug() << "col 1:" << two_dimensional_data_vect[i][0] << "- col 2:" << two_dimensional_data_vect[i][1];
     }
 
+    qDebug() << Packet::timestamp_to_string(vect[i].getCurrent_time());
+
 }
 
 void StatWindow::display_graph_temp() {

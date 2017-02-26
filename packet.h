@@ -18,6 +18,8 @@ class Packet {
 public:
     Packet();
 
+    static QString timestamp_to_string(int input_time);
+
     int getIp_header_length() const;
     void setIp_header_length(int value);
 
@@ -114,7 +116,6 @@ private:
     QVector<short> payload_vect;
     QString protocol;
     time_t current_time;
-    QString current_time_string;
 
     // Ethernet stuff
     u_char ethernet_destination_address[ETHER_ADDR_LEN];

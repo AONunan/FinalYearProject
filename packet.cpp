@@ -5,6 +5,17 @@ Packet::Packet() {
     reset_values();
 }
 
+QString Packet::timestamp_to_string(int input_time)
+{
+    // Get packet timestamp
+    tm *ltm;
+    long long_Time = (long)input_time;
+    ltm = localtime(&long_Time);
+
+    return QString("%1:%2:%3").arg(ltm->tm_hour, 2, 10, QChar('0')).arg(ltm->tm_min, 2, 10, QChar('0')).arg(ltm->tm_sec, 2, 10, QChar('0')); // Get the timestamp in the format HH:MM:SS. The arguments pad the digits with zeros;
+
+}
+
 void Packet::reset_values() {
     total_header_length = 0;
     ip_header_length = 0;
@@ -217,20 +228,6 @@ void Packet::setIp_checksum(const u_short &value)
 QString Packet::getIp_protocol_string() const
 {
     return ip_protocol_string;
-}
-
-QString Packet::getCurrent_time_string() const
-{
-    return current_time_string;
-}
-
-void Packet::setCurrent_time_string()
-{    // Get packet timestamp
-    tm *ltm;
-    long long_Time = (long)current_time;
-    ltm = localtime(&long_Time);
-
-    current_time_string = QString("%1:%2:%3").arg(ltm->tm_hour, 2, 10, QChar('0')).arg(ltm->tm_min, 2, 10, QChar('0')).arg(ltm->tm_sec, 2, 10, QChar('0')); // Get the timestamp in the format HH:MM:SS. The arguments pad the digits with zeros;
 }
 
 int Packet::getIp_header_length() const {

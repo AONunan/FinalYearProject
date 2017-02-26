@@ -111,7 +111,6 @@ void MainWindow::capture_loop() {
 
     // Add each newly captured packet in the vector to the UI
     for(i = captured_packets_vect.length() - no_of_packets; i < captured_packets_vect.length(); i++) {
-        captured_packets_vect[i].setCurrent_time_string();
         update_table(captured_packets_vect[i]);
     }
 
@@ -125,7 +124,7 @@ void MainWindow::update_table(Packet packet) {
     ui->tableWidget_packets->setRowCount(row_count + 1);
     ui->tableWidget_packets->scrollToBottom();
 
-    ui->tableWidget_packets->setItem(row_count, HEADER_TIMESTAMP, new QTableWidgetItem(packet.getCurrent_time_string()));
+    ui->tableWidget_packets->setItem(row_count, HEADER_TIMESTAMP, new QTableWidgetItem(Packet::timestamp_to_string(packet.getCurrent_time())));
     ui->tableWidget_packets->setItem(row_count, HEADER_PROTOCOL, new QTableWidgetItem(packet.getProtocol()));
     //ui->tableWidget_packets->setItem(row_count, HEADER_SRC_HOST, new QTableWidgetItem(packet));
     ui->tableWidget_packets->setItem(row_count, HEADER_SRC_HOST, new QTableWidgetItem(packet.getIp_source_address()));
