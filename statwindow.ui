@@ -13,20 +13,31 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
-    <widget class="QComboBox" name="comboBox_display_option">
-     <item>
-      <property name="text">
-       <string>TCP vs UDP</string>
-      </property>
-     </item>
-    </widget>
+  <widget class="QComboBox" name="comboBox_display_option">
+   <property name="geometry">
+    <rect>
+     <x>9</x>
+     <y>9</y>
+     <width>94</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <item>
+    <property name="text">
+     <string>TCP vs UDP</string>
+    </property>
    </item>
-   <item row="1" column="0">
-    <widget class="QWidget" name="widget_graph" native="true"/>
-   </item>
-  </layout>
+  </widget>
+  <widget class="QWidget" name="widget_graph" native="true">
+   <property name="geometry">
+    <rect>
+     <x>9</x>
+     <y>42</y>
+     <width>451</width>
+     <height>271</height>
+    </rect>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

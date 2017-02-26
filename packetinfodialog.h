@@ -15,7 +15,7 @@ public:
     explicit PacketInfoDialog(const Packet packet, QWidget *parent = 0);
     ~PacketInfoDialog();
 
-    void show_header_fields();
+    void show_header_field_names();
     void show_header_details();
 private slots:
     void on_pushButton_print_payload_clicked();

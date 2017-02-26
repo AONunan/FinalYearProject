@@ -32,11 +32,11 @@ void PacketInfoDialog::on_pushButton_change_view_clicked() {
     if(currently_showing_field_names) {
         show_header_details();
     } else {
-        show_header_fields();
+        show_header_field_names();
     }
 }
 
-void PacketInfoDialog::show_header_fields() {
+void PacketInfoDialog::show_header_field_names() {
     currently_showing_field_names = true;
 
     // Set IP fields
