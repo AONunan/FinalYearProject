@@ -18,15 +18,16 @@ public:
     explicit StatWindow(QVector<Packet> vect, QWidget *parent = 0);
     ~StatWindow();
 
-    void display_tcp_vs_udp();
+    void display_tcp_vs_udp_line();
+    void display_tcp_vs_udp_bar();
     void display_graph_temp();
 private slots:
     void on_comboBox_display_choice_currentIndexChanged(const QString &menu_value);
 
 private:
     Ui::StatWindow *ui;
-    QGridLayout *mainLayout;
-    QChartView *chartView;
+    QGridLayout *main_layout;
+    QChartView *chart_view;
     QVector<Packet> input_vect;
 
 };

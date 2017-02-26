@@ -10,16 +10,16 @@ StatWindow::StatWindow(QVector<Packet> vect, QWidget *parent) :
     // Set class member variable to input vect
     input_vect = vect;
 
-    chartView = new QChartView();
-    chartView->setRenderHint(QPainter::Antialiasing); // Turn on antialiasing to make chart lines appear nicer
+    chart_view = new QChartView();
+    chart_view->setRenderHint(QPainter::Antialiasing); // Turn on antialiasing to make chart lines appear nicer
 
     // Add the combobox and the chartview to the UI
-    mainLayout = new QGridLayout(this);
-    mainLayout->addWidget(ui->comboBox_display_choice);
-    mainLayout->addWidget(chartView);
+    main_layout = new QGridLayout(this);
+    main_layout->addWidget(ui->comboBox_display_choice);
+    main_layout->addWidget(chart_view);
 
     if(input_vect.length() > 0) {
-        display_tcp_vs_udp();
+        display_tcp_vs_udp_line();
     } else {
         qDebug() << "Cannot display graph without first capturing packets.";
     }
@@ -32,9 +32,10 @@ StatWindow::~StatWindow()
 
 void StatWindow::on_comboBox_display_choice_currentIndexChanged(const QString &menu_value)
 {
-    //mainLayout->removeWidget();
-    if(menu_value == "TCP vs UDP") {
-        display_tcp_vs_udp();
+    if(menu_value == "TCP vs UDP (Line Chart)") {
+        display_tcp_vs_udp_line();
+    } else if(menu_value == "TCP vs UDP (Bar Chart)") {
+        display_tcp_vs_udp_bar();
     } else if(menu_value == "Chart 2") {
         display_graph_temp();
     } else {
@@ -42,7 +43,7 @@ void StatWindow::on_comboBox_display_choice_currentIndexChanged(const QString &m
     }
 }
 
-void StatWindow::display_tcp_vs_udp() {
+void StatWindow::display_tcp_vs_udp_line() {
     int i, j, // Counters
         initial_time, final_time;
 
@@ -90,51 +91,93 @@ void StatWindow::display_tcp_vs_udp() {
     }
 
     // Store the line data
-    QLineSeries *seriesTcp = new QLineSeries();
-    QLineSeries *seriesUdp = new QLineSeries();
+    QLineSeries *series_tcp = new QLineSeries();
+    QLineSeries *series_udp = new QLineSeries();
+
+    // Add origin points
+    series_tcp->append(tcp_count_vect[0][0], 0);
+    series_tcp->append(udp_count_vect[0][0], 0);
 
     // Add data to plotting info
     for(i = 0; i < tcp_count_vect.length(); i++) {
         if(tcp_count_vect[i][1] != 0) { // Exclude 0 values from graph
-            seriesTcp->append(tcp_count_vect[i][0], tcp_count_vect[i][1]); // Add timestamp and count
+            series_tcp->append(tcp_count_vect[i][0], tcp_count_vect[i][1]); // Add timestamp and count
         }
 
         if(udp_count_vect[i][1] != 0) { // Exclude 0 values from graph
-            seriesUdp->append(udp_count_vect[i][0], udp_count_vect[i][1]); // Add timestamp and count
+            series_udp->append(udp_count_vect[i][0], udp_count_vect[i][1]); // Add timestamp and count
         }
     }
 
     // Generate the chart
     QChart *chart = new QChart();
     chart->legend()->hide();
-    chart->addSeries(seriesTcp);
-    chart->addSeries(seriesUdp);
+    chart->addSeries(series_tcp);
+    chart->addSeries(series_udp);
     chart->createDefaultAxes();
     chart->setTitle("TCP vs UDP");
 
-    // Set the chartView widget to the current chart details
-    chartView->setChart(chart);
+    // Set the chart_view widget to the current chart details
+    chart_view->setChart(chart);
+}
+
+void StatWindow::display_tcp_vs_udp_bar() {
+    int i, tcp_count, udp_count;
+
+    tcp_count = 0;
+    udp_count = 0;
+
+    for(i = 0; i < input_vect.length(); i++) {
+        if(input_vect[i].getProtocol() == "TCP") {
+            tcp_count++;
+        } else if(input_vect[i].getProtocol() == "UDP") {
+            udp_count++;
+        }
+    }
+
+    QBarSet *tcp_set = new QBarSet("TCP");
+    QBarSet *udp_set = new QBarSet("UDP");
+
+    *tcp_set << tcp_count;
+    *udp_set << udp_count;
+
+    QBarSeries *series = new QBarSeries();
+    series->append(tcp_set);
+    series->append(udp_set);
+
+    QChart *chart = new QChart();
+    chart->addSeries(series);
+    chart->setTitle("TCP vs UDP");
+    chart->setAnimationOptions(QChart::SeriesAnimations);
+    chart->legend()->setVisible(true);
+    chart->legend()->setAlignment(Qt::AlignBottom);
+
+    // Set the chart_view widget to the current chart details
+    chart_view->setChart(chart);
+
+    qDebug() << "TCP count:" << tcp_count;
+    qDebug() << "UDP count:" << udp_count;
 }
 
 void StatWindow::display_graph_temp() {
     // Store the line data
-    QLineSeries *seriesTcp = new QLineSeries();
-    QLineSeries *seriesUdp = new QLineSeries();
+    QLineSeries *series_tcp = new QLineSeries();
+    QLineSeries *series_udp = new QLineSeries();
 
-    seriesTcp->append(0, 5);
-    seriesTcp->append(1, 7);
-    seriesTcp->append(2, 4);
+    series_tcp->append(0, 5);
+    series_tcp->append(1, 7);
+    series_tcp->append(2, 4);
 
-    seriesUdp->append(0, 9);
-    seriesUdp->append(1, -5);
-    seriesUdp->append(2, 5);
+    series_udp->append(0, 9);
+    series_udp->append(1, -5);
+    series_udp->append(2, 5);
 
     QChart *chart = new QChart();
     chart->legend()->hide();
-    chart->addSeries(seriesTcp);
-    chart->addSeries(seriesUdp);
+    chart->addSeries(series_tcp);
+    chart->addSeries(series_udp);
     chart->createDefaultAxes();
     chart->setTitle("Testing");
 
-    chartView->setChart(chart);
+    chart_view->setChart(chart);
 }

@@ -24,7 +24,12 @@
    </property>
    <item>
     <property name="text">
-     <string>TCP vs UDP</string>
+     <string>TCP vs UDP (Line Chart)</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>TCP vs UDP (Bar Chart)</string>
     </property>
    </item>
    <item>
