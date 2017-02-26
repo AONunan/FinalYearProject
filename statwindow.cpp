@@ -46,8 +46,8 @@ void StatWindow::display_tcp_vs_udp() {
     int i, j, // Counters
         initial_time, final_time;
 
-    QVector<QVector<int> > two_dimensional_data_vect;
-    /* The two_dimensional_data_vect keeps track of how many packets were captured each second
+    QVector<QVector<int> > tcp_count_vect, udp_count_vect;
+    /* The tcp_count_vect keeps track of how many packets were captured each second
      * and will look like the following:
      *
      * | Timestamp | Count |
@@ -66,31 +66,41 @@ void StatWindow::display_tcp_vs_udp() {
         QVector<int> row_vect; // Inner QVector
         row_vect.append(i); // Timestamp
         row_vect.append(0); // Count of packets at that timestamp
-        two_dimensional_data_vect.append(row_vect);
+        tcp_count_vect.append(row_vect);
+        udp_count_vect.append(row_vect);
     }
 
     // Populate 2d_data_vect count column
     for(i = 0; i < input_vect.length(); i++) {
-        for(j = 0; j < two_dimensional_data_vect.length(); j++) {
-            if(input_vect[i].getCurrent_time() == two_dimensional_data_vect[j][0]) { // Check if packet timestamp matches 2d_data_vect timestamp
-                two_dimensional_data_vect[j][1]++; // If so, add 1 to the count
-                break; // No need to check any more so break out of FOR loop
+        if(input_vect[i].getProtocol() == "TCP") {
+            for(j = 0; j < tcp_count_vect.length(); j++) {
+                if(input_vect[i].getCurrent_time() == tcp_count_vect[j][0]) { // Check if packet timestamp matches 2d_data_vect timestamp
+                    tcp_count_vect[j][1]++; // If so, add 1 to the count
+                    break; // No need to check any more so break out of FOR loop
+                }
+            }
+        } else if(input_vect[i].getProtocol() == "UDP") {
+            for(j = 0; j < udp_count_vect.length(); j++) {
+                if(input_vect[i].getCurrent_time() == tcp_count_vect[j][0]) { // Check if packet timestamp matches 2d_data_vect timestamp
+                    udp_count_vect[j][1]++; // If so, add 1 to the count
+                    break; // No need to check any more so break out of FOR loop
+                }
             }
         }
     }
 
-    // Display results
-    for(i = 0; i < two_dimensional_data_vect.length(); i++) {
-        qDebug() << "col 1:" << Packet::timestamp_to_string(two_dimensional_data_vect[i][0]) << "- col 2:" << two_dimensional_data_vect[i][1];
-    }
-
     // Store the line data
     QLineSeries *seriesTcp = new QLineSeries();
+    QLineSeries *seriesUdp = new QLineSeries();
 
     // Add data to plotting info
-    for(i = 0; i < two_dimensional_data_vect.length(); i++) {
-        if(two_dimensional_data_vect[i][1] != 0) { // Exclude 0 values from graph
-            seriesTcp->append(two_dimensional_data_vect[i][0], two_dimensional_data_vect[i][1]); // Add timestamp and count
+    for(i = 0; i < tcp_count_vect.length(); i++) {
+        if(tcp_count_vect[i][1] != 0) { // Exclude 0 values from graph
+            seriesTcp->append(tcp_count_vect[i][0], tcp_count_vect[i][1]); // Add timestamp and count
+        }
+
+        if(udp_count_vect[i][1] != 0) { // Exclude 0 values from graph
+            seriesUdp->append(udp_count_vect[i][0], udp_count_vect[i][1]); // Add timestamp and count
         }
     }
 
@@ -98,9 +108,11 @@ void StatWindow::display_tcp_vs_udp() {
     QChart *chart = new QChart();
     chart->legend()->hide();
     chart->addSeries(seriesTcp);
+    chart->addSeries(seriesUdp);
     chart->createDefaultAxes();
     chart->setTitle("TCP vs UDP");
 
+    // Set the chartView widget to the current chart details
     chartView->setChart(chart);
 }
 
