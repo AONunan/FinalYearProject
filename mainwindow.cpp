@@ -111,6 +111,7 @@ void MainWindow::capture_loop() {
 
     // Add each newly captured packet in the vector to the UI
     for(i = captured_packets_vect.length() - no_of_packets; i < captured_packets_vect.length(); i++) {
+        captured_packets_vect[i].setCurrent_time_string();
         update_table(captured_packets_vect[i]);
     }
 
@@ -120,16 +121,11 @@ void MainWindow::capture_loop() {
 }
 
 void MainWindow::update_table(Packet packet) {
-    // Get packet timestamp
-    tm *ltm;
-    long long_Time = (long)packet.getCurrent_time();
-    ltm = localtime(&long_Time);
-
     // Create new row and scroll to bottom of table
     ui->tableWidget_packets->setRowCount(row_count + 1);
     ui->tableWidget_packets->scrollToBottom();
 
-    ui->tableWidget_packets->setItem(row_count, HEADER_TIMESTAMP, new QTableWidgetItem(QString("%1:%2:%3").arg(ltm->tm_hour, 2, 10, QChar('0')).arg(ltm->tm_min, 2, 10, QChar('0')).arg(ltm->tm_sec, 2, 10, QChar('0')))); // Add the timestamp in the format HH:MM:SS. The arguments pad the digits with zeros
+    ui->tableWidget_packets->setItem(row_count, HEADER_TIMESTAMP, new QTableWidgetItem(packet.getCurrent_time_string()));
     ui->tableWidget_packets->setItem(row_count, HEADER_PROTOCOL, new QTableWidgetItem(packet.getProtocol()));
     //ui->tableWidget_packets->setItem(row_count, HEADER_SRC_HOST, new QTableWidgetItem(packet));
     ui->tableWidget_packets->setItem(row_count, HEADER_SRC_HOST, new QTableWidgetItem(packet.getIp_source_address()));
@@ -157,7 +153,7 @@ void MainWindow::on_pushButton_filterSettings_clicked() {
 
 void MainWindow::on_pushButton_statistics_clicked() {
     // Open dialog with packet details with an argument
-    StatWindow statWindow;
+    StatWindow statWindow(captured_packets_vect);
     statWindow.setModal(true);
     statWindow.exec();
 }

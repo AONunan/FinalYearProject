@@ -103,6 +103,9 @@ public:
 
     QString getIp_protocol_string() const;
 
+    QString getCurrent_time_string() const;
+    void setCurrent_time_string();
+
 private:
     int total_header_length;
     int ip_header_length;
@@ -111,6 +114,7 @@ private:
     QVector<short> payload_vect;
     QString protocol;
     time_t current_time;
+    QString current_time_string;
 
     // Ethernet stuff
     u_char ethernet_destination_address[ETHER_ADDR_LEN];
