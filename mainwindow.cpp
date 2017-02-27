@@ -8,6 +8,7 @@
 #include "packet.h"
 #include "packetinfodialog.h"
 #include "statwindow.h"
+#include "sidebysidewindow.h"
 #include "filtersettingswindow.h"
 
 // These correspond to the columns in the table
@@ -170,3 +171,11 @@ void MainWindow::on_pushButton_clear_clicked() {
     ui->tableWidget_packets->setRowCount(0);
 }
 
+
+void MainWindow::on_pushButton_side_by_side_clicked()
+{
+    // Open dialog with packet details with an argument
+    SideBySideWindow sideBySideWindow(captured_packets_vect);
+    sideBySideWindow.setModal(true);
+    sideBySideWindow.exec();
+}

@@ -166,6 +166,13 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="pushButton_side_by_side">
+        <property name="text">
+         <string>Side by side</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="pushButton_clear">
         <property name="text">
          <string>Clear</string>
@@ -189,7 +196,7 @@
      <x>0</x>
      <y>0</y>
      <width>729</width>
-     <height>25</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>

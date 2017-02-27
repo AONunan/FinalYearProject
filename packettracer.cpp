@@ -49,7 +49,7 @@ pcap_t* PacketTracer::open_for_sniffing(char* dev) {
 }
 
 void PacketTracer::apply_filter(pcap_t *handle, bpf_program *filter_expressionPtr, bpf_u_int32 net) {
-    char filter_expession_string[] = "ip > 100";
+    char filter_expession_string[] = "host 178.62.36.190";
 
     // Compile filter expression
     if (pcap_compile(handle, filter_expressionPtr, filter_expession_string, 0, net) == -1) {
