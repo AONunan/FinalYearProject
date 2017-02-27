@@ -3,6 +3,16 @@
 
 #include <QDebug>
 
+#define TCP_FIN  0x01
+#define TCP_SYN  0x02
+#define TCP_RST  0x04
+#define TCP_PUSH 0x08
+#define TCP_ACK  0x10
+#define TCP_URG  0x20
+#define TCP_ECE  0x40
+#define TCP_CWR  0x80
+#define TCP_FLAGS		(TCP_FIN|TCP_SYN|TCP_RST|TCP_ACK|TCP_URG|TCP_ECE|TCP_CWR)
+
 PacketInfoDialog::PacketInfoDialog(const Packet packet, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::PacketInfoDialog) {
@@ -108,10 +118,43 @@ void PacketInfoDialog::show_header_details() {
     ui->label_tcp_sequence_number->setText(QString::number(displayed_packet.getTcp_sequence_number()));
     ui->label_tcp_ack_number->setText(QString::number(displayed_packet.getTcp_acknowledgement_number()));
     ui->label_tcp_offset->setText(QString::number(displayed_packet.getTcp_offset()));
-    ui->label_tcp_flags->setText(QString("0x%1").arg(displayed_packet.getTcp_flags(), 2, 16, QChar('0')).toUpper()); // Display flags in Hex
+
+    ui->label_tcp_flags->setText(QString("0x%1").arg(displayed_packet.getTcp_flags(), 2, 16, QChar('0'))); // Display flags in Hex
+    ui->label_tcp_flags->setToolTip(find_tcp_flag_string(displayed_packet.getTcp_flags())); // Show TCP flags in tooltip
+
     ui->label_tcp_window->setText(QString::number(displayed_packet.getTcp_window()));
     ui->label_tcp_checksum->setText(QString::number(displayed_packet.getTcp_checksum()));
     ui->label_tcp_urgent_ptr->setText(QString::number(displayed_packet.getTcp_urgent_pointer()));
     // TODO: Fill out options
 
+}
+
+QString PacketInfoDialog::find_tcp_flag_string(int flags) {
+    QString result = "(6 bits)\n";
+
+    result += "\nFIN = ";
+    result += (flags & TCP_FIN) ? "True" : "False";
+    result += "\nFinish: Used to tear down connections. Each sides sends a FIN followed by an ACK and the connection closes.";
+
+    result += "\n\nSYN = ";
+    result += (flags & TCP_SYN) ? "True" : "False";
+    result += "\nSynchronize: Used at the start of the three-way handshake to initialise a connection.";
+
+    result += "\n\nRST = ";
+    result += (flags & TCP_RST) ? "True" : "False";
+    result += "\nReset: Used to inform the reciever that the sender has abrubtly shut the connection down.";
+
+    result += "\n\nPUSH = ";
+    result += (flags & TCP_PUSH) ? "True" : "False";
+    result += "\nPush: Often set at the end of a block of data, informing the receiver that they can begin processing the data.";
+
+    result += "\n\nACK = ";
+    result += (flags & TCP_ACK) ? "True" : "False";
+    result += "\nAcknowledgment: Used to acknowledge that data has been received. Used also when setting up and tearing down TCP connections.";
+
+    result += "\n\nURG = ";
+    result += (flags & TCP_URG) ? "True" : "False";
+    result += "\nUrgent: Indicates that the data is urgent. The receiver will know to process the data immediately.";
+
+    return result;
 }
