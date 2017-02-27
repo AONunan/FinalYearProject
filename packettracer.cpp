@@ -86,8 +86,10 @@ Packet PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet, 
     // Define IP header, same as pointer plus ethernet length
     ipPtr = (struct ip_header*)(packet + SIZE_ETHERNET);
 
+    qDebug() << "???????????? version_and_header_length:" << ipPtr->version_and_header_length;
+
     // Calculate IP header length (i.e. offset)
-    ip_header_length = ((ipPtr->version) & 0x0f) * 4;
+    ip_header_length = ((ipPtr->version_and_header_length) & 0x0f) << 2; // Bitshift to the right to get header length
     working_packet.setIp_header_length(ip_header_length);
 
     qDebug() << "IP header length" << ip_header_length << "bytes";
@@ -101,7 +103,7 @@ Packet PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet, 
     // Set IP details
     working_packet.setIp_source_address(inet_ntoa(ipPtr->source_address));
     working_packet.setIp_destination_address(inet_ntoa(ipPtr->destination_address));
-    working_packet.setIp_version(ipPtr->version);
+    working_packet.setIp_version((ipPtr->version_and_header_length) >> 4); // Bitshifting required to obtain version number
     working_packet.setIp_type_of_service(ipPtr->type_of_service);
     working_packet.setIp_length(ipPtr->length);
     working_packet.setIp_id(ipPtr->id);

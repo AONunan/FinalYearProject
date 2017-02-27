@@ -188,6 +188,9 @@
       </property>
       <item>
        <widget class="QLabel" name="label_tcp_checksum">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;(16 bits)&lt;/p&gt;&lt;p&gt;Used to check for data corruption in the packet header AND in the packet payload.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="styleSheet">
          <string notr="true">background-color: rgb(255, 255, 255);</string>
         </property>
@@ -422,6 +425,9 @@
       </item>
       <item>
        <widget class="QLabel" name="label_ip_checksum">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;(16 bits)&lt;/p&gt;&lt;p&gt;Used to check for data corruption in the packet header, does not check the packet payload.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="styleSheet">
          <string notr="true">background-color: rgb(255, 255, 255);</string>
         </property>

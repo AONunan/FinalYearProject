@@ -56,11 +56,11 @@ private:
 
     // IP header
     struct ip_header {
-        u_char version; // version << 4 | header length >> 2
+        u_char version_and_header_length; // IP version has been bitshifted 4 places to the right. Header length has been bit shifted 2 places to the left. Will require shifting to obtain proper values later
         u_char type_of_service;
         u_short length;
         u_short id;
-        u_short offset; // fragment offset field
+        u_short offset; // Fragment offset field
         u_char time_to_live;
         u_char protocol;
         u_short checksum;
