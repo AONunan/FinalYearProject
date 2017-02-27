@@ -81,62 +81,42 @@ void PacketInfoDialog::show_header_field_names() {
 void PacketInfoDialog::show_header_details() {
     currently_showing_field_names = false;
 
-    // Set IP fields
+    // Set IP field details
     ui->label_ip_version->setText(QString::number(displayed_packet.getIp_version()));
-    ui->label_ip_version->setToolTip(QString("(4 bits)%1").arg((displayed_packet.getIp_version() == 4) ? "\n\nIP Version 4" : ""));
-
     ui->label_ip_header_length->setText(QString::number(displayed_packet.getIp_header_length())); // TODO: Fill out length
-    ui->label_ip_header_length->setToolTip(QString("(4 bits)\n\nThe length of the IP header, given in bytes."));
-
     ui->label_ip_type_of_service->setText(QString::number(displayed_packet.getIp_type_of_service()));
-    // Tool tip set in UI file
-
-    ui->label_ip_total_length->setText(QString::number(displayed_packet.getIp_length())); // TODO: Fill out length
-
+    ui->label_ip_total_length->setText(QString::number(displayed_packet.getIp_length()));
     ui->label_ip_id->setText(QString::number(displayed_packet.getIp_id()));
-    // Tool tip set in UI file
-
     // TODO: Fill out flags
-
     ui->label_ip_offset->setText(QString::number(displayed_packet.getIp_offset()));
-
     ui->label_ip_ttl->setText(QString::number(displayed_packet.getIp_time_to_live()));
-
     ui->label_ip_protocol->setText(QString::number(displayed_packet.getIp_protocol()));
+    ui->label_ip_checksum->setText(QString("0x%1").arg(displayed_packet.getIp_checksum(), 2, 16, QChar('0')));
+    ui->label_ip_src_address->setText(displayed_packet.getIp_source_address());
+    ui->label_ip_dst_address->setText(displayed_packet.getIp_destination_address());
+    // TODO: Fill out options
+
+    // Set IP field tooltips
+    ui->label_ip_version->setToolTip(QString("(4 bits)%1").arg((displayed_packet.getIp_version() == 4) ? "\n\nIP Version 4" : ""));
+    ui->label_ip_header_length->setToolTip(QString("(4 bits)\n\nThe length of the IP header, given in bytes."));
     ui->label_ip_protocol->setToolTip(QString("(8 bits)\n\n%1").arg(displayed_packet.getIp_protocol_string()));
 
-    ui->label_ip_checksum->setText(QString("0x%1").arg(displayed_packet.getIp_checksum(), 2, 16, QChar('0')));
-    // Tool tip set in UI file
-
-    ui->label_ip_src_address->setText(displayed_packet.getIp_source_address());
-
-    ui->label_ip_dst_address->setText(displayed_packet.getIp_destination_address());
-
-    // TODO: Fill out options
-
-    // Set TCP fields
+    // Set TCP field details
     ui->label_tcp_src_port->setText(QString::number(displayed_packet.getTcp_source_port()));
-
     ui->label_tcp_dst_port->setText(QString::number(displayed_packet.getTcp_destination_port()));
-
     ui->label_tcp_sequence_number->setText(QString::number(displayed_packet.getTcp_sequence_number()));
-
     ui->label_tcp_ack_number->setText(QString::number(displayed_packet.getTcp_acknowledgement_number()));
-
     ui->label_tcp_offset->setText(QString::number(displayed_packet.getTcp_offset()));
-
     ui->label_tcp_flags->setText(QString("0x%1").arg(displayed_packet.getTcp_flags(), 2, 16, QChar('0'))); // Display flags in Hex
-    ui->label_tcp_flags->setToolTip(find_tcp_flag_string(displayed_packet.getTcp_flags())); // Show TCP flags in tooltip
-
     ui->label_tcp_window->setText(QString::number(displayed_packet.getTcp_window()));
-
     ui->label_tcp_checksum->setText(QString("0x%1").arg(displayed_packet.getTcp_checksum(), 2, 16, QChar('0'))); // Display as hex
-    // Tool tip set in UI file
-
     ui->label_tcp_urgent_ptr->setText(QString::number(displayed_packet.getTcp_urgent_pointer()));
-
     // TODO: Fill out options
 
+    // Set TCP field tooltips
+    ui->label_tcp_src_port->setToolTip(QString("(16 bits)\n\n%1").arg(Packet::tcp_port_to_string(displayed_packet.getTcp_source_port())));
+    ui->label_tcp_dst_port->setToolTip(QString("(16 bits)\n\n%1").arg(Packet::tcp_port_to_string(displayed_packet.getTcp_destination_port())));
+    ui->label_tcp_flags->setToolTip(find_tcp_flag_string(displayed_packet.getTcp_flags())); // Show TCP flags in tooltip
 }
 
 QString PacketInfoDialog::find_tcp_flag_string(int flags) {

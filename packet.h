@@ -105,6 +105,8 @@ public:
 
     QString getIp_protocol_string() const;
 
+    static QString tcp_port_to_string(u_short port);
+
 private:
     int total_header_length;
     int ip_header_length;

@@ -230,6 +230,43 @@ QString Packet::getIp_protocol_string() const
     return ip_protocol_string;
 }
 
+QString Packet::tcp_port_to_string(u_short port)
+{
+    switch(port) {
+    case 20:
+    case 21:
+        return "FTP";
+        break;
+    case 22:
+        return "SSH";
+        break;
+    case 23:
+        return "Telnet";
+        break;
+    case 25:
+        return "SMTP";
+        break;
+    case 53:
+        return "DNS";
+        break;
+    case 67:
+    case 68:
+        return "DHCP";
+        break;
+    case 80:
+        return "HTTP";
+        break;
+    case 110:
+        return "POP3";
+        break;
+    case 443:
+        return "HTTPS";
+        break;
+    default:
+        return "unknown";
+    }
+}
+
 int Packet::getIp_header_length() const {
     return ip_header_length;
 }
