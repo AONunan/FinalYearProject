@@ -108,7 +108,7 @@ void PacketInfoDialog::show_header_details() {
     ui->label_tcp_sequence_number->setText(QString::number(displayed_packet.getTcp_sequence_number()));
     ui->label_tcp_ack_number->setText(QString::number(displayed_packet.getTcp_acknowledgement_number()));
     ui->label_tcp_offset->setText(QString::number(displayed_packet.getTcp_offset()));
-    ui->label_tcp_flags->setText(QString::number(displayed_packet.getTcp_flags()));
+    ui->label_tcp_flags->setText(QString("0x%1").arg(displayed_packet.getTcp_flags(), 2, 16, QChar('0')).toUpper()); // Display flags in Hex
     ui->label_tcp_window->setText(QString::number(displayed_packet.getTcp_window()));
     ui->label_tcp_checksum->setText(QString::number(displayed_packet.getTcp_checksum()));
     ui->label_tcp_urgent_ptr->setText(QString::number(displayed_packet.getTcp_urgent_pointer()));
