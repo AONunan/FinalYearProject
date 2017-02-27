@@ -137,8 +137,6 @@ void MainWindow::update_table(Packet packet) {
 }
 
 void MainWindow::on_tableWidget_packets_cellDoubleClicked(int row) {
-    qDebug() << "You double clicked on row" << row;
-
     // Open dialog with packet details with an argument
     PacketInfoDialog infoDialog(captured_packets_vect[row]);
     infoDialog.setModal(true);

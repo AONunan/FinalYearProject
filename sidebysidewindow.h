@@ -17,10 +17,13 @@ public:
     ~SideBySideWindow();
 
     void populate_table();
-    void update_table(int timestamp, int column_position);
+    void update_table(Packet packet, int column_position);
+private slots:
+    void on_tableWidget_packets_cellDoubleClicked(int row);
+
 private:
     Ui::SideBySideWindow *ui;
-    QVector<Packet> input_vect;
+    QVector<Packet> input_vect, matching_packets_vect;
     int row_count; // Keep track of current row
 };
 

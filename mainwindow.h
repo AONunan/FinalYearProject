@@ -27,7 +27,6 @@ private slots:
     void on_tableWidget_packets_cellDoubleClicked(int row);
     void on_pushButton_statistics_clicked();
     void on_pushButton_clear_clicked();
-
     void on_pushButton_side_by_side_clicked();
 
 private:

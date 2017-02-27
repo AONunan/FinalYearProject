@@ -29,7 +29,6 @@ private:
     QGridLayout *main_layout;
     QChartView *chart_view;
     QVector<Packet> input_vect;
-
 };
 
 #endif // STATWINDOW_H
