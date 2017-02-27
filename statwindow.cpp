@@ -1,6 +1,9 @@
 #include "statwindow.h"
 #include "ui_statwindow.h"
 
+#define TIMESTAMP_COLUMN 0
+#define COUNT_COLUMN 1
+
 StatWindow::StatWindow(QVector<Packet> vect, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::StatWindow)
@@ -75,15 +78,15 @@ void StatWindow::display_tcp_vs_udp_line() {
     for(i = 0; i < input_vect.length(); i++) {
         if(input_vect[i].getProtocol() == "TCP") {
             for(j = 0; j < tcp_count_vect.length(); j++) {
-                if(input_vect[i].getCurrent_time() == tcp_count_vect[j][0]) { // Check if packet timestamp matches 2d_data_vect timestamp
-                    tcp_count_vect[j][1]++; // If so, add 1 to the count
+                if(input_vect[i].getCurrent_time() == tcp_count_vect[j][TIMESTAMP_COLUMN]) { // Check if packet timestamp matches 2d_data_vect timestamp
+                    tcp_count_vect[j][COUNT_COLUMN]++; // If so, add 1 to the count
                     break; // No need to check any more so break out of FOR loop
                 }
             }
         } else if(input_vect[i].getProtocol() == "UDP") {
             for(j = 0; j < udp_count_vect.length(); j++) {
-                if(input_vect[i].getCurrent_time() == tcp_count_vect[j][0]) { // Check if packet timestamp matches 2d_data_vect timestamp
-                    udp_count_vect[j][1]++; // If so, add 1 to the count
+                if(input_vect[i].getCurrent_time() == tcp_count_vect[j][TIMESTAMP_COLUMN]) { // Check if packet timestamp matches 2d_data_vect timestamp
+                    udp_count_vect[j][COUNT_COLUMN]++; // If so, add 1 to the count
                     break; // No need to check any more so break out of FOR loop
                 }
             }
@@ -95,17 +98,17 @@ void StatWindow::display_tcp_vs_udp_line() {
     QLineSeries *series_udp = new QLineSeries();
 
     // Add origin points
-    series_tcp->append(tcp_count_vect[0][0], 0);
-    series_tcp->append(udp_count_vect[0][0], 0);
+    series_tcp->append(tcp_count_vect[0][TIMESTAMP_COLUMN], 0);
+    series_tcp->append(udp_count_vect[0][TIMESTAMP_COLUMN], 0);
 
     // Add data to plotting info
     for(i = 0; i < tcp_count_vect.length(); i++) {
-        if(tcp_count_vect[i][1] != 0) { // Exclude 0 values from graph
-            series_tcp->append(tcp_count_vect[i][0], tcp_count_vect[i][1]); // Add timestamp and count
+        if(tcp_count_vect[i][COUNT_COLUMN] != 0) { // Exclude 0 values from graph
+            series_tcp->append(tcp_count_vect[i][TIMESTAMP_COLUMN], tcp_count_vect[i][COUNT_COLUMN]); // Add timestamp and count
         }
 
-        if(udp_count_vect[i][1] != 0) { // Exclude 0 values from graph
-            series_udp->append(udp_count_vect[i][0], udp_count_vect[i][1]); // Add timestamp and count
+        if(udp_count_vect[i][COUNT_COLUMN] != 0) { // Exclude 0 values from graph
+            series_udp->append(udp_count_vect[i][TIMESTAMP_COLUMN], udp_count_vect[i][COUNT_COLUMN]); // Add timestamp and count
         }
     }
 
