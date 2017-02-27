@@ -112,6 +112,7 @@ void MainWindow::capture_loop() {
     // Add each newly captured packet in the vector to the UI
     for(i = captured_packets_vect.length() - no_of_packets; i < captured_packets_vect.length(); i++) {
         update_table(captured_packets_vect[i]);
+        //ui->statusBar->showMessage(QString("Processing %1 of %2.").arg(QString::number(i + 1)).arg(QString::number(captured_packets_vect.length())));
     }
 
     ui->button_capture_packet->setText("Capture");
