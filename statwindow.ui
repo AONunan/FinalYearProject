@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Stats and Charts</string>
   </property>
   <widget class="QComboBox" name="comboBox_display_choice">
    <property name="geometry">

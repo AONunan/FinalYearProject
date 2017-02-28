@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Side By Side</string>
   </property>
   <widget class="QTableWidget" name="tableWidget_packets">
    <property name="geometry">

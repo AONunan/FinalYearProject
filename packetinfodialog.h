@@ -18,6 +18,8 @@ public:
     void show_header_field_names();
     void show_header_details();
     QString find_tcp_flag_string(int flags);
+    void print_payload();
+    void print_payload_offset();
 private slots:
     void on_pushButton_print_payload_clicked();
     void on_pushButton_change_view_clicked();

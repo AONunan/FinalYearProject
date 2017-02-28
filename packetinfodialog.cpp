@@ -20,6 +20,18 @@ PacketInfoDialog::PacketInfoDialog(const Packet packet, QWidget *parent) :
     displayed_packet = packet;
 
     show_header_details();
+    ui->groupBox_ip_header->setTitle(QString("IP Header (%1 bytes)").arg(displayed_packet.getIp_header_length()));
+    ui->groupBox_tcp_header->setTitle(QString("TCP Header (%1 bytes)").arg(displayed_packet.getTcp_header_length()));
+
+    // If payload exists, print out payload
+    if(displayed_packet.getPayload_length() > 0) {
+        print_payload();
+    } else {
+        ui->groupBox_payload->hide();
+        this->resize(700, 300);
+    }
+
+    //ui->textBrowser_payload_hex->setText("Hello world, this is a test");
 
 }
 
@@ -149,4 +161,26 @@ QString PacketInfoDialog::find_tcp_flag_string(int flags) {
     result += "\nUrgent: Indicates that the data is urgent. The receiver will know to process the data immediately.";
 
     return result;
+}
+
+void PacketInfoDialog::print_payload() {
+    ui->groupBox_payload->setTitle(QString("Payload (%1 bytes)").arg(displayed_packet.getPayload_length()));
+    print_payload_offset();
+}
+
+void PacketInfoDialog::print_payload_offset() {
+    int i;
+    int row_count = 0;
+
+    /*    ui->tableWidget_packets->setRowCount(row_count + 1);
+    ui->tableWidget_packets->scrollToBottom();
+
+    ui->tableWidget_packets->setItem(row_count, HEADER_TIMESTAMP, new QTableWidgetItem(Packet::timestamp_to_string(packet.getCurrent_time())));
+    */
+
+    for(i = 0; i <= displayed_packet.getPayload_length(); i += 16) {
+        ui->tableWidget_payload->setRowCount(row_count + 1);
+        ui->tableWidget_payload->setItem(row_count, 0, new QTableWidgetItem(QString("%1").arg(i, 5, 10, QChar('0'))));
+        row_count++;
+    }
 }
