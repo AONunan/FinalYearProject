@@ -18,14 +18,15 @@
 #define TCP_ECE 0x40
 #define TCP_CWR 0x80
 
-SideBySideWindow::SideBySideWindow(QVector<Packet> vect, QWidget *parent) :
+SideBySideWindow::SideBySideWindow(QVector<Packet> vect, const QString input_server_address, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::SideBySideWindow)
 {
     ui->setupUi(this);
 
-    // Set class member variable to input vect
+    // Set class member variables to input variables
     input_vect = vect;
+    server_address = input_server_address;
 
     row_count = 0;
 
@@ -39,8 +40,6 @@ SideBySideWindow::~SideBySideWindow()
 
 void SideBySideWindow::populate_table() {
     int i;
-
-    QString server_address = "178.62.36.190";
 
     for(i = 0; i < input_vect.length(); i++) {
         if(input_vect[i].getIp_destination_address() == server_address) { // Client is sending to server

@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui charts
+QT       += core gui charts network
 
 # included to allow use of libpcap
 LIBS += -lpcap

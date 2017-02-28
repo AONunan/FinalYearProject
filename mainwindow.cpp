@@ -3,6 +3,8 @@
 #include <QDebug>
 #include <QTableWidget>
 #include <QDateTime>
+#include <QTcpSocket> // UNSURE IF NEEDED
+#include <QNetworkInterface> // UNSURE IF NEEDED
 #include <thread>
 
 #include "packet.h"
@@ -36,6 +38,8 @@ MainWindow::MainWindow(QWidget *parent) :
     row_count = 0;
     currently_capturing_packets = false;
     break_out_of_capture = false;
+
+    my_ip_address = find_my_ip_address();
 }
 
 MainWindow::~MainWindow() {
@@ -121,6 +125,20 @@ void MainWindow::capture_loop() {
     ui->statusBar->showMessage(QString("Finished capturing %1 packets.").arg(QString::number(no_of_packets)));
 }
 
+QString MainWindow::find_my_ip_address()
+{
+    QList<QHostAddress> ip_addr_list = QNetworkInterface::allAddresses();
+
+    for(int i = 0; i < ip_addr_list.count(); i++) {
+        if(!ip_addr_list[i].isLoopback()) // Check that it is no a loopback address
+            if(ip_addr_list[i].protocol() == QAbstractSocket::IPv4Protocol) // Check that it is an IPv4 address
+                return ip_addr_list[i].toString();
+    }
+
+    // Return error string if no suitable addresses found
+    return "IP_ADDRESS_ERROR";
+}
+
 void MainWindow::update_table(Packet packet) {
     // Create new row and scroll to bottom of table
     ui->tableWidget_packets->setRowCount(row_count + 1);
@@ -173,7 +191,21 @@ void MainWindow::on_pushButton_clear_clicked() {
 void MainWindow::on_pushButton_side_by_side_clicked()
 {
     // Open dialog with packet details with an argument
-    SideBySideWindow sideBySideWindow(captured_packets_vect);
+    QString server_address;
+    int current_row = ui->tableWidget_packets->currentRow();
+
+    if(captured_packets_vect[current_row].getIp_source_address() == my_ip_address) {
+        server_address = captured_packets_vect[current_row].getIp_destination_address();
+    } else {
+        server_address = captured_packets_vect[current_row].getIp_source_address();
+    }
+
+    SideBySideWindow sideBySideWindow(captured_packets_vect, server_address);
     sideBySideWindow.setModal(true);
     sideBySideWindow.exec();
+}
+
+void MainWindow::on_pushButton_test_clicked()
+{
+    qDebug() << "Current row:" << ui->tableWidget_packets->currentRow();
 }

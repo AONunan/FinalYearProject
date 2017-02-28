@@ -13,7 +13,7 @@ class SideBySideWindow : public QDialog
     Q_OBJECT
 
 public:
-    explicit SideBySideWindow(QVector<Packet> vect, QWidget *parent = 0);
+    explicit SideBySideWindow(QVector<Packet> vect, const QString input_server_address, QWidget *parent = 0);
     ~SideBySideWindow();
 
     void populate_table();
@@ -27,6 +27,7 @@ private:
     QVector<Packet> input_vect, matching_packets_vect;
     int row_count; // Keep track of current row
     u_int syn_ack_ack_number; // SYN-ACK packet's acknowledgement number
+    QString server_address;
 };
 
 #endif // SIDEBYSIDEWINDOW_H

@@ -51,6 +51,13 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="pushButton_test">
+        <property name="text">
+         <string>Test</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="button_applyFilter">
         <property name="toolTip">
          <string>Apply selected filter</string>

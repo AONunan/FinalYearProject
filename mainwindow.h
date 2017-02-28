@@ -19,6 +19,7 @@ public:
 
     void update_table(Packet packet);
     void capture_loop();
+    QString find_my_ip_address();
 private slots:
     void on_button_applyFilter_clicked();
     void on_button_close_handle_clicked();
@@ -29,6 +30,8 @@ private slots:
     void on_pushButton_clear_clicked();
     void on_pushButton_side_by_side_clicked();
 
+    void on_pushButton_test_clicked();
+
 private:
     Ui::MainWindow *ui;
 
@@ -38,6 +41,7 @@ private:
     QVector<Packet> captured_packets_vect;
     bool currently_capturing_packets; // Flag set to TRUE when running packet capture
     bool break_out_of_capture; // Flag to interrupt packet capture
+    QString my_ip_address;
 
     char *dev;
     char errbuf[PCAP_ERRBUF_SIZE];
