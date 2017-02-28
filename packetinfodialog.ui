@@ -496,7 +496,7 @@
     <item>
      <widget class="QLabel" name="label_ip_dst_address">
       <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;(32 bits)&lt;/p&gt;&lt;p&gt;Source IPv4 address.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;(32 bits)&lt;/p&gt;&lt;p&gt;Destination IPv4 address.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="styleSheet">
        <string notr="true">background-color: rgb(255, 255, 255);</string>

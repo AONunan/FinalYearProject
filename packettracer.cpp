@@ -86,8 +86,6 @@ Packet PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet, 
     // Define IP header, same as pointer plus ethernet length
     ipPtr = (struct ip_header*)(packet + SIZE_ETHERNET);
 
-    qDebug() << "???????????? version_and_header_length:" << ipPtr->version_and_header_length;
-
     // Calculate IP header length (i.e. offset)
     ip_header_length = ((ipPtr->version_and_header_length) & 0x0f) << 2; // Bitshift to the right to get header length
     working_packet.setIp_header_length(ip_header_length);

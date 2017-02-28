@@ -40,14 +40,13 @@ void PacketInfoDialog::on_pushButton_print_payload_clicked()
 void PacketInfoDialog::on_pushButton_change_view_clicked() {
     if(currently_showing_field_names) {
         show_header_details();
-        ui->pushButton_change_view->setText("Show field names");
     } else {
         show_header_field_names();
-        ui->pushButton_change_view->setText("Show field values");
     }
 }
 
 void PacketInfoDialog::show_header_field_names() {
+    ui->pushButton_change_view->setText("Show field values");
     currently_showing_field_names = true;
 
     // Set IP fields
@@ -80,6 +79,7 @@ void PacketInfoDialog::show_header_field_names() {
 }
 
 void PacketInfoDialog::show_header_details() {
+    ui->pushButton_change_view->setText("Show field names");
     currently_showing_field_names = false;
 
     // Set IP field details
@@ -99,7 +99,7 @@ void PacketInfoDialog::show_header_details() {
     // TODO: Fill out options
 
     // Set IP field tooltips
-    ui->label_ip_version->setToolTip(QString("(4 bits)%1").arg((displayed_packet.getIp_version() == 4) ? "\n\nIP Version 4" : ""));
+    ui->label_ip_version->setToolTip(QString("(4 bits)%1").arg((displayed_packet.getIp_version() == 4) ? "\n\nIP Version 4" : "")); // Set tooltip to IPv4 if ip_version == 4
     ui->label_ip_header_length->setToolTip(QString("(4 bits)\n\nThe length of the IP header, given in bytes."));
     ui->label_ip_protocol->setToolTip(QString("(8 bits)\n\n%1").arg(displayed_packet.getIp_protocol_string()));
 
@@ -118,14 +118,14 @@ void PacketInfoDialog::show_header_details() {
     // Set TCP field tooltips
     ui->label_tcp_src_port->setToolTip(QString("(16 bits)\n\n%1").arg(Packet::tcp_port_to_string(displayed_packet.getTcp_source_port())));
     ui->label_tcp_dst_port->setToolTip(QString("(16 bits)\n\n%1").arg(Packet::tcp_port_to_string(displayed_packet.getTcp_destination_port())));
-    ui->label_tcp_flags->setToolTip(find_tcp_flag_string(displayed_packet.getTcp_flags())); // Show TCP flags in tooltip
+    ui->label_tcp_flags->setToolTip(find_tcp_flag_string(displayed_packet.getTcp_flags()));
 }
 
 QString PacketInfoDialog::find_tcp_flag_string(int flags) {
     QString result = "(6 bits)\n";
 
     result += "\nFIN = ";
-    result += (flags & TCP_FIN) ? "True" : "False";
+    result += (flags & TCP_FIN) ? "True" : "False"; // If FIN bit is set, set to "True", otherwise "False"
     result += "\nFinish: Used to tear down connections. Each sides sends a FIN followed by an ACK and the connection closes.";
 
     result += "\n\nSYN = ";
