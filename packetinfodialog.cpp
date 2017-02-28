@@ -25,6 +25,10 @@ PacketInfoDialog::PacketInfoDialog(const Packet packet, QWidget *parent) :
 
     // If payload exists, print out payload
     if(displayed_packet.getPayload_length() > 0) {
+        // Increase the width of the columns
+        ui->tableWidget_payload->setColumnWidth(0, 70);
+        ui->tableWidget_payload->setColumnWidth(1, 410);
+
         print_payload();
     } else {
         // Hide the payload box and resize the window to a smaller size
@@ -37,16 +41,6 @@ PacketInfoDialog::PacketInfoDialog(const Packet packet, QWidget *parent) :
 
 PacketInfoDialog::~PacketInfoDialog() {
     delete ui;
-}
-
-void PacketInfoDialog::on_pushButton_print_payload_clicked()
-{
-    int i;
-    qDebug() << "Payload vect length:" << displayed_packet.getPayload_vect().length();
-
-    for(i = 0; i < displayed_packet.getPayload_vect().length(); i++) {
-        qDebug() << QString("%1").arg(displayed_packet.getPayload_vect()[i], 2, 16, QChar('0')).toUpper();
-    }
 }
 
 void PacketInfoDialog::on_pushButton_change_view_clicked() {
@@ -166,18 +160,12 @@ QString PacketInfoDialog::find_tcp_flag_string(int flags) {
 void PacketInfoDialog::print_payload() {
     ui->groupBox_payload->setTitle(QString("Payload (%1 bytes)").arg(displayed_packet.getPayload_length()));
     print_payload_offset();
-    print_payload_hex();
+    print_payload_hex_ascii();
 }
 
 void PacketInfoDialog::print_payload_offset() {
     int i;
     int row_count = 0;
-
-    /*    ui->tableWidget_packets->setRowCount(row_count + 1);
-    ui->tableWidget_packets->scrollToBottom();
-
-    ui->tableWidget_packets->setItem(row_count, HEADER_TIMESTAMP, new QTableWidgetItem(Packet::timestamp_to_string(packet.getCurrent_time())));
-    */
 
     for(i = 0; i < displayed_packet.getPayload_length(); i += 16) {
         ui->tableWidget_payload->setRowCount(row_count + 1);
@@ -186,26 +174,29 @@ void PacketInfoDialog::print_payload_offset() {
     }
 }
 
-void PacketInfoDialog::print_payload_hex() {
+void PacketInfoDialog::print_payload_hex_ascii() {
     // No need to increase table row count in this function, that was done in print_payload_offset()
 
     int i, j;
     int total_printed = 0;
     int current_row = 0;
-    QString hex_line;
+    QString hex_line, ascii_line;
 
     // Display all rows except the last one (because the last row will be a variable length, not always 16 long
     for(i = 0; i < displayed_packet.getPayload_length() - 16; i += 16) {
         hex_line = ""; // Reset
+        ascii_line = "";
 
         for(j = 0; j < 16; j++) {
             // Get all values in row
             hex_line += QString("%1 ").arg(displayed_packet.getPayload_vect()[i + j], 2, 16, QChar('0'));
+            ascii_line += char(displayed_packet.getPayload_vect()[i + j]);
             total_printed++;
         }
 
         // Add to table
         ui->tableWidget_payload->setItem(current_row, 1, new QTableWidgetItem(hex_line));
+        ui->tableWidget_payload->setItem(current_row, 2, new QTableWidgetItem(ascii_line));
         current_row++;
     }
 
@@ -214,8 +205,11 @@ void PacketInfoDialog::print_payload_hex() {
     // Print the final row
     for(i = total_printed; i < displayed_packet.getPayload_length(); i++) {
         hex_line += QString("%1 ").arg(displayed_packet.getPayload_vect()[i], 2, 16, QChar('0'));
+        ascii_line += char(displayed_packet.getPayload_vect()[i]);
     }
 
     ui->tableWidget_payload->setItem(current_row, 1, new QTableWidgetItem(hex_line));
+    ui->tableWidget_payload->setItem(current_row, 2, new QTableWidgetItem(ascii_line));
+
 
 }

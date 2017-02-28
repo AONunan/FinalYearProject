@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>704</width>
-    <height>760</height>
+    <width>796</width>
+    <height>612</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,13 +18,6 @@
     <widget class="QPushButton" name="pushButton_change_view">
      <property name="text">
       <string>Show field names</string>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QPushButton" name="pushButton_print_payload">
-     <property name="text">
-      <string>Print payload</string>
      </property>
     </widget>
    </item>
@@ -555,8 +548,14 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="font">
+         <font>
+          <family>Droid Sans Mono</family>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
         <property name="toolTip">
-         <string>Captured packets</string>
+         <string>Payload</string>
         </property>
         <property name="frameShape">
          <enum>QFrame::StyledPanel</enum>
