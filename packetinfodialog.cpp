@@ -3,15 +3,14 @@
 
 #include <QDebug>
 
-#define TCP_FIN  0x01
-#define TCP_SYN  0x02
-#define TCP_RST  0x04
+#define TCP_FIN 0x01
+#define TCP_SYN 0x02
+#define TCP_RST 0x04
 #define TCP_PUSH 0x08
-#define TCP_ACK  0x10
-#define TCP_URG  0x20
-#define TCP_ECE  0x40
-#define TCP_CWR  0x80
-#define TCP_FLAGS		(TCP_FIN|TCP_SYN|TCP_RST|TCP_ACK|TCP_URG|TCP_ECE|TCP_CWR)
+#define TCP_ACK 0x10
+#define TCP_URG 0x20
+#define TCP_ECE 0x40
+#define TCP_CWR 0x80
 
 PacketInfoDialog::PacketInfoDialog(const Packet packet, QWidget *parent) :
     QDialog(parent),
@@ -41,8 +40,10 @@ void PacketInfoDialog::on_pushButton_print_payload_clicked()
 void PacketInfoDialog::on_pushButton_change_view_clicked() {
     if(currently_showing_field_names) {
         show_header_details();
+        ui->pushButton_change_view->setText("Show field names");
     } else {
         show_header_field_names();
+        ui->pushButton_change_view->setText("Show field values");
     }
 }
 
@@ -88,10 +89,11 @@ void PacketInfoDialog::show_header_details() {
     ui->label_ip_total_length->setText(QString::number(displayed_packet.getIp_length()));
     ui->label_ip_id->setText(QString::number(displayed_packet.getIp_id()));
     // TODO: Fill out flags
+
     ui->label_ip_offset->setText(QString::number(displayed_packet.getIp_offset()));
     ui->label_ip_ttl->setText(QString::number(displayed_packet.getIp_time_to_live()));
     ui->label_ip_protocol->setText(QString::number(displayed_packet.getIp_protocol()));
-    ui->label_ip_checksum->setText(QString("0x%1").arg(displayed_packet.getIp_checksum(), 2, 16, QChar('0')));
+    ui->label_ip_checksum->setText(QString("0x%1").arg(QString("%1").arg(displayed_packet.getIp_checksum(), 2, 16, QChar('0')).toUpper())); // Display as hex
     ui->label_ip_src_address->setText(displayed_packet.getIp_source_address());
     ui->label_ip_dst_address->setText(displayed_packet.getIp_destination_address());
     // TODO: Fill out options
@@ -107,9 +109,9 @@ void PacketInfoDialog::show_header_details() {
     ui->label_tcp_sequence_number->setText(QString::number(displayed_packet.getTcp_sequence_number()));
     ui->label_tcp_ack_number->setText(QString::number(displayed_packet.getTcp_acknowledgement_number()));
     ui->label_tcp_offset->setText(QString::number(displayed_packet.getTcp_offset()));
-    ui->label_tcp_flags->setText(QString("0x%1").arg(displayed_packet.getTcp_flags(), 2, 16, QChar('0'))); // Display flags in Hex
+    ui->label_tcp_flags->setText(QString("0b%1").arg(displayed_packet.getTcp_flags(), 6, 2, QChar('0'))); // Display flags in binary
     ui->label_tcp_window->setText(QString::number(displayed_packet.getTcp_window()));
-    ui->label_tcp_checksum->setText(QString("0x%1").arg(displayed_packet.getTcp_checksum(), 2, 16, QChar('0'))); // Display as hex
+    ui->label_tcp_checksum->setText(QString("0x%1").arg(QString("%1").arg(displayed_packet.getTcp_checksum(), 2, 16, QChar('0')).toUpper())); // Display as hex
     ui->label_tcp_urgent_ptr->setText(QString::number(displayed_packet.getTcp_urgent_pointer()));
     // TODO: Fill out options
 
