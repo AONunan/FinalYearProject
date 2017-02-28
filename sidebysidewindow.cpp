@@ -18,6 +18,11 @@
 #define TCP_ECE 0x40
 #define TCP_CWR 0x80
 
+// TODO: Implement switching between options. Currently set at 3 way handshake
+// Choice of selected options
+#define SELECTED_THREE_WAY_HANDSHAKE 0
+#define SELECTED_WINDOWING 1
+
 SideBySideWindow::SideBySideWindow(QVector<Packet> vect, const QString input_server_address, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::SideBySideWindow)
@@ -48,6 +53,16 @@ void SideBySideWindow::populate_table() {
             update_table(input_vect[i], COLUMN_SERVER);
         }
     }
+
+    // Set the more_details_vect to be the same length as number of matching packets, with empty content
+    for(i = 0; i < matching_packets_vect.length(); i++) {
+        more_details_vect.append("");
+    }
+
+    // Set the values for each item in the more_details_vect
+    for(i = 0; i < more_details_vect.length(); i++) {
+        more_details_vect[i] = more_details_field(input_vect[i]);
+    }
 }
 
 void SideBySideWindow::update_table(Packet packet, int column_position) {
@@ -59,13 +74,13 @@ void SideBySideWindow::update_table(Packet packet, int column_position) {
     ui->tableWidget_packets->scrollToBottom();
 
     ui->tableWidget_packets->setItem(row_count, COLUMN_TIMESTAMP, new QTableWidgetItem(timestamp_string));
-    ui->tableWidget_packets->setItem(row_count, column_position, new QTableWidgetItem("***"));
-    ui->tableWidget_packets->setItem(row_count, COLUMN_DETAILS, new QTableWidgetItem(find_details_field(packet)));
+    ui->tableWidget_packets->setItem(row_count, column_position, new QTableWidgetItem(QString("%1 bytes").arg(packet.getPayload_length())));
+    //ui->tableWidget_packets->setItem(row_count, COLUMN_DETAILS, new QTableWidgetItem(details_field(packet)));
 
     row_count++;
 }
 
-QString SideBySideWindow::find_details_field(Packet packet) {
+QString SideBySideWindow::details_field(Packet packet) {
     int tcp_flags = packet.getTcp_flags();
 
     if((tcp_flags & TCP_SYN) && !(tcp_flags & TCP_ACK)) { // SYN and not ACK
@@ -81,9 +96,19 @@ QString SideBySideWindow::find_details_field(Packet packet) {
     }
 }
 
+QString SideBySideWindow::more_details_field(Packet packet) {
+    return QString("Value: %1").arg(packet.getPayload_length());
+}
+
 void SideBySideWindow::on_tableWidget_packets_cellDoubleClicked(int row) {
     // Open dialog with packet details with an argument
     PacketInfoDialog infoDialog(matching_packets_vect[row]);
     infoDialog.setModal(true);
     infoDialog.exec();
+}
+
+void SideBySideWindow::on_tableWidget_packets_itemSelectionChanged()
+{
+    int row = ui->tableWidget_packets->currentRow();
+    ui->textBrowser_more_details->setText(more_details_vect[row]);
 }

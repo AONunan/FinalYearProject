@@ -18,8 +18,10 @@ public:
 
     void populate_table();
     void update_table(Packet packet, int column_position);
-    QString find_details_field(Packet packet);
+    QString details_field(Packet packet);
+    QString more_details_field(Packet packet);
 private slots:
+    void on_tableWidget_packets_itemSelectionChanged();
     void on_tableWidget_packets_cellDoubleClicked(int row);
 
 private:
@@ -28,6 +30,8 @@ private:
     int row_count; // Keep track of current row
     u_int syn_ack_ack_number; // SYN-ACK packet's acknowledgement number
     QString server_address;
+    QVector<QString> more_details_vect; // Holds all the strings for the "More details" field in the UI
+
 };
 
 #endif // SIDEBYSIDEWINDOW_H

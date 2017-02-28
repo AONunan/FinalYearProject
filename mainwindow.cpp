@@ -3,9 +3,9 @@
 #include <QDebug>
 #include <QTableWidget>
 #include <QDateTime>
-#include <QTcpSocket> // UNSURE IF NEEDED
-#include <QNetworkInterface> // UNSURE IF NEEDED
+#include <QNetworkInterface>
 #include <thread>
+#include <QMessageBox>
 
 #include "packet.h"
 #include "packetinfodialog.h"
@@ -39,6 +39,8 @@ MainWindow::MainWindow(QWidget *parent) :
     currently_capturing_packets = false;
     break_out_of_capture = false;
 
+    ui->label_hint->hide(); // Hide the hint initially
+
     my_ip_address = find_my_ip_address();
 }
 
@@ -66,6 +68,8 @@ void MainWindow::on_button_capture_packet_clicked() {
 
         // TODO: Implement multithreading to allow use of UI while loop is running
         capture_loop();
+
+        ui->label_hint->show();
 
         currently_capturing_packets = false;
     } else {
@@ -155,6 +159,8 @@ void MainWindow::update_table(Packet packet) {
 }
 
 void MainWindow::on_tableWidget_packets_cellDoubleClicked(int row) {
+    ui->label_hint->hide();
+
     // Open dialog with packet details with an argument
     PacketInfoDialog infoDialog(captured_packets_vect[row]);
     infoDialog.setModal(true);
@@ -185,6 +191,8 @@ void MainWindow::on_pushButton_clear_clicked() {
     // Clear the table
     ui->tableWidget_packets->clearContents();
     ui->tableWidget_packets->setRowCount(0);
+
+    ui->label_hint->hide();
 }
 
 
@@ -194,15 +202,23 @@ void MainWindow::on_pushButton_side_by_side_clicked()
     QString server_address;
     int current_row = ui->tableWidget_packets->currentRow();
 
-    if(captured_packets_vect[current_row].getIp_source_address() == my_ip_address) {
-        server_address = captured_packets_vect[current_row].getIp_destination_address();
-    } else {
-        server_address = captured_packets_vect[current_row].getIp_source_address();
+    if(current_row != -1) { // Check that a row is actually selected
+        if(captured_packets_vect[current_row].getIp_source_address() == my_ip_address) {
+            server_address = captured_packets_vect[current_row].getIp_destination_address();
+        } else {
+            server_address = captured_packets_vect[current_row].getIp_source_address();
+        }
+
+        current_row = -1; // Set back to -1 (in case the user clears the screen before pressing the button again)
+
+        SideBySideWindow sideBySideWindow(captured_packets_vect, server_address);
+        sideBySideWindow.setModal(true);
+        sideBySideWindow.exec();
+    } else { // No row selected
+        QMessageBox::critical(this, "Error", "No row selected.");
     }
 
-    SideBySideWindow sideBySideWindow(captured_packets_vect, server_address);
-    sideBySideWindow.setModal(true);
-    sideBySideWindow.exec();
+
 }
 
 void MainWindow::on_pushButton_test_clicked()

@@ -7,78 +7,93 @@
     <x>0</x>
     <y>0</y>
     <width>705</width>
-    <height>416</height>
+    <height>488</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Side By Side</string>
   </property>
-  <widget class="QTableWidget" name="tableWidget_packets">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>20</y>
-     <width>671</width>
-     <height>341</height>
-    </rect>
-   </property>
-   <property name="sizePolicy">
-    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-     <horstretch>0</horstretch>
-     <verstretch>0</verstretch>
-    </sizepolicy>
-   </property>
-   <property name="toolTip">
-    <string>Captured packets</string>
-   </property>
-   <property name="frameShape">
-    <enum>QFrame::StyledPanel</enum>
-   </property>
-   <property name="verticalScrollBarPolicy">
-    <enum>Qt::ScrollBarAlwaysOn</enum>
-   </property>
-   <property name="editTriggers">
-    <set>QAbstractItemView::NoEditTriggers</set>
-   </property>
-   <property name="alternatingRowColors">
-    <bool>false</bool>
-   </property>
-   <property name="selectionBehavior">
-    <enum>QAbstractItemView::SelectRows</enum>
-   </property>
-   <property name="rowCount">
-    <number>0</number>
-   </property>
-   <property name="columnCount">
-    <number>4</number>
-   </property>
-   <attribute name="horizontalHeaderStretchLastSection">
-    <bool>true</bool>
-   </attribute>
-   <attribute name="verticalHeaderStretchLastSection">
-    <bool>false</bool>
-   </attribute>
-   <column>
-    <property name="text">
-     <string>Timestamp</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>Client</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>Server</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>Details</string>
-    </property>
-   </column>
-  </widget>
+  <layout class="QHBoxLayout" name="horizontalLayout">
+   <item>
+    <layout class="QVBoxLayout" name="verticalLayout" stretch="2,1,0">
+     <item>
+      <widget class="QTableWidget" name="tableWidget_packets">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="toolTip">
+        <string>Captured packets</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="verticalScrollBarPolicy">
+        <enum>Qt::ScrollBarAlwaysOn</enum>
+       </property>
+       <property name="editTriggers">
+        <set>QAbstractItemView::NoEditTriggers</set>
+       </property>
+       <property name="alternatingRowColors">
+        <bool>false</bool>
+       </property>
+       <property name="selectionBehavior">
+        <enum>QAbstractItemView::SelectRows</enum>
+       </property>
+       <property name="rowCount">
+        <number>0</number>
+       </property>
+       <property name="columnCount">
+        <number>4</number>
+       </property>
+       <attribute name="horizontalHeaderStretchLastSection">
+        <bool>true</bool>
+       </attribute>
+       <attribute name="verticalHeaderStretchLastSection">
+        <bool>false</bool>
+       </attribute>
+       <column>
+        <property name="text">
+         <string>Timestamp</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Client</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Server</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Details</string>
+        </property>
+       </column>
+      </widget>
+     </item>
+     <item>
+      <widget class="QTextBrowser" name="textBrowser_more_details"/>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_hint">
+       <property name="font">
+        <font>
+         <italic>true</italic>
+        </font>
+       </property>
+       <property name="text">
+        <string>Hint: Click on a packet to display more information</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections/>
