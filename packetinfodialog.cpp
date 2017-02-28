@@ -27,11 +27,11 @@ PacketInfoDialog::PacketInfoDialog(const Packet packet, QWidget *parent) :
     if(displayed_packet.getPayload_length() > 0) {
         print_payload();
     } else {
+        // Hide the payload box and resize the window to a smaller size
         ui->groupBox_payload->hide();
         this->resize(700, 300);
     }
 
-    //ui->textBrowser_payload_hex->setText("Hello world, this is a test");
 
 }
 
@@ -166,6 +166,7 @@ QString PacketInfoDialog::find_tcp_flag_string(int flags) {
 void PacketInfoDialog::print_payload() {
     ui->groupBox_payload->setTitle(QString("Payload (%1 bytes)").arg(displayed_packet.getPayload_length()));
     print_payload_offset();
+    print_payload_hex();
 }
 
 void PacketInfoDialog::print_payload_offset() {
@@ -178,9 +179,43 @@ void PacketInfoDialog::print_payload_offset() {
     ui->tableWidget_packets->setItem(row_count, HEADER_TIMESTAMP, new QTableWidgetItem(Packet::timestamp_to_string(packet.getCurrent_time())));
     */
 
-    for(i = 0; i <= displayed_packet.getPayload_length(); i += 16) {
+    for(i = 0; i < displayed_packet.getPayload_length(); i += 16) {
         ui->tableWidget_payload->setRowCount(row_count + 1);
         ui->tableWidget_payload->setItem(row_count, 0, new QTableWidgetItem(QString("%1").arg(i, 5, 10, QChar('0'))));
         row_count++;
     }
+}
+
+void PacketInfoDialog::print_payload_hex() {
+    // No need to increase table row count in this function, that was done in print_payload_offset()
+
+    int i, j;
+    int total_printed = 0;
+    int current_row = 0;
+    QString hex_line;
+
+    // Display all rows except the last one (because the last row will be a variable length, not always 16 long
+    for(i = 0; i < displayed_packet.getPayload_length() - 16; i += 16) {
+        hex_line = ""; // Reset
+
+        for(j = 0; j < 16; j++) {
+            // Get all values in row
+            hex_line += QString("%1 ").arg(displayed_packet.getPayload_vect()[i + j], 2, 16, QChar('0'));
+            total_printed++;
+        }
+
+        // Add to table
+        ui->tableWidget_payload->setItem(current_row, 1, new QTableWidgetItem(hex_line));
+        current_row++;
+    }
+
+    hex_line = "";
+
+    // Print the final row
+    for(i = total_printed; i < displayed_packet.getPayload_length(); i++) {
+        hex_line += QString("%1 ").arg(displayed_packet.getPayload_vect()[i], 2, 16, QChar('0'));
+    }
+
+    ui->tableWidget_payload->setItem(current_row, 1, new QTableWidgetItem(hex_line));
+
 }
