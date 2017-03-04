@@ -195,14 +195,22 @@ void MainWindow::on_pushButton_clear_clicked() {
     ui->label_hint->hide();
 }
 
-
+/*
+ * By clicking on pushButton_side_by_side, you will open the SideBySideWindow screen.
+ * A check if performed first:
+ * - If you have clicked on a row, open the side by side view for this host address
+ * - If no row is selected, check if only 1 possible server address exists. If so, open with this address.
+ * - Otherwise display error message
+ */
 void MainWindow::on_pushButton_side_by_side_clicked()
 {
     // Open dialog with packet details with an argument
     QString server_address;
     int current_row = ui->tableWidget_packets->currentRow();
+    QVector<QString> temp_hosts;
 
     if(current_row != -1) { // Check that a row is actually selected
+        // Look for server address (by checking that each side is not equal to my_ip_address
         if(captured_packets_vect[current_row].getIp_source_address() == my_ip_address) {
             server_address = captured_packets_vect[current_row].getIp_destination_address();
         } else {
@@ -211,16 +219,39 @@ void MainWindow::on_pushButton_side_by_side_clicked()
 
         current_row = -1; // Set back to -1 (in case the user clears the screen before pressing the button again)
 
+        // Open window
         SideBySideWindow sideBySideWindow(captured_packets_vect, server_address);
         sideBySideWindow.setModal(true);
         sideBySideWindow.exec();
+
     } else { // No row selected
-        QMessageBox::critical(this, "Error", "No row selected.");
+        // Find all possible server addresses
+        for(int i = 0; i < ui->tableWidget_packets->rowCount(); i++) {
+            // Check for source hosts
+            if(!(temp_hosts.contains(captured_packets_vect[i].getIp_source_address())) && (captured_packets_vect[i].getIp_source_address() != my_ip_address)) { // Check if host in vector
+                temp_hosts.append(captured_packets_vect[i].getIp_source_address()); // If host isn't in vector, add it
+            }
+
+            // Do the same for destination hosts
+            if(!(temp_hosts.contains(captured_packets_vect[i].getIp_destination_address())) && (captured_packets_vect[i].getIp_destination_address() != my_ip_address))
+                temp_hosts.append(captured_packets_vect[i].getIp_destination_address());
+            }
+
+        // If there is only 1 possible server host, open the SideBySide window with this
+        if(temp_hosts.count() == 1) {
+            SideBySideWindow sideBySideWindow(captured_packets_vect, temp_hosts[0]);
+            sideBySideWindow.setModal(true);
+            sideBySideWindow.exec();
+        // Otherwise display error message
+        } else {
+            QMessageBox::critical(this, "Error", "More than one possible server address. Please click on a row before opening side by side view.");
+        }
     }
-
-
 }
 
+/*
+ * For testing purposes
+ */
 void MainWindow::on_pushButton_test_clicked()
 {
     qDebug() << "Current row:" << ui->tableWidget_packets->currentRow();

@@ -131,27 +131,27 @@ QString PacketInfoDialog::find_tcp_flag_string(int flags) {
     QString result = "(6 bits)\n";
 
     result += "\nFIN = ";
-    result += (flags & TCP_FIN) ? "True" : "False"; // If FIN bit is set, set to "True", otherwise "False"
+    result += (flags & TCP_FIN) ? "1" : "0"; // If FIN bit is set, set to "True", otherwise "False"
     result += "\nFinish: Used to tear down connections. Each sides sends a FIN followed by an ACK and the connection closes.";
 
     result += "\n\nSYN = ";
-    result += (flags & TCP_SYN) ? "True" : "False";
+    result += (flags & TCP_SYN) ? "1" : "0";
     result += "\nSynchronize: Used at the start of the three-way handshake to initialise a connection.";
 
     result += "\n\nRST = ";
-    result += (flags & TCP_RST) ? "True" : "False";
+    result += (flags & TCP_RST) ? "1" : "0";
     result += "\nReset: Used to inform the reciever that the sender has abrubtly shut the connection down.";
 
     result += "\n\nPUSH = ";
-    result += (flags & TCP_PUSH) ? "True" : "False";
+    result += (flags & TCP_PUSH) ? "1" : "0";
     result += "\nPush: Often set at the end of a block of data, informing the receiver that they can begin processing the data.";
 
     result += "\n\nACK = ";
-    result += (flags & TCP_ACK) ? "True" : "False";
+    result += (flags & TCP_ACK) ? "1" : "0";
     result += "\nAcknowledgment: Used to acknowledge that data has been received. Used also when setting up and tearing down TCP connections.";
 
     result += "\n\nURG = ";
-    result += (flags & TCP_URG) ? "True" : "False";
+    result += (flags & TCP_URG) ? "1" : "0";
     result += "\nUrgent: Indicates that the data is urgent. The receiver will know to process the data immediately.";
 
     return result;
