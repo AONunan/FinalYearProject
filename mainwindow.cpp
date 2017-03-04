@@ -35,6 +35,9 @@ MainWindow::MainWindow(QWidget *parent) :
     // Open the handle
     handle = packetTracer.open_for_sniffing(dev);
 
+    // Apply the filter
+    packetTracer.apply_filter(handle, &filter_expression, net);
+
     row_count = 0;
     currently_capturing_packets = false;
     break_out_of_capture = false;
@@ -46,13 +49,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow() {
     delete ui;
-}
-
-void MainWindow::on_button_applyFilter_clicked() {
-    packetTracer.apply_filter(handle, &filter_expression, net);
-
-    ui->button_applyFilter->setEnabled(false);
-    ui->button_capture_packet->setEnabled(true);
 }
 
 void MainWindow::on_button_close_handle_clicked() {

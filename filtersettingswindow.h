@@ -18,6 +18,8 @@ public:
 private slots:
     void on_pushButton_temp_clicked();
 
+    void on_button_applyFilter_clicked();
+
 private:
     Ui::FilterSettingsWindow *ui;
 };

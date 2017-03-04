@@ -73,3 +73,8 @@ void FilterSettingsWindow::on_pushButton_temp_clicked()
     ui->label_temp->setText(filter_expression);
     qDebug() << "FILTER EXP:" << filter_expression;
 }
+
+void FilterSettingsWindow::on_button_applyFilter_clicked()
+{
+    ui->button_applyFilter->setEnabled(false);
+}

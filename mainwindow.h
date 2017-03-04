@@ -21,7 +21,6 @@ public:
     void capture_loop();
     QString find_my_ip_address();
 private slots:
-    void on_button_applyFilter_clicked();
     void on_button_close_handle_clicked();
     void on_button_capture_packet_clicked();
     void on_pushButton_filterSettings_clicked();

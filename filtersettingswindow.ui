@@ -124,19 +124,6 @@
     <string>NULL</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_temp">
-   <property name="geometry">
-    <rect>
-     <x>170</x>
-     <y>300</y>
-     <width>87</width>
-     <height>27</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Apply</string>
-   </property>
-  </widget>
   <widget class="QCheckBox" name="checkBox_src_host">
    <property name="geometry">
     <rect>
@@ -187,6 +174,22 @@
    </property>
    <property name="text">
     <string>Not</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="button_applyFilter">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>410</y>
+     <width>96</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>Apply selected filter</string>
+   </property>
+   <property name="text">
+    <string>Apply filter</string>
    </property>
   </widget>
  </widget>
