@@ -6,6 +6,7 @@
 #include <QNetworkInterface>
 #include <thread>
 #include <QMessageBox>
+#include <unistd.h>
 
 #include "packet.h"
 #include "packetinfodialog.h"
@@ -45,7 +46,7 @@ MainWindow::MainWindow(QWidget *parent) :
     break_out_of_capture = false;
 
     ui->label_hint->hide(); // Hide the hint initially
-
+    ui->label_loading->hide();
 
 
     my_ip_address = find_my_ip_address();
@@ -66,8 +67,17 @@ void MainWindow::on_button_capture_packet_clicked() {
     if(!currently_capturing_packets) {
         currently_capturing_packets = true;
 
+        //Launch a thread
+        //std::thread t1(thread_test);
+        //std::thread t1(&MainWindow::capture_loop, this);
+
+        //Join the thread with the main thread
+        //t1.join();
+
         // TODO: Implement multithreading to allow use of UI while loop is running
         capture_loop();
+
+
 
         ui->label_hint->show();
 
@@ -81,6 +91,12 @@ void MainWindow::on_button_capture_packet_clicked() {
 
 void MainWindow::capture_loop() {
     ui->statusBar->showMessage("Waiting for first packet.");
+
+    // Start the loading icon
+    ui->label_loading->show();
+    QMovie *movie = new QMovie("/home/alan/TEMP/loading.gif");
+    ui->label_loading->setMovie(movie);
+    movie->start();
 
     Packet my_captured_packet;
     int i;
@@ -127,6 +143,8 @@ void MainWindow::capture_loop() {
     ui->button_capture_packet->setText("Capture");
 
     ui->statusBar->showMessage(QString("Finished capturing %1 packets.").arg(QString::number(no_of_packets)));
+    ui->label_loading->hide();
+    movie->stop();
 }
 
 QString MainWindow::find_my_ip_address()
@@ -235,9 +253,9 @@ void MainWindow::on_pushButton_side_by_side_clicked()
             SideBySideWindow sideBySideWindow(captured_packets_vect, temp_hosts[0]);
             sideBySideWindow.setModal(true);
             sideBySideWindow.exec();
-        // Otherwise display error message
+        // Otherwise display warning message
         } else {
-            QMessageBox::critical(this, "Error", "More than one possible server address. Please click on a row before opening side by side view.");
+            QMessageBox::warning(this, "Error", "More than one possible server address. Please click on a row before opening side by side view.");
         }
     }
 }
@@ -247,7 +265,12 @@ void MainWindow::on_pushButton_side_by_side_clicked()
  */
 void MainWindow::on_pushButton_test_clicked()
 {
+    /*pid_t pid = fork();
+    qDebug() << pid;*/
+}
 
+void MainWindow::thread_test() {
+    qDebug() << "I am a thread";
 }
 
 void MainWindow::on_button_check_clicked()
@@ -322,10 +345,6 @@ void MainWindow::on_button_check_clicked()
     constructed_filter_string = filter_expression;
 
     ui->button_applyFilter->setEnabled(true);
-    /*qDebug() << "HOST:" << host;
-    qDebug() << "PORT:" << port;
-    qDebug() << "PROTOCOL:" << protocol;
-    qDebug() << "FILTER EXP:" << filter_expression;*/
 
     // ui->button_applyFilter->setEnabled(false);
 }

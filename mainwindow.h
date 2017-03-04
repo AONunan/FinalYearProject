@@ -21,6 +21,7 @@ public:
     void update_table(Packet packet);
     void capture_loop();
     QString find_my_ip_address();
+    void thread_test();
 private slots:
     void on_button_close_handle_clicked();
     void on_button_capture_packet_clicked();
