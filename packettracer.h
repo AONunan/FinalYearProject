@@ -42,7 +42,7 @@ public:
     char* get_network_interface_device();
     void set_mask_and_ip(char *dev, bpf_u_int32 *netPtr, bpf_u_int32 *maskPtr);
     pcap_t* open_for_sniffing(char *dev);
-    void apply_filter(pcap_t *handle, bpf_program *filter_expressionPtr, bpf_u_int32 net);
+    void apply_filter(pcap_t *handle, bpf_program *filter_expressionPtr, bpf_u_int32 net, char filter_expression_string[]);
     QVector<short> print_payload(const u_char *payloadPtr, int payload_length);
     Packet captured_packet(pcap_pkthdr *header, const u_char *packet, Packet working_packet);
 private:

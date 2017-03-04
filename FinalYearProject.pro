@@ -22,7 +22,6 @@ SOURCES += main.cpp\
     packet.cpp \
     packetinfodialog.cpp \
     statwindow.cpp \
-    filtersettingswindow.cpp \
     sidebysidewindow.cpp
 
 HEADERS  += mainwindow.h \
@@ -30,11 +29,9 @@ HEADERS  += mainwindow.h \
     packet.h \
     packetinfodialog.h \
     statwindow.h \
-    filtersettingswindow.h \
     sidebysidewindow.h
 
 FORMS    += mainwindow.ui \
     packetinfodialog.ui \
     statwindow.ui \
-    filtersettingswindow.ui \
     sidebysidewindow.ui

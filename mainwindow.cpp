@@ -11,7 +11,6 @@
 #include "packetinfodialog.h"
 #include "statwindow.h"
 #include "sidebysidewindow.h"
-#include "filtersettingswindow.h"
 
 // These correspond to the columns in the table
 #define HEADER_TIMESTAMP 0
@@ -27,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Set the network interface device
     dev = packetTracer.get_network_interface_device();
-    ui->label_interface->setText(dev);
+    ui->label_interface->setText(QString("Device: %1").arg(dev));
 
     // Set network ID and subnet mask
     packetTracer.set_mask_and_ip(dev, &net, &mask);
@@ -36,13 +35,16 @@ MainWindow::MainWindow(QWidget *parent) :
     handle = packetTracer.open_for_sniffing(dev);
 
     // Apply the filter
-    packetTracer.apply_filter(handle, &filter_expression, net);
+    //char filter_expession_string[] = "(host 93.184.216.34) and (port 80)";
+    packetTracer.apply_filter(handle, &filter_expression, net, "ip");
 
     row_count = 0;
     currently_capturing_packets = false;
     break_out_of_capture = false;
 
     ui->label_hint->hide(); // Hide the hint initially
+
+
 
     my_ip_address = find_my_ip_address();
 }
@@ -163,13 +165,6 @@ void MainWindow::on_tableWidget_packets_cellDoubleClicked(int row) {
     infoDialog.exec();
 }
 
-void MainWindow::on_pushButton_filterSettings_clicked() {
-    // Open filter settings window
-    FilterSettingsWindow filterStatWindow;
-    filterStatWindow.setModal(true);
-    filterStatWindow.exec();
-}
-
 void MainWindow::on_pushButton_statistics_clicked() {
     // Open dialog with packet details with an argument
     StatWindow statWindow(captured_packets_vect);
@@ -251,4 +246,88 @@ void MainWindow::on_pushButton_side_by_side_clicked()
 void MainWindow::on_pushButton_test_clicked()
 {
     qDebug() << "Current row:" << ui->tableWidget_packets->currentRow();
+}
+
+void MainWindow::on_button_check_clicked()
+{
+    QString host, port, protocol, filter_expression;
+
+    // Host construction
+    if(ui->lineEdit_host->text() != "") {
+        host = QString("%1host %2").arg(ui->checkBox_host->isChecked() ? "not " : "").arg(ui->lineEdit_host->text());
+    }
+
+    // Port construction
+    if(ui->lineEdit_port->text() != "") {
+        port = QString("%1port %2").arg(ui->checkBox_port->isChecked() ? "not " : "").arg(ui->lineEdit_port->text());
+    }
+
+    // Protocol construction
+    if(ui->comboBox_protocol->currentText() == "All") {
+        protocol = "";
+    } else {
+        protocol = ui->comboBox_protocol->currentText().toLower();
+    }
+
+    // if-else block to set filter_expression based on inputs
+    if((host == "") && (port == "") && (protocol == "")) { // 000
+        filter_expression = "";
+
+    } else if((host == "") && (port == "") && (protocol != "")) { // 001
+        filter_expression = protocol;
+
+    } else if((host == "") && (port != "") && (protocol == "")) { // 010
+        filter_expression = port;
+
+    } else if((host == "") && (port != "") && (protocol != "")) { // 011
+        filter_expression = QString("%1 and %2").arg(port).arg(protocol);
+
+    } else if((host != "") && (port == "") && (protocol == "")) { // 100
+        filter_expression = host;
+
+    } else if((host != "") && (port == "") && (protocol != "")) { // 101
+        filter_expression = QString("%1 and %2").arg(host).arg(protocol);
+
+    } else if((host != "") && (port != "") && (protocol == "")) { // 110
+        filter_expression = QString("%1 and %2").arg(host).arg(port);
+
+    } else { // 111
+        filter_expression = QString("%1 and %2 and %3").arg(host).arg(port).arg(protocol);
+    }
+
+    ui->label_filter_string->setText(filter_expression);
+    constructed_filter_string = filter_expression;
+
+    ui->button_applyFilter->setEnabled(true);
+    /*qDebug() << "HOST:" << host;
+    qDebug() << "PORT:" << port;
+    qDebug() << "PROTOCOL:" << protocol;
+    qDebug() << "FILTER EXP:" << filter_expression;*/
+
+    // ui->button_applyFilter->setEnabled(false);
+}
+
+void MainWindow::on_button_applyFilter_clicked()
+{
+    if(constructed_filter_string.length() == 0) { // i.e. No filter specified
+        packetTracer.apply_filter(handle, &filter_expression, net, "ip");
+    } else {
+        // As we need the filter string in a char array, it is necessary to memcpy the contents of the QString
+        char filter_expression_chars[constructed_filter_string.length()]; // Create a char array of length constructed_filter_string
+        memcpy(filter_expression_chars, constructed_filter_string.toStdString().c_str() ,constructed_filter_string.size()); // Copy the contents of QString to char array
+
+        packetTracer.apply_filter(handle, &filter_expression, net, filter_expression_chars);
+    }
+
+    ui->button_applyFilter->setEnabled(false);
+    ui->statusBar->showMessage("Filter set.");
+}
+
+void MainWindow::on_button_clear_settings_fields_clicked() {
+    ui->lineEdit_host->clear();
+    ui->checkBox_host->setChecked(false);
+    ui->lineEdit_port->clear();
+    ui->checkBox_port->setChecked(false);
+    ui->comboBox_protocol->setCurrentIndex(0);
+    ui->label_filter_string->setText("");
 }
