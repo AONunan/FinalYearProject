@@ -225,7 +225,7 @@
            <string/>
           </property>
           <property name="placeholderText">
-           <string>Host address</string>
+           <string>Host address, e.g. 93.184.216.34, example.com</string>
           </property>
          </widget>
         </item>
@@ -249,7 +249,7 @@
            <string/>
           </property>
           <property name="placeholderText">
-           <string>Port</string>
+           <string>Port, e.g. 80</string>
           </property>
          </widget>
         </item>

@@ -24,6 +24,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow) {
     ui->setupUi(this);
 
+
+
     // Set the network interface device
     dev = packetTracer.get_network_interface_device();
     ui->label_interface->setText(QString("Device: %1").arg(dev));
@@ -245,21 +247,42 @@ void MainWindow::on_pushButton_side_by_side_clicked()
  */
 void MainWindow::on_pushButton_test_clicked()
 {
-    qDebug() << "Current row:" << ui->tableWidget_packets->currentRow();
+
 }
 
 void MainWindow::on_button_check_clicked()
 {
+    QRegExp regex_ipv4("([\\d+]{1,3}\\.){3}[\\d+]{1,3}"); // Match IPv4 address, e.g. 93.184.216.34
+    QRegExp regex_dns("(\\w+\\.)+\\w+"); // Match domain name, e.g. example.com
+    QRegExp regex_integer("(\\w+\\.)+\\w+"); // Match domain name, e.g. example.com
     QString host, port, protocol, filter_expression;
 
     // Host construction
     if(ui->lineEdit_host->text() != "") {
-        host = QString("%1host %2").arg(ui->checkBox_host->isChecked() ? "not " : "").arg(ui->lineEdit_host->text());
+        if(regex_ipv4.exactMatch(ui->lineEdit_host->text())) { // Check if IPv4 address
+            host = QString("%1host %2").arg(ui->checkBox_host->isChecked() ? "not " : "").arg(ui->lineEdit_host->text());
+
+        } else if(regex_dns.exactMatch(ui->lineEdit_host->text())) { // Check if domain name
+            // Need to perform DNS lookup
+            QHostInfo host_info = QHostInfo::fromName(ui->lineEdit_host->text());
+            QString ipv4_addr = host_info.addresses()[0].toString();
+
+            host = QString("%1host %2").arg(ui->checkBox_host->isChecked() ? "not " : "").arg(ipv4_addr);
+
+        } else {
+            QMessageBox::warning(this, "Warning", "Invalid host entererd");
+
+        }
     }
 
     // Port construction
     if(ui->lineEdit_port->text() != "") {
-        port = QString("%1port %2").arg(ui->checkBox_port->isChecked() ? "not " : "").arg(ui->lineEdit_port->text());
+        if(regex_integer.exactMatch(ui->lineEdit_port->text())) { // Check if integer
+            port = QString("%1port %2").arg(ui->checkBox_port->isChecked() ? "not " : "").arg(ui->lineEdit_port->text());
+
+        } else {
+            QMessageBox::warning(this, "Warning", "Invalid port entererd");
+        }
     }
 
     // Protocol construction

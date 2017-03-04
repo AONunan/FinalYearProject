@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <pcap.h>
+#include <QHostInfo>
 
 #include "packettracer.h"
 
