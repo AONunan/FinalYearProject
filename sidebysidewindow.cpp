@@ -35,7 +35,8 @@ SideBySideWindow::SideBySideWindow(QVector<Packet> vect, const QString input_ser
 
     row_count = 0;
 
-    populate_table();
+    populate_entries();
+    update_table();
 }
 
 SideBySideWindow::~SideBySideWindow()
@@ -43,44 +44,39 @@ SideBySideWindow::~SideBySideWindow()
     delete ui;
 }
 
-void SideBySideWindow::populate_table() {
+void SideBySideWindow::populate_entries() {
     int i;
 
     for(i = 0; i < input_vect.length(); i++) {
+        struct row_entry new_row;
+        new_row.index = i;
+        new_row.timestamp = Packet::timestamp_to_string(input_vect[i].getCurrent_time());
+
         if(input_vect[i].getIp_destination_address() == server_address) { // Client is sending to server
-            update_table(input_vect[i], COLUMN_CLIENT);
+            new_row.local = true;
         } else if(input_vect[i].getIp_source_address() == server_address) { // Server is sending to client
-            update_table(input_vect[i], COLUMN_SERVER);
+            new_row.local = false;
         }
-    }
 
-    // Set the more_details_vect to be the same length as number of matching packets, with empty content
-    for(i = 0; i < matching_packets_vect.length(); i++) {
-        more_details_vect.append("");
-    }
-
-    // Set the values for each item in the more_details_vect
-    for(i = 0; i < more_details_vect.length(); i++) {
-        more_details_vect[i] = more_details_field(input_vect[i]);
+        all_row_entries.append(new_row);
     }
 }
 
-void SideBySideWindow::update_table(Packet packet, int column_position) {
-    QString timestamp_string = Packet::timestamp_to_string(packet.getCurrent_time()); // Convert to string
-    matching_packets_vect.append(packet);
+void SideBySideWindow::update_table() {
+    for(int i = 0; i < input_vect.length(); i++) {
+        // Create new row and scroll to bottom of table
+        ui->tableWidget_packets->setRowCount(row_count + 1);
+        ui->tableWidget_packets->scrollToBottom();
 
-    // Create new row and scroll to bottom of table
-    ui->tableWidget_packets->setRowCount(row_count + 1);
-    ui->tableWidget_packets->scrollToBottom();
+        ui->tableWidget_packets->setItem(row_count, COLUMN_TIMESTAMP, new QTableWidgetItem(all_row_entries[i].timestamp));
+        ui->tableWidget_packets->setItem(row_count, (all_row_entries[i].local ? COLUMN_CLIENT : COLUMN_SERVER), new QTableWidgetItem(QString("%1 bytes").arg(input_vect[i].getPayload_length()))); // Display data in either the client or server column depending on the value of the boolean
 
-    ui->tableWidget_packets->setItem(row_count, COLUMN_TIMESTAMP, new QTableWidgetItem(timestamp_string));
-    ui->tableWidget_packets->setItem(row_count, column_position, new QTableWidgetItem(QString("%1 bytes").arg(packet.getPayload_length())));
-    //ui->tableWidget_packets->setItem(row_count, COLUMN_DETAILS, new QTableWidgetItem(details_field(packet)));
+        row_count++;
+    }
 
-    row_count++;
 }
 
-QString SideBySideWindow::details_field(Packet packet) {
+/*QString SideBySideWindow::details_field(Packet packet) {
     int tcp_flags = packet.getTcp_flags();
 
     if((tcp_flags & TCP_SYN) && !(tcp_flags & TCP_ACK)) { // SYN and not ACK
@@ -94,7 +90,7 @@ QString SideBySideWindow::details_field(Packet packet) {
     } else {
         return "";
     }
-}
+}*/
 
 QString SideBySideWindow::more_details_field(Packet packet) {
     return QString("Value: %1").arg(packet.getPayload_length());
@@ -102,7 +98,7 @@ QString SideBySideWindow::more_details_field(Packet packet) {
 
 void SideBySideWindow::on_tableWidget_packets_cellDoubleClicked(int row) {
     // Open dialog with packet details with an argument
-    PacketInfoDialog infoDialog(matching_packets_vect[row]);
+    PacketInfoDialog infoDialog(input_vect[row]);
     infoDialog.setModal(true);
     infoDialog.exec();
 }
@@ -110,5 +106,5 @@ void SideBySideWindow::on_tableWidget_packets_cellDoubleClicked(int row) {
 void SideBySideWindow::on_tableWidget_packets_itemSelectionChanged()
 {
     int row = ui->tableWidget_packets->currentRow();
-    ui->textBrowser_more_details->setText(more_details_vect[row]);
+    ui->textBrowser_more_details->setText(QString::number(input_vect[row].getPayload_length()));
 }

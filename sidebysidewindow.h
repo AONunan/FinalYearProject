@@ -16,8 +16,8 @@ public:
     explicit SideBySideWindow(QVector<Packet> vect, const QString input_server_address, QWidget *parent = 0);
     ~SideBySideWindow();
 
-    void populate_table();
-    void update_table(Packet packet, int column_position);
+    void populate_entries();
+    void update_table();
     QString details_field(Packet packet);
     QString more_details_field(Packet packet);
 private slots:
@@ -26,11 +26,19 @@ private slots:
 
 private:
     Ui::SideBySideWindow *ui;
-    QVector<Packet> input_vect, matching_packets_vect;
+
+    struct row_entry {
+        int index; // Number in sequence
+        QString timestamp;
+        bool local; // True if client (left hand side), False if server (RHS)
+        QString syn_ack_details;
+        QString syn_ack_more_details;
+    };
+
+    QVector<Packet> input_vect;
     int row_count; // Keep track of current row
-    u_int syn_ack_ack_number; // SYN-ACK packet's acknowledgement number
     QString server_address;
-    QVector<QString> more_details_vect; // Holds all the strings for the "More details" field in the UI
+    QVector<struct row_entry> all_row_entries; // Store all table entries
 
 };
 
