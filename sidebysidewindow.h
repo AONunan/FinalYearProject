@@ -20,9 +20,13 @@ public:
     void update_table();
     QString details_field(Packet packet);
     QString more_details_field(Packet packet);
+    void populate_syn_ack();
+    void set_details(QString choice);
 private slots:
     void on_tableWidget_packets_itemSelectionChanged();
     void on_tableWidget_packets_cellDoubleClicked(int row);
+
+    void on_comboBox_choice_currentTextChanged(const QString &arg1);
 
 private:
     Ui::SideBySideWindow *ui;

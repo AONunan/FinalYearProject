@@ -18,11 +18,6 @@
 #define TCP_ECE 0x40
 #define TCP_CWR 0x80
 
-// TODO: Implement switching between options. Currently set at 3 way handshake
-// Choice of selected options
-#define SELECTED_THREE_WAY_HANDSHAKE 0
-#define SELECTED_WINDOWING 1
-
 SideBySideWindow::SideBySideWindow(QVector<Packet> vect, const QString input_server_address, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::SideBySideWindow)
@@ -37,6 +32,9 @@ SideBySideWindow::SideBySideWindow(QVector<Packet> vect, const QString input_ser
 
     populate_entries();
     update_table();
+    populate_syn_ack();
+    set_details("SYN-ACK");
+
 }
 
 SideBySideWindow::~SideBySideWindow()
@@ -76,24 +74,44 @@ void SideBySideWindow::update_table() {
 
 }
 
-/*QString SideBySideWindow::details_field(Packet packet) {
-    int tcp_flags = packet.getTcp_flags();
+void SideBySideWindow::populate_syn_ack() {
+    int tcp_flags,
+        syn_ack_ack_number;
 
-    if((tcp_flags & TCP_SYN) && !(tcp_flags & TCP_ACK)) { // SYN and not ACK
-        return "Three-way handshake (1): SYN";
-    } else if((tcp_flags & TCP_SYN) && (tcp_flags & TCP_ACK)) { // SYN and ACK
-        syn_ack_ack_number = packet.getTcp_acknowledgement_number();
-        return "Three-way handshake (2): SYN-ACK";
-    } else if(!(tcp_flags & TCP_SYN) && (tcp_flags & TCP_ACK) && (packet.getTcp_sequence_number() == syn_ack_ack_number)) { // not SYN and ACK and the sequence number matches the ACK of SYN-ACK packet
-        syn_ack_ack_number = 0; // Reset
-        return "Three-way handshake (3): ACK";
-    } else {
-        return "";
+    for(int i = 0; i < input_vect.length(); i++) {
+        tcp_flags = input_vect[i].getTcp_flags();
+
+        if((tcp_flags & TCP_SYN) && !(tcp_flags & TCP_ACK)) { // SYN and not ACK
+            all_row_entries[i].syn_ack_details = "Three-way handshake (1): SYN";
+
+        } else if((tcp_flags & TCP_SYN) && (tcp_flags & TCP_ACK)) { // SYN and ACK
+            syn_ack_ack_number = input_vect[i].getTcp_acknowledgement_number();
+            all_row_entries[i].syn_ack_details = "Three-way handshake (2): SYN-ACK";
+
+        } else if(!(tcp_flags & TCP_SYN) && (tcp_flags & TCP_ACK) && (input_vect[i].getTcp_sequence_number() == syn_ack_ack_number)) { // not SYN and ACK and the sequence number matches the ACK of SYN-ACK packet
+            syn_ack_ack_number = 0; // Reset
+            all_row_entries[i].syn_ack_details = "Three-way handshake (3): ACK";
+
+        } else {
+            all_row_entries[i].syn_ack_details = "";
+        }
     }
-}*/
+}
 
-QString SideBySideWindow::more_details_field(Packet packet) {
-    return QString("Value: %1").arg(packet.getPayload_length());
+void SideBySideWindow::set_details(QString choice) {
+    QString details_field;
+
+    for(int i = 0; i < input_vect.length(); i++) {
+        // Decide what to set as the details field
+        if(choice == "SYN-ACK") {
+            details_field = all_row_entries[i].syn_ack_details;
+        } else {
+            details_field = "";
+        }
+
+        ui->tableWidget_packets->setItem(i, COLUMN_DETAILS, new QTableWidgetItem(details_field));
+    }
+
 }
 
 void SideBySideWindow::on_tableWidget_packets_cellDoubleClicked(int row) {
@@ -107,4 +125,9 @@ void SideBySideWindow::on_tableWidget_packets_itemSelectionChanged()
 {
     int row = ui->tableWidget_packets->currentRow();
     ui->textBrowser_more_details->setText(QString::number(input_vect[row].getPayload_length()));
+}
+
+void SideBySideWindow::on_comboBox_choice_currentTextChanged(const QString &current_choice)
+{
+    qDebug() << "Chosen:" << current_choice;
 }
