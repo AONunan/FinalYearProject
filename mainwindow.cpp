@@ -39,7 +39,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Apply the filter
     //char filter_expession_string[] = "(host 93.184.216.34) and (port 80)";
-    packetTracer.apply_filter(handle, &filter_expression, net, "ip");
+    packetTracer.apply_filter(handle, &filter_expression, net, "host 93.184.216.34");
 
     row_count = 0;
     currently_capturing_packets = false;

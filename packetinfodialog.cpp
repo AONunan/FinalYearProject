@@ -190,7 +190,14 @@ void PacketInfoDialog::print_payload_hex_ascii() {
         for(j = 0; j < 16; j++) {
             // Get all values in row
             hex_line += QString("%1 ").arg(displayed_packet.getPayload_vect()[i + j], 2, 16, QChar('0'));
-            ascii_line += char(displayed_packet.getPayload_vect()[i + j]);
+
+            // Exlcude extended ascii characters
+            if((32 <= displayed_packet.getPayload_vect()[i + j]) && (displayed_packet.getPayload_vect()[i + j] <= 126)) {
+                //qDebug() << "int: " << displayed_packet.getPayload_vect()[i + j] << "*** char:" << char(displayed_packet.getPayload_vect()[i + j]);
+                ascii_line += char(displayed_packet.getPayload_vect()[i + j]);
+            } else {
+                ascii_line += ".";
+            }
             total_printed++;
         }
 
