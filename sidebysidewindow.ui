@@ -94,7 +94,11 @@
       </widget>
      </item>
      <item>
-      <widget class="QTextBrowser" name="textBrowser_more_details"/>
+      <widget class="QTextBrowser" name="textBrowser_more_details">
+       <property name="placeholderText">
+        <string>Select a packet to see more details</string>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QLabel" name="label_hint">
@@ -104,7 +108,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Hint: Click on a packet to display more information</string>
+        <string>Hint: Change the option in the dropdown box at the top to see different details.</string>
        </property>
       </widget>
      </item>

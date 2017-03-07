@@ -75,26 +75,46 @@ void SideBySideWindow::update_table() {
 }
 
 void SideBySideWindow::populate_syn_ack() {
-    int tcp_flags,
-        syn_ack_ack_number;
+    u_int tcp_flags,
+        seq_number,
+        ack_number;
+
+    bool end_of_twh, // Set to True at the very end of the three-way-handshake, false every other time
+         currently_in_twh; // Set to True while processing three-way-handshake
+
+    end_of_twh = false;
+    currently_in_twh = false;
 
     for(int i = 0; i < input_vect.length(); i++) {
         tcp_flags = input_vect[i].getTcp_flags();
 
         if((tcp_flags & TCP_SYN) && !(tcp_flags & TCP_ACK)) { // SYN and not ACK
             all_row_entries[i].syn_ack_details = "Three-way handshake (1): SYN";
+            all_row_entries[i].syn_ack_more_details = QString("The client wants to initialise a connection with the server. This connection is established in TCP via the three-way handshake.\n\nAs this is the first step of the three-way handshake, the client sets the sequence number (SEQ) to a random number, in this case: SEQ = %1.\n\nThe acknowledgement number is initally set to 0. ACK = 0").arg(input_vect[i].getTcp_sequence_number());
+
+            currently_in_twh = true;
 
         } else if((tcp_flags & TCP_SYN) && (tcp_flags & TCP_ACK)) { // SYN and ACK
-            syn_ack_ack_number = input_vect[i].getTcp_acknowledgement_number();
             all_row_entries[i].syn_ack_details = "Three-way handshake (2): SYN-ACK";
+            all_row_entries[i].syn_ack_more_details = QString("The server acknowledges receiving the SYN packet and sets its ACK number to 1 plus the SEQ number from the previous packet.\nACK = 1 + %1 = %2 (in other words, this is the SEQ number the server expects the client to send next)\n\nThe server sets its own random SEQ number, in this case: SEQ = %3").arg(seq_number).arg(input_vect[i].getTcp_acknowledgement_number()).arg(input_vect[i].getTcp_sequence_number());
 
-        } else if(!(tcp_flags & TCP_SYN) && (tcp_flags & TCP_ACK) && (input_vect[i].getTcp_sequence_number() == syn_ack_ack_number)) { // not SYN and ACK and the sequence number matches the ACK of SYN-ACK packet
-            syn_ack_ack_number = 0; // Reset
+        } else if(!(tcp_flags & TCP_SYN) && (tcp_flags & TCP_ACK) && (currently_in_twh)) { // not SYN and ACK and still processing the three-way-handshake
             all_row_entries[i].syn_ack_details = "Three-way handshake (3): ACK";
+            all_row_entries[i].syn_ack_more_details = QString("The client acknowledges receiving the SYN-ACK packet and sets its ACK number to 1 + the SEQ number it just received.\nACK = 1 + %1 = %2.\n\nThe SEQ number the client sends is now %3 (note that this is in alignment with what the server says it is expecting in the SYN-ACK packet)").arg(seq_number).arg(input_vect[i].getTcp_acknowledgement_number()).arg(input_vect[i].getTcp_sequence_number());
+            currently_in_twh = false; // Set to false as we are finished processing the three-way-handshake
+            //end_of_twh = true; // 3-way-handshake finished
+
+        } else if(end_of_twh) { // This is the first packet sent after the three-way-handshake
+            end_of_twh = false;
 
         } else {
             all_row_entries[i].syn_ack_details = "";
+
         }
+
+        // Set the SEQ and ACK numbers for use in the next iteration of the loop
+        seq_number = input_vect[i].getTcp_sequence_number();
+        ack_number = input_vect[i].getTcp_acknowledgement_number();
     }
 }
 
@@ -124,10 +144,12 @@ void SideBySideWindow::on_tableWidget_packets_cellDoubleClicked(int row) {
 void SideBySideWindow::on_tableWidget_packets_itemSelectionChanged()
 {
     int row = ui->tableWidget_packets->currentRow();
-    ui->textBrowser_more_details->setText(QString::number(input_vect[row].getPayload_length()));
+    //ui->textBrowser_more_details->setText(QString::number(input_vect[row].getPayload_length()));
+    ui->textBrowser_more_details->setText(all_row_entries[row].syn_ack_more_details);
 }
 
 void SideBySideWindow::on_comboBox_choice_currentTextChanged(const QString &current_choice)
 {
+    ui->label_hint->hide();
     qDebug() << "Chosen:" << current_choice;
 }
