@@ -137,9 +137,35 @@ void SideBySideWindow::populate_syn_ack() {
 }
 
 void SideBySideWindow::populate_windowing() {
+    u_int client_window_size, server_window_size;
+
+    client_window_size = 0;
+    server_window_size = 0;
+
     for(int i = 0; i < input_vect.length(); i++) {
-        all_row_entries[i].windowing_details = "Windowing details";
+        if(all_row_entries[i].local) { // Client
+            if(client_window_size != 0) {
+                if(input_vect[i].getTcp_window() < client_window_size) {
+                    all_row_entries[i].windowing_details = QString("Client window has reduced from %1 to %2.").arg(client_window_size).arg(input_vect[i].getTcp_window());
+                } else if(input_vect[i].getTcp_window() > client_window_size) {
+                    all_row_entries[i].windowing_details = QString("Client window has increased from %1 to %2.").arg(client_window_size).arg(input_vect[i].getTcp_window());
+                }
+            }
+            client_window_size = input_vect[i].getTcp_window();
+
+        } else { // Server
+            if(server_window_size != 0) {
+                if(input_vect[i].getTcp_window() < server_window_size) {
+                    all_row_entries[i].windowing_details = QString("Server window has reduced from %1 to %2.").arg(server_window_size).arg(input_vect[i].getTcp_window());
+                } else if(input_vect[i].getTcp_window() > server_window_size) {
+                    all_row_entries[i].windowing_details = QString("Server window has increased from %1 to %2.").arg(server_window_size).arg(input_vect[i].getTcp_window());
+                }
+            }
+            server_window_size = input_vect[i].getTcp_window();
+        }
+
         all_row_entries[i].windowing_more_details = "Windowing more details";
+
     }
 }
 
@@ -156,7 +182,8 @@ void SideBySideWindow::set_details(QString choice) {
 
     } else if(choice == "Windowing") {
         ui->pushButton_more_info->setText("More info on windowing and flow control");
-        more_info_popup_text = "Windowing...";
+        more_info_popup_text = "Windowing is a type of flow control used in TCP. It determines how much data is sent before requiring an acknowledgement.\n"
+                               "It can really slow down network traffic if window sizes are small and ACKs are constantly required.";
 
     } else {
         ui->pushButton_more_info->setText("NULL");

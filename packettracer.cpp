@@ -88,7 +88,6 @@ Packet PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet, 
     // Calculate IP header length (i.e. offset)
     ip_header_length = ((ipPtr->version_and_header_length) & 0x0f) << 2; // Bitshift to the right to get header length
 
-    qDebug() << "IP header length" << ip_header_length << "bytes";
     if (ip_header_length < 20) {
         qDebug() << "Invalid IP header length:" << ip_header_length << " bytes";
         return working_packet;
@@ -138,7 +137,6 @@ Packet PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet, 
     tcp_header_length = ((tcpPtr->offset & 0xf0) >> 4) * 4;
     working_packet.setTcp_header_length(tcp_header_length);
 
-    qDebug() << "TCP header length" << tcp_header_length << "bytes";
     if (tcp_header_length < 20) {
         qDebug() << "Invalid TCP header length" << tcp_header_length << "bytes";
         return working_packet;
