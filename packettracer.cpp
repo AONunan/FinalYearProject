@@ -87,7 +87,6 @@ Packet PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet, 
 
     // Calculate IP header length (i.e. offset)
     ip_header_length = ((ipPtr->version_and_header_length) & 0x0f) << 2; // Bitshift to the right to get header length
-    working_packet.setIp_header_length(ip_header_length);
 
     qDebug() << "IP header length" << ip_header_length << "bytes";
     if (ip_header_length < 20) {
@@ -98,16 +97,17 @@ Packet PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet, 
     }
 
     // Set IP details
-    working_packet.setIp_source_address(inet_ntoa(ipPtr->source_address));
-    working_packet.setIp_destination_address(inet_ntoa(ipPtr->destination_address));
     working_packet.setIp_version((ipPtr->version_and_header_length) >> 4); // Bitshifting required to obtain version number
+    working_packet.setIp_header_length(ip_header_length);
     working_packet.setIp_type_of_service(ipPtr->type_of_service);
-    working_packet.setIp_length(ipPtr->length);
-    working_packet.setIp_id(ipPtr->id);
+    working_packet.setIp_length(ntohs(ipPtr->length));
+    working_packet.setIp_id(ntohs(ipPtr->id));
     working_packet.setIp_offset(ipPtr->offset);
     working_packet.setIp_time_to_live(ipPtr->time_to_live);
     working_packet.setIp_protocol(ipPtr->protocol);
-    working_packet.setIp_checksum(ipPtr->checksum);
+    working_packet.setIp_checksum(ntohs(ipPtr->checksum));
+    working_packet.setIp_source_address(inet_ntoa(ipPtr->source_address));
+    working_packet.setIp_destination_address(inet_ntoa(ipPtr->destination_address));
 
     // Find protocol in use
     switch(ipPtr->protocol) {
@@ -153,8 +153,8 @@ Packet PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet, 
     working_packet.setTcp_acknowledgement_number(ntohl(tcpPtr->acknowledgement_number));
     working_packet.setTcp_offset(tcpPtr->offset);
     working_packet.setTcp_flags(tcpPtr->flags);
-    working_packet.setTcp_window(tcpPtr->window);
-    working_packet.setTcp_checksum(tcpPtr->checksum);
+    working_packet.setTcp_window(ntohs(tcpPtr->window));
+    working_packet.setTcp_checksum(ntohs(tcpPtr->checksum));
     working_packet.setTcp_urgent_pointer(tcpPtr->urgent_pointer);
 
     // Define packet payloadPtr
