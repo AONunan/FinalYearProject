@@ -77,11 +77,14 @@ void SideBySideWindow::update_table() {
 void SideBySideWindow::populate_syn_ack() {
     u_int tcp_flags,
         seq_number,
-        ack_number;
+        ack_number,
+        payload;
 
-    bool end_of_twh, // Set to True at the very end of the three-way-handshake, false every other time
+    bool processing_twh, // Set to false until the three-way-handshake has been processed
+         end_of_twh, // Set to True at the very end of the three-way-handshake, false every other time
          currently_in_twh; // Set to True while processing three-way-handshake
 
+    processing_twh = false;
     end_of_twh = false;
     currently_in_twh = false;
 
@@ -92,6 +95,7 @@ void SideBySideWindow::populate_syn_ack() {
             all_row_entries[i].syn_ack_details = "Three-way handshake (1): SYN";
             all_row_entries[i].syn_ack_more_details = QString("The client wants to initialise a connection with the server. This connection is established in TCP via the three-way handshake.\n\nAs this is the first step of the three-way handshake, the client sets the sequence number (SEQ) to a random number, in this case: SEQ = %1.\n\nThe acknowledgement number is initally set to 0. ACK = 0").arg(input_vect[i].getTcp_sequence_number());
 
+            processing_twh = true; // From now on, will not display "Insufficient data..." message
             currently_in_twh = true;
 
         } else if((tcp_flags & TCP_SYN) && (tcp_flags & TCP_ACK)) { // SYN and ACK
@@ -102,10 +106,23 @@ void SideBySideWindow::populate_syn_ack() {
             all_row_entries[i].syn_ack_details = "Three-way handshake (3): ACK";
             all_row_entries[i].syn_ack_more_details = QString("The client acknowledges receiving the SYN-ACK packet and sets its ACK number to 1 + the SEQ number it just received.\nACK = 1 + %1 = %2.\n\nThe SEQ number the client sends is now %3 (note that this is in alignment with what the server says it is expecting in the SYN-ACK packet)").arg(seq_number).arg(input_vect[i].getTcp_acknowledgement_number()).arg(input_vect[i].getTcp_sequence_number());
             currently_in_twh = false; // Set to false as we are finished processing the three-way-handshake
-            //end_of_twh = true; // 3-way-handshake finished
+            end_of_twh = true; // 3-way-handshake finished
 
-        } else if(end_of_twh) { // This is the first packet sent after the three-way-handshake
-            end_of_twh = false;
+        } else if(processing_twh ==  false) {
+            all_row_entries[i].syn_ack_more_details = "Insufficient data to process details. Try another packet below.";
+
+        /*} else if(end_of_twh) { // This is the first packet sent after the three-way-handshake
+            all_row_entries[i].syn_ack_details = "GET request";
+            all_row_entries[i].syn_ack_more_details = QString("The three-way-handshake has completed and the client sends a GET request to the server. As nothing was received, the SEQ number remains at %1 and the ACK number remains at %2.").arg(input_vect[i].getTcp_sequence_number()).arg(input_vect[i].getTcp_acknowledgement_number());
+            end_of_twh = false;*/
+
+        } else if((tcp_flags & TCP_ACK) && (input_vect[i].getPayload_length() == 0)) { // ACK and zero payload
+            all_row_entries[i].syn_ack_details = "ACK of data";
+            all_row_entries[i].syn_ack_more_details = QString("The %1 just received %2 bytes, so the ACK number is the previous SEQ number + the payload length.\nACK = %3 + %4 = %5.\nThis is what the %1 expects the next SEQ number to be.\n\nThe SEQ number equals the ACK of the previous packet. SEQ = %6.").arg((all_row_entries[i].local) ? "client" : "server").arg(payload).arg(seq_number).arg(payload).arg(input_vect[i].getTcp_acknowledgement_number()).arg(input_vect[i].getTcp_sequence_number());
+
+        } else if((input_vect[i].getPayload_length() > 0) && (payload == 0)) { // Sending data and just received nothing
+            all_row_entries[i].syn_ack_details = "Sending data";
+            all_row_entries[i].syn_ack_more_details = QString("The %1 sends %2 bytes of data.\n\nBecause no data was received in the last packet, the SEQ number remains at %3 and the ACK number remains at %4.").arg((all_row_entries[i].local) ? "client" : "server").arg(input_vect[i].getPayload_length()).arg(input_vect[i].getTcp_sequence_number()).arg(input_vect[i].getTcp_acknowledgement_number());
 
         } else {
             all_row_entries[i].syn_ack_details = "";
@@ -115,6 +132,7 @@ void SideBySideWindow::populate_syn_ack() {
         // Set the SEQ and ACK numbers for use in the next iteration of the loop
         seq_number = input_vect[i].getTcp_sequence_number();
         ack_number = input_vect[i].getTcp_acknowledgement_number();
+        payload = input_vect[i].getPayload_length();
     }
 }
 
