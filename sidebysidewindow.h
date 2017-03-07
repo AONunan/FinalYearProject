@@ -22,6 +22,8 @@ public:
     QString more_details_field(Packet packet);
     void populate_syn_ack();
     void set_details(QString choice);
+    void populate_windowing();
+    QString get_more_details(int row);
 private slots:
     void on_tableWidget_packets_itemSelectionChanged();
     void on_tableWidget_packets_cellDoubleClicked(int row);
@@ -37,8 +39,12 @@ private:
         int index; // Number in sequence
         QString timestamp;
         bool local; // True if client (left hand side), False if server (RHS)
+
         QString syn_ack_details;
         QString syn_ack_more_details;
+
+        QString windowing_details;
+        QString windowing_more_details;
     };
 
     QVector<Packet> input_vect;

@@ -34,7 +34,8 @@ SideBySideWindow::SideBySideWindow(QVector<Packet> vect, const QString input_ser
     populate_entries();
     update_table();
     populate_syn_ack();
-    set_details("SYN-ACK");
+    populate_windowing();
+    set_details(ui->comboBox_choice->currentText()); // Set the window details to what is currently in the combo box
 
 }
 
@@ -135,6 +136,13 @@ void SideBySideWindow::populate_syn_ack() {
     }
 }
 
+void SideBySideWindow::populate_windowing() {
+    for(int i = 0; i < input_vect.length(); i++) {
+        all_row_entries[i].windowing_details = "Windowing details";
+        all_row_entries[i].windowing_more_details = "Windowing more details";
+    }
+}
+
 void SideBySideWindow::set_details(QString choice) {
     QString details_field;
 
@@ -145,6 +153,11 @@ void SideBySideWindow::set_details(QString choice) {
                                "2. Host B responds with a SYN-ACK packet (acknowledge the previous and synchronise)\n"
                                "3. Host A responds with an ACK packet (acknowledge the previous)\n\n"
                                "Now that a connection is established, data transfer can begin. Sequence numbers and acknowledgement numbers are used to ensure packets arrive correctly. If either side determines that a packet has been lost, the missing data will be reset.";
+
+    } else if(choice == "Windowing") {
+        ui->pushButton_more_info->setText("More info on windowing and flow control");
+        more_info_popup_text = "Windowing...";
+
     } else {
         ui->pushButton_more_info->setText("NULL");
         more_info_popup_text = "NULL";
@@ -156,6 +169,8 @@ void SideBySideWindow::set_details(QString choice) {
         // Decide what to set as the details field
         if(choice == "SYN-ACK") {
             details_field = all_row_entries[i].syn_ack_details;
+        } else if(choice == "Windowing") {
+            details_field = all_row_entries[i].windowing_details;
         } else {
             details_field = "";
         }
@@ -163,6 +178,18 @@ void SideBySideWindow::set_details(QString choice) {
         ui->tableWidget_packets->setItem(i, COLUMN_DETAILS, new QTableWidgetItem(details_field));
     }
 
+}
+
+QString SideBySideWindow::get_more_details(int row) {
+    QString choice = ui->comboBox_choice->currentText();
+
+    if(choice == "SYN-ACK") {
+        return all_row_entries[row].syn_ack_more_details;
+    } else if(choice == "Windowing") {
+        return all_row_entries[row].windowing_more_details;
+    } else {
+        return "";
+    }
 }
 
 void SideBySideWindow::on_tableWidget_packets_cellDoubleClicked(int row) {
@@ -175,8 +202,7 @@ void SideBySideWindow::on_tableWidget_packets_cellDoubleClicked(int row) {
 void SideBySideWindow::on_tableWidget_packets_itemSelectionChanged()
 {
     int row = ui->tableWidget_packets->currentRow();
-    //ui->textBrowser_more_details->setText(QString::number(input_vect[row].getPayload_length()));
-    ui->textBrowser_more_details->setText(all_row_entries[row].syn_ack_more_details);
+    ui->textBrowser_more_details->setText(get_more_details(row));
 }
 
 void SideBySideWindow::on_comboBox_choice_currentTextChanged(const QString &current_choice)

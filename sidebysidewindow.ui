@@ -30,6 +30,11 @@
          </item>
          <item>
           <property name="text">
+           <string>Windowing</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
            <string>Testing</string>
           </property>
          </item>
