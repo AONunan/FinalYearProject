@@ -28,6 +28,8 @@ private slots:
 
     void on_comboBox_choice_currentTextChanged(const QString &arg1);
 
+    void on_pushButton_more_info_clicked();
+
 private:
     Ui::SideBySideWindow *ui;
 
@@ -43,6 +45,7 @@ private:
     int row_count; // Keep track of current row
     QString server_address;
     QVector<struct row_entry> all_row_entries; // Store all table entries
+    QString more_info_popup_text;
 
 };
 
