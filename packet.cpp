@@ -25,23 +25,19 @@ void Packet::reset_values() {
     current_time = 0;
 }
 
-u_int Packet::getTcp_sequence_number() const
-{
+u_int Packet::getTcp_sequence_number() const {
     return tcp_sequence_number;
 }
 
-void Packet::setTcp_sequence_number(const u_int &value)
-{
+void Packet::setTcp_sequence_number(const u_int &value) {
     tcp_sequence_number = value;
 }
 
-u_int Packet::getTcp_acknowledgement_number() const
-{
+u_int Packet::getTcp_acknowledgement_number() const {
     return tcp_acknowledgement_number;
 }
 
-void Packet::setTcp_acknowledgement_number(const u_int &value)
-{
+void Packet::setTcp_acknowledgement_number(const u_int &value) {
     tcp_acknowledgement_number = value;
 }
 
