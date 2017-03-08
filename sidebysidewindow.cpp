@@ -221,9 +221,21 @@ QString SideBySideWindow::get_more_details(int row) {
 
 void SideBySideWindow::on_tableWidget_packets_cellDoubleClicked(int row) {
     // Open dialog with packet details with an argument
-    PacketInfoDialog infoDialog(input_vect[row]);
+    /*PacketInfoDialog infoDialog(input_vect[row]);
     infoDialog.setModal(true);
-    infoDialog.exec();
+    infoDialog.exec();*/
+
+
+    if(input_vect[row].getIp_protocol() ==  6) { // If user has clicked on a TCP packet
+        ui->label_hint->hide();
+
+        // Open dialog with packet details with an argument
+        PacketInfoDialog infoDialog(input_vect[row]);
+        infoDialog.setModal(true);
+        infoDialog.exec();
+    } else {
+        QMessageBox::warning(this, "Error", QString("Please choose a TCP packet. Details not available for %1 packets.").arg(input_vect[row].getIp_protocol_string()));
+    }
 }
 
 void SideBySideWindow::on_tableWidget_packets_itemSelectionChanged()
