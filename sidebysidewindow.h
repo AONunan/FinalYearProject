@@ -52,6 +52,7 @@ private:
     QString server_address;
     QVector<struct row_entry> all_row_entries; // Store all table entries
     QString more_info_popup_text;
+    int first_index_after_twh; // Set at the index of the first packet AFTER the three-way handshake. This saves other functions from having to perform the checks after it has been done once
 
 };
 

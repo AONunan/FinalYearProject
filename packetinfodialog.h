@@ -24,6 +24,8 @@ public:
 private slots:
     void on_pushButton_change_view_clicked();
 
+    void on_pushButton_next_packet_clicked();
+
 private:
     Ui::PacketInfoDialog *ui;
 

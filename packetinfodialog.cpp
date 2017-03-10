@@ -245,3 +245,8 @@ void PacketInfoDialog::print_payload_hex_ascii() {
     ui->tableWidget_payload->setItem(current_row, 1, new QTableWidgetItem(hex_line));
     ui->tableWidget_payload->setItem(current_row, 2, new QTableWidgetItem(ascii_line));
 }
+
+void PacketInfoDialog::on_pushButton_next_packet_clicked()
+{
+
+}

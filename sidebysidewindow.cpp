@@ -73,6 +73,7 @@ void SideBySideWindow::update_table() {
 void SideBySideWindow::populate_syn_ack() {
     u_int tcp_flags,
         seq_number,
+        ack_number,
         payload;
 
     bool processing_twh, // Set to false until the three-way-handshake has been processed
@@ -80,6 +81,8 @@ void SideBySideWindow::populate_syn_ack() {
 
     processing_twh = false;
     currently_in_twh = false;
+    seq_number = -1;
+    ack_number = -1;
 
     for(int i = 0; i < input_vect.length(); i++) {
         tcp_flags = input_vect[i].getTcp_flags();
@@ -96,13 +99,15 @@ void SideBySideWindow::populate_syn_ack() {
             all_row_entries[i].syn_ack_more_details = QString("The server acknowledges receiving the SYN packet and sets its ACK number to 1 plus the SEQ number from the previous packet.\n"
                                                               "ACK = 1 + %1 = %2 (in other words, this is the SEQ number the server expects the client to send next)\n\n"
                                                               "The server sets its own random SEQ number, in this case: SEQ = %3").arg(seq_number).arg(input_vect[i].getTcp_acknowledgement_number()).arg(input_vect[i].getTcp_sequence_number());
+            ack_number = input_vect[i].getTcp_acknowledgement_number(); // Set so that we can compare when checking if the next step in the three-way handshake
 
-        } else if(!(tcp_flags & TCP_SYN) && (tcp_flags & TCP_ACK) && (currently_in_twh)) { // not SYN and ACK and still processing the three-way-handshake
+        } else if(!(tcp_flags & TCP_SYN) && (tcp_flags & TCP_ACK) && (input_vect[i].getTcp_sequence_number() == ack_number)) { // not SYN and ACK and current SEQ number matches previous ACK number
             all_row_entries[i].syn_ack_details = "Three-way handshake (3): ACK";
             all_row_entries[i].syn_ack_more_details = QString("The client acknowledges receiving the SYN-ACK packet and sets its ACK number to 1 + the SEQ number it just received.\n"
                                                               "ACK = 1 + %1 = %2.\n\n"
                                                               "The SEQ number the client sends is now %3 (note that this is in alignment with what the server says it is expecting in the SYN-ACK packet)").arg(seq_number).arg(input_vect[i].getTcp_acknowledgement_number()).arg(input_vect[i].getTcp_sequence_number());
             currently_in_twh = false; // Set to false as we are finished processing the three-way-handshake
+            ack_number = -1; // Reset
 
         } else if(processing_twh ==  false) {
             all_row_entries[i].syn_ack_more_details = "Insufficient data to process details. Try another packet below.";
@@ -176,8 +181,8 @@ void SideBySideWindow::set_details(QString choice) {
 
     } else if(choice == "Windowing") {
         ui->pushButton_more_info->setText("More info on windowing and flow control");
-        more_info_popup_text = "Windowing is a type of flow control used in TCP. It determines how much data is sent before requiring an acknowledgement.\n"
-                               "It can really slow down network traffic if window sizes are small and ACKs are constantly required.";
+        more_info_popup_text = "Windowing is a type of flow control used in TCP. It determines how much data can be sent before requiring an acknowledgement.\n"
+                               "If window sizes are small, it can really slow down network traffic if window sizes are small. However, if window sizes are too large, more data will need to be resent if a packet is dropped.";
 
     } else {
         ui->pushButton_more_info->setText("NULL");
@@ -235,7 +240,7 @@ void SideBySideWindow::on_tableWidget_packets_itemSelectionChanged()
 void SideBySideWindow::on_comboBox_choice_currentTextChanged(const QString &current_choice)
 {
     ui->label_hint->hide();
-    set_details(current_choice);
+    set_details(current_choice); // Set the more_details textbox contents
 }
 
 void SideBySideWindow::on_pushButton_more_info_clicked()

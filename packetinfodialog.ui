@@ -15,6 +15,13 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_4">
    <item>
+    <widget class="QPushButton" name="pushButton_next_packet">
+     <property name="text">
+      <string>Next</string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QPushButton" name="pushButton_change_view">
      <property name="text">
       <string>Show field names</string>

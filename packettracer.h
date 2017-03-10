@@ -60,16 +60,12 @@ private:
         struct in_addr source_address, destination_address;
     };
 
-
-    // TCP header
-    typedef u_int tcp_seq;
-
     struct tcp_header {
         u_short source_port;
         u_short destination_port;
-        tcp_seq sequence_number;
-        tcp_seq acknowledgement_number;
-        u_char offset; // data offset, rsvd
+        u_int sequence_number;
+        u_int acknowledgement_number;
+        u_char offset;
         u_char flags;
         u_short window;
         u_short checksum;

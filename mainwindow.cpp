@@ -36,8 +36,8 @@ MainWindow::MainWindow(QWidget *parent) :
     handle = packetTracer.open_for_sniffing(dev);
 
     // Apply the filter
-    //char filter_expession_string[] = "(host 93.184.216.34) and (port 80)";
-    packetTracer.apply_filter(handle, &filter_expression, net, "host 93.184.216.34");
+    packetTracer.apply_filter(handle, &filter_expression, net, "host 216.59.56.71");
+//    packetTracer.apply_filter(handle, &filter_expression, net, "host 93.184.216.34");
 
     row_count = 0;
 

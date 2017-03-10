@@ -167,6 +167,7 @@ void StatWindow::display_graph_temp() {
     QLineSeries *series_tcp = new QLineSeries();
     QLineSeries *series_udp = new QLineSeries();
 
+    // Test data
     series_tcp->append(0, 5);
     series_tcp->append(1, 7);
     series_tcp->append(2, 4);
