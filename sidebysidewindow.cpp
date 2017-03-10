@@ -10,14 +10,8 @@
 #define COLUMN_SERVER 2
 #define COLUMN_DETAILS 3
 
-#define TCP_FIN 0x01
 #define TCP_SYN 0x02
-#define TCP_RST 0x04
-#define TCP_PUSH 0x08
 #define TCP_ACK 0x10
-#define TCP_URG 0x20
-#define TCP_ECE 0x40
-#define TCP_CWR 0x80
 
 SideBySideWindow::SideBySideWindow(QVector<Packet> vect, const QString input_server_address, QWidget *parent) :
     QDialog(parent),
@@ -220,12 +214,6 @@ QString SideBySideWindow::get_more_details(int row) {
 }
 
 void SideBySideWindow::on_tableWidget_packets_cellDoubleClicked(int row) {
-    // Open dialog with packet details with an argument
-    /*PacketInfoDialog infoDialog(input_vect[row]);
-    infoDialog.setModal(true);
-    infoDialog.exec();*/
-
-
     if(input_vect[row].getIp_protocol() ==  6) { // If user has clicked on a TCP packet
         ui->label_hint->hide();
 

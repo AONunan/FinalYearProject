@@ -25,8 +25,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow) {
     ui->setupUi(this);
 
-
-
     // Set the network interface device
     dev = packetTracer.get_network_interface_device();
     ui->label_interface->setText(QString("Device: %1").arg(dev));
@@ -43,10 +41,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
     row_count = 0;
 
-    ui->label_hint->hide(); // Hide the hint initially
+    // Hide the hint and loading gif
+    ui->label_hint->hide();
     ui->label_loading->hide();
 
-
+    // Get local IP address
     my_ip_address = find_my_ip_address();
 }
 
@@ -82,18 +81,12 @@ void MainWindow::capture_loop() {
     // Get number of packets required from spinbox
     int no_of_packets = ui->spinBox_no_of_packets->value();
 
-    //qDebug() << "Value of bool:" << break_out_of_capture;
-    ui->button_capture_packet->setText("Cancel");
-
     for(i = 0; i < no_of_packets; i++) {
-        // TODO: Add loading symbol to window while packets are being captured.
-
-        packet = 0;
+        packet = 0; // Reset the packet
 
         // Packets sometimes return as 0, causing errors. Loop until non-0 value returned
         while(packet == 0) {
-            // Fetch single packet
-            packet = pcap_next(handle, &header);
+            packet = pcap_next(handle, &header); // Fetch single packet
         }
 
         // Process captured packet
@@ -110,8 +103,6 @@ void MainWindow::capture_loop() {
         update_table(captured_packets_vect[i]);
     }
 
-    ui->button_capture_packet->setText("Capture");
-
     ui->statusBar->showMessage(QString("Finished capturing %1 packets.").arg(QString::number(no_of_packets)));
     ui->label_loading->hide(); // Hide the loading gif
     movie->stop(); // Stop the loading gif
@@ -121,6 +112,7 @@ QString MainWindow::find_my_ip_address()
 {
     QList<QHostAddress> ip_addr_list = QNetworkInterface::allAddresses();
 
+    // Loop through list of local addresses to find non-loopback, IPv4 address
     for(int i = 0; i < ip_addr_list.count(); i++) {
         if(!ip_addr_list[i].isLoopback()) // Check that it is no a loopback address
             if(ip_addr_list[i].protocol() == QAbstractSocket::IPv4Protocol) // Check that it is an IPv4 address
@@ -154,7 +146,8 @@ void MainWindow::on_tableWidget_packets_cellDoubleClicked(int row) {
         PacketInfoDialog infoDialog(captured_packets_vect[row]);
         infoDialog.setModal(true);
         infoDialog.exec();
-    } else {
+
+    } else { // User has clicked on something other than a TCP packet
         QMessageBox::warning(this, "Error", QString("Please choose a TCP packet. Details not available for %1 packets.").arg(captured_packets_vect[row].getIp_protocol_string()));
     }
 }
@@ -189,7 +182,6 @@ void MainWindow::on_pushButton_clear_clicked() {
  */
 void MainWindow::on_pushButton_side_by_side_clicked()
 {
-    // Open dialog with packet details with an argument
     QString server_address;
     int current_row = ui->tableWidget_packets->currentRow();
     QVector<QString> temp_hosts;
@@ -241,10 +233,6 @@ void MainWindow::on_pushButton_test_clicked()
 {
     /*pid_t pid = fork();
     qDebug() << pid;*/
-}
-
-void MainWindow::thread_test() {
-    qDebug() << "I am a thread";
 }
 
 void MainWindow::on_button_check_clicked()

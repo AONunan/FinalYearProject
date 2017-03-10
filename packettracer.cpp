@@ -68,7 +68,6 @@ void PacketTracer::apply_filter(pcap_t *handle, bpf_program *filter_expressionPt
 Packet PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet, Packet working_packet) {
     working_packet.setCurrent_time(time(0));
 
-    //const struct ethernet_header *ethernetPtr; // Pointer to beginning of Ethernet header
     const struct ip_header *ipPtr; // Pointer to beginning of IP header
     const struct tcp_header *tcpPtr; // Pointer to beginning of TCP header
     const u_char *payloadPtr; // Pointer to beginning of packet payload
@@ -78,9 +77,6 @@ Packet PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet, 
     int payload_length; // Length of packet payload
 
     working_packet.setTotal_header_length(header->len);
-
-    // Define Ethernet header, same as pointer to packet
-    //ethernetPtr = (struct ethernet_header*)(packet);
 
     // Define IP header, same as pointer plus ethernet length
     ipPtr = (struct ip_header*)(packet + SIZE_ETHERNET);
@@ -128,7 +124,7 @@ Packet PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet, 
     }
 
 
-    // If from here down is executed, we must be dealing with TCP
+    // If from here down is executed, we must be dealing with TCP because "break" was met
 
     // Define TCP header, equals packet pointer plus ethernet size plus ip size
     tcpPtr = (struct tcp_header*)(packet + SIZE_ETHERNET + ip_header_length);
@@ -177,9 +173,8 @@ Packet PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet, 
 QVector<short> PacketTracer::print_payload(const u_char *payloadPtr, int payload_length) {
     const u_char *next_char = payloadPtr; // Each character of the payload, initally a pointer to memory location of start of payload
     QVector<short> total_payload;
-    int i; // Counter
 
-    for(i = 0; i < payload_length; i++) {
+    for(int i = 0; i < payload_length; i++) {
         total_payload.append(*next_char);
         next_char++;
     }

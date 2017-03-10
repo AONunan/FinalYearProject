@@ -3,40 +3,38 @@
 
 #include <QDebug>
 
-#define TCP_FIN 0x01
-#define TCP_SYN 0x02
-#define TCP_RST 0x04
-#define TCP_PUSH 0x08
-#define TCP_ACK 0x10
-#define TCP_URG 0x20
-#define TCP_ECE 0x40
-#define TCP_CWR 0x80
+#define TCP_FIN 0x01 // 0b000001
+#define TCP_SYN 0x02 // 0b000010
+#define TCP_RST 0x04 // 0b000100
+#define TCP_PSH 0x08 // 0b001000
+#define TCP_ACK 0x10 // 0b010000
+#define TCP_URG 0x20 // 0b100000
 
-#define FIELD_IP_VERSION "Version"
-#define FIELD_IP_HEADER_LENGTH "Header Length"
-#define FIELD_IP_TYPE_OF_SERVICE "Type of Service"
-#define FIELD_IP_TOTAL_LENGTH "Total Length"
-#define FIELD_IP_ID "Identification"
-#define FIELD_IP_FLAGS "Flags"
-#define FIELD_IP_OFFSET "Fragment Offset"
-#define FIELD_IP_TTL "Time To Live"
-#define FIELD_IP_PROTOCOL "Protocol"
-#define FIELD_IP_CHECKSUM "Header Checksum"
-#define FIELD_IP_SRC_ADDRESS "Source Address"
-#define FIELD_IP_DST_ADDRESS "Destination Address"
-#define FIELD_IP_OPTIONS "Options"
+#define FIELD_IP_VERSION          "Version"
+#define FIELD_IP_HEADER_LENGTH    "Header Length"
+#define FIELD_IP_TYPE_OF_SERVICE  "Type of Service"
+#define FIELD_IP_TOTAL_LENGTH     "Total Length"
+#define FIELD_IP_ID               "Identification"
+#define FIELD_IP_FLAGS            "Flags"
+#define FIELD_IP_OFFSET           "Fragment Offset"
+#define FIELD_IP_TTL              "Time To Live"
+#define FIELD_IP_PROTOCOL         "Protocol"
+#define FIELD_IP_CHECKSUM         "Header Checksum"
+#define FIELD_IP_SRC_ADDRESS      "Source Address"
+#define FIELD_IP_DST_ADDRESS      "Destination Address"
+#define FIELD_IP_OPTIONS          "Options"
 
-#define FIELD_TCP_SRC_PORT "Source Port"
-#define FIELD_TCP_DST_PORT "Destination Port"
+#define FIELD_TCP_SRC_PORT        "Source Port"
+#define FIELD_TCP_DST_PORT        "Destination Port"
 #define FIELD_TCP_SEQUENCE_NUMBER "Sequence Number"
-#define FIELD_TCP_ACK_NUMBER "Acknowledgement Number"
-#define FIELD_TCP_OFFSET "Offset"
-#define FIELD_TCP_RESERVED "Reserved"
-#define FIELD_TCP_FLAGS "Flags"
-#define FIELD_TCP_WINDOW "Window"
-#define FIELD_TCP_CHECKSUM "Checksum"
-#define FIELD_TCP_URGENT_PTR "Urgent Pointer"
-#define FIELD_TCP_OPTIONS "Options"
+#define FIELD_TCP_ACK_NUMBER      "Acknowledgement Number"
+#define FIELD_TCP_OFFSET          "Offset"
+#define FIELD_TCP_RESERVED        "Reserved"
+#define FIELD_TCP_FLAGS           "Flags"
+#define FIELD_TCP_WINDOW          "Window"
+#define FIELD_TCP_CHECKSUM        "Checksum"
+#define FIELD_TCP_URGENT_PTR      "Urgent Pointer"
+#define FIELD_TCP_OPTIONS         "Options"
 
 PacketInfoDialog::PacketInfoDialog(const Packet packet, QWidget *parent) :
     QDialog(parent),
@@ -56,13 +54,12 @@ PacketInfoDialog::PacketInfoDialog(const Packet packet, QWidget *parent) :
         ui->tableWidget_payload->setColumnWidth(1, 410);
 
         print_payload();
+
     } else {
         // Hide the payload box and resize the window to a smaller size
         ui->groupBox_payload->hide();
         this->resize(700, 300);
     }
-
-
 }
 
 PacketInfoDialog::~PacketInfoDialog() {
@@ -120,15 +117,12 @@ void PacketInfoDialog::show_header_details() {
     ui->label_ip_type_of_service->setText(QString::number(displayed_packet.getIp_type_of_service()));
     ui->label_ip_total_length->setText(QString::number(displayed_packet.getIp_length()));
     ui->label_ip_id->setText(QString::number(displayed_packet.getIp_id()));
-    // TODO: Fill out flags
-
     ui->label_ip_offset->setText(QString::number(displayed_packet.getIp_offset()));
     ui->label_ip_ttl->setText(QString::number(displayed_packet.getIp_time_to_live()));
     ui->label_ip_protocol->setText(QString::number(displayed_packet.getIp_protocol()));
     ui->label_ip_checksum->setText(QString("0x%1").arg(QString("%1").arg(displayed_packet.getIp_checksum(), 2, 16, QChar('0')).toUpper())); // Display as hex
     ui->label_ip_src_address->setText(displayed_packet.getIp_source_address());
     ui->label_ip_dst_address->setText(displayed_packet.getIp_destination_address());
-    // TODO: Fill out options
 
     // Set IP field tooltips
     ui->label_ip_version->setToolTip(QString("%1 (4 bits)"
@@ -152,7 +146,6 @@ void PacketInfoDialog::show_header_details() {
     ui->label_tcp_window->setText(QString::number(displayed_packet.getTcp_window()));
     ui->label_tcp_checksum->setText(QString("0x%1").arg(QString("%1").arg(displayed_packet.getTcp_checksum(), 2, 16, QChar('0')).toUpper())); // Display as hex
     ui->label_tcp_urgent_ptr->setText(QString::number(displayed_packet.getTcp_urgent_pointer()));
-    // TODO: Fill out options
 
     // Set TCP field tooltips
     ui->label_tcp_src_port->setToolTip(QString("%1 (16 bits)\n\n"
@@ -178,7 +171,7 @@ QString PacketInfoDialog::find_tcp_flag_string(int flags) {
     result += "\nReset: Used to inform the reciever that the sender has abrubtly shut the connection down.";
 
     result += "\n\nPUSH = ";
-    result += (flags & TCP_PUSH) ? "1" : "0";
+    result += (flags & TCP_PSH) ? "1" : "0";
     result += "\nPush: Often set at the end of a block of data, informing the receiver that they can begin processing the data.";
 
     result += "\n\nACK = ";
@@ -228,7 +221,6 @@ void PacketInfoDialog::print_payload_hex_ascii() {
 
             // Exlcude extended ascii characters
             if((32 <= displayed_packet.getPayload_vect()[i + j]) && (displayed_packet.getPayload_vect()[i + j] <= 126)) {
-                //qDebug() << "int: " << displayed_packet.getPayload_vect()[i + j] << "*** char:" << char(displayed_packet.getPayload_vect()[i + j]);
                 ascii_line += char(displayed_packet.getPayload_vect()[i + j]);
             } else {
                 ascii_line += ".";
@@ -252,6 +244,4 @@ void PacketInfoDialog::print_payload_hex_ascii() {
 
     ui->tableWidget_payload->setItem(current_row, 1, new QTableWidgetItem(hex_line));
     ui->tableWidget_payload->setItem(current_row, 2, new QTableWidgetItem(ascii_line));
-
-
 }

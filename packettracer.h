@@ -7,9 +7,6 @@
 
 #include "packet.h"
 
-//#include <ctype.h>
-//#include <errno.h>
-//#include <sys/types.h>
 #include <sys/socket.h> // For converting host addresses to readable format
 #include <netinet/in.h> // For converting host addresses to readable format
 #include <arpa/inet.h> // For converting ports to readable format
@@ -19,21 +16,17 @@
 #define SIZE_ETHERNET 14        /* ethernet headers are always exactly 14 bytes [1] */
 #define ETHER_ADDR_LEN	6       /* Ethernet addresses are 6 bytes */
 
-
 #define IP_RF 0x8000            /* reserved fragment flag */
 #define IP_DF 0x4000            /* dont fragment flag */
 #define IP_MF 0x2000            /* more fragments flag */
 #define IP_OFFMASK 0x1fff       /* mask for fragmenting bits */
 
-#define TCP_FIN  0x01
-#define TCP_SYN  0x02
-#define TCP_RST  0x04
-#define TCP_PUSH 0x08
-#define TCP_ACK  0x10
-#define TCP_URG  0x20
-#define TCP_ECE  0x40
-#define TCP_CWR  0x80
-#define TCP_FLAGS		(TCP_FIN|TCP_SYN|TCP_RST|TCP_ACK|TCP_URG|TCP_ECE|TCP_CWR)
+#define TCP_FIN 0x01
+#define TCP_SYN 0x02
+#define TCP_RST 0x04
+#define TCP_PSH 0x08
+#define TCP_ACK 0x10
+#define TCP_URG 0x20
 
 
 class PacketTracer {

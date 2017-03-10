@@ -4,16 +4,6 @@
 #include <QString>
 #include <QVector>
 
-#define ETHER_ADDR_LEN	6       /* Ethernet addresses are 6 bytes */
-
-
-#include <ctype.h>
-#include <errno.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-
 class Packet {
 public:
     Packet();
@@ -116,11 +106,6 @@ private:
     QString protocol;
     time_t current_time;
 
-    // Ethernet stuff
-    u_char ethernet_destination_address[ETHER_ADDR_LEN];
-    u_char ethernet_source_address[ETHER_ADDR_LEN];
-    u_short ethernet_type; // IP, ARP, RARP, etc
-
     // IP stuff
     QString ip_source_address;
     QString ip_destination_address;
@@ -139,7 +124,7 @@ private:
     u_short tcp_destination_port;
     u_int tcp_sequence_number;
     u_int tcp_acknowledgement_number;
-    u_char tcp_offset; // data offset, rsvd
+    u_char tcp_offset;
     u_char tcp_flags;
     u_short tcp_window;
     u_short tcp_checksum;
