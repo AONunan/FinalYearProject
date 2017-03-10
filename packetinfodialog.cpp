@@ -36,13 +36,38 @@
 #define FIELD_TCP_URGENT_PTR      "Urgent Pointer"
 #define FIELD_TCP_OPTIONS         "Options"
 
-PacketInfoDialog::PacketInfoDialog(const QVector<Packet>* vectPtr, const int packet_index, QWidget *parent) :
+PacketInfoDialog::PacketInfoDialog(QVector<Packet>* input_vect_ptr, const int input_packet_index, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::PacketInfoDialog) {
     ui->setupUi(this);
 
-    const QVector<Packet> packet_array = *vectPtr;
-    displayed_packet = packet_array[packet_index];
+    vect_ptr = input_vect_ptr;
+    current_index = input_packet_index;
+
+    set_up_display();
+}
+
+PacketInfoDialog::~PacketInfoDialog() {
+    delete ui;
+}
+
+void PacketInfoDialog::set_up_display() {
+    QVector<Packet> packet_vect = *vect_ptr; // Set up QVector from pointer
+    displayed_packet = packet_vect[current_index]; // Get the required packet from the offset
+
+    vect_length = packet_vect.length();
+
+    QDialog::setWindowTitle(QString("Packet %1 of %2").arg(current_index + 1).arg(vect_length));
+
+    // Decide if any buttons need to be disabled
+    if(current_index == 0) {
+        ui->pushButton_previous_packet->setEnabled(false);
+    } else if(current_index == vect_length - 1) {
+        ui->pushButton_next_packet->setEnabled(false);
+    } else {
+        ui->pushButton_previous_packet->setEnabled(true);
+        ui->pushButton_next_packet->setEnabled(true);
+    }
 
     show_header_details();
     ui->groupBox_ip_header->setTitle(QString("IP Header (%1 bytes)").arg(displayed_packet.getIp_header_length()));
@@ -50,6 +75,9 @@ PacketInfoDialog::PacketInfoDialog(const QVector<Packet>* vectPtr, const int pac
 
     // If payload exists, print out payload
     if(displayed_packet.getPayload_length() > 0) {
+        ui->groupBox_payload->show();
+        this->resize(700, 600);
+
         // Increase the width of the columns
         ui->tableWidget_payload->setColumnWidth(0, 70);
         ui->tableWidget_payload->setColumnWidth(1, 410);
@@ -59,12 +87,9 @@ PacketInfoDialog::PacketInfoDialog(const QVector<Packet>* vectPtr, const int pac
     } else {
         // Hide the payload box and resize the window to a smaller size
         ui->groupBox_payload->hide();
-        this->resize(700, 300);
+        this->resize(700, 200);
+        this->resize(700, 200); // Not sure why but Window doesn't always resize properly unless I include this line twice
     }
-}
-
-PacketInfoDialog::~PacketInfoDialog() {
-    delete ui;
 }
 
 void PacketInfoDialog::on_pushButton_change_view_clicked() {
@@ -249,5 +274,12 @@ void PacketInfoDialog::print_payload_hex_ascii() {
 
 void PacketInfoDialog::on_pushButton_next_packet_clicked()
 {
+    current_index++;
+    set_up_display();
+}
 
+void PacketInfoDialog::on_pushButton_previous_packet_clicked()
+{
+    current_index--;
+    set_up_display();
 }
