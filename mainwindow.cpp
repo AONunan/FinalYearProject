@@ -42,8 +42,6 @@ MainWindow::MainWindow(QWidget *parent) :
     packetTracer.apply_filter(handle, &filter_expression, net, "host 93.184.216.34");
 
     row_count = 0;
-    currently_capturing_packets = false;
-    break_out_of_capture = false;
 
     ui->label_hint->hide(); // Hide the hint initially
     ui->label_loading->hide();
@@ -64,29 +62,9 @@ void MainWindow::on_button_close_handle_clicked() {
 }
 
 void MainWindow::on_button_capture_packet_clicked() {
-    if(!currently_capturing_packets) {
-        currently_capturing_packets = true;
-
-        //Launch a thread
-        //std::thread t1(thread_test);
-        //std::thread t1(&MainWindow::capture_loop, this);
-
-        //Join the thread with the main thread
-        //t1.join();
-
-        // TODO: Implement multithreading to allow use of UI while loop is running
-        capture_loop();
-
-
-
-        ui->label_hint->show();
-
-        currently_capturing_packets = false;
-    } else {
-        qDebug() << "Setting flag to break out of loop.";
-        break_out_of_capture = true;
-    }
-
+    // Begin capture loop and show the hint
+    capture_loop();
+    ui->label_hint->show();
 }
 
 void MainWindow::capture_loop() {
@@ -125,26 +103,18 @@ void MainWindow::capture_loop() {
         captured_packets_vect.append(my_captured_packet);
 
         ui->statusBar->showMessage(QString("Captured %1 of %2.").arg(QString::number(i + 1)).arg(QString::number(no_of_packets)));
-
-        // TODO: Implement multithreading to allow breaking out of running loop
-        /*if(break_out_of_capture) {
-            qDebug() << "Breaking out of loop.";
-            break;
-        }
-        break_out_of_capture = false;*/
     }
 
     // Add each newly captured packet in the vector to the UI
     for(i = captured_packets_vect.length() - no_of_packets; i < captured_packets_vect.length(); i++) {
         update_table(captured_packets_vect[i]);
-        //ui->statusBar->showMessage(QString("Processing %1 of %2.").arg(QString::number(i + 1)).arg(QString::number(captured_packets_vect.length())));
     }
 
     ui->button_capture_packet->setText("Capture");
 
     ui->statusBar->showMessage(QString("Finished capturing %1 packets.").arg(QString::number(no_of_packets)));
-    ui->label_loading->hide();
-    movie->stop();
+    ui->label_loading->hide(); // Hide the loading gif
+    movie->stop(); // Stop the loading gif
 }
 
 QString MainWindow::find_my_ip_address()
@@ -166,9 +136,9 @@ void MainWindow::update_table(Packet packet) {
     ui->tableWidget_packets->setRowCount(row_count + 1);
     ui->tableWidget_packets->scrollToBottom();
 
+    // Populate each of the columns
     ui->tableWidget_packets->setItem(row_count, HEADER_TIMESTAMP, new QTableWidgetItem(Packet::timestamp_to_string(packet.getCurrent_time())));
     ui->tableWidget_packets->setItem(row_count, HEADER_PROTOCOL, new QTableWidgetItem(packet.getProtocol()));
-    //ui->tableWidget_packets->setItem(row_count, HEADER_SRC_HOST, new QTableWidgetItem(packet));
     ui->tableWidget_packets->setItem(row_count, HEADER_SRC_HOST, new QTableWidgetItem(packet.getIp_source_address()));
     ui->tableWidget_packets->setItem(row_count, HEADER_DST_HOST, new QTableWidgetItem(packet.getIp_destination_address()));
     ui->tableWidget_packets->setItem(row_count, HEADER_PAYLOAD_LENGTH, new QTableWidgetItem(QString::number(packet.getPayload_length())));
@@ -298,7 +268,6 @@ void MainWindow::on_button_check_clicked()
 
         } else {
             QMessageBox::warning(this, "Warning", "Invalid host entererd");
-
         }
     }
 
@@ -349,8 +318,6 @@ void MainWindow::on_button_check_clicked()
     constructed_filter_string = filter_expression;
 
     ui->button_applyFilter->setEnabled(true);
-
-    // ui->button_applyFilter->setEnabled(false);
 }
 
 void MainWindow::on_button_applyFilter_clicked()
@@ -360,7 +327,7 @@ void MainWindow::on_button_applyFilter_clicked()
     } else {
         // As we need the filter string in a char array, it is necessary to memcpy the contents of the QString
         char filter_expression_chars[constructed_filter_string.length()]; // Create a char array of length constructed_filter_string
-        memcpy(filter_expression_chars, constructed_filter_string.toStdString().c_str() ,constructed_filter_string.size()); // Copy the contents of QString to char array
+        memcpy(filter_expression_chars, constructed_filter_string.toStdString().c_str(), constructed_filter_string.size()); // Copy the contents of QString to char array
 
         packetTracer.apply_filter(handle, &filter_expression, net, filter_expression_chars);
     }

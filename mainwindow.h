@@ -41,8 +41,6 @@ private:
 
     int row_count;                          // Keep track of current row to populate with packet details
     QVector<Packet> captured_packets_vect;  // Captured packets
-    bool currently_capturing_packets;       // Flag set to TRUE when running packet capture
-    bool break_out_of_capture;              // Flag to interrupt packet capture
     QString my_ip_address;                  // This device's IPv4 address
     QString constructed_filter_string;      // Filter string constructed in Filter Settings tab
 
