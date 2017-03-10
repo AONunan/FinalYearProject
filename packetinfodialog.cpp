@@ -36,12 +36,13 @@
 #define FIELD_TCP_URGENT_PTR      "Urgent Pointer"
 #define FIELD_TCP_OPTIONS         "Options"
 
-PacketInfoDialog::PacketInfoDialog(const Packet packet, QWidget *parent) :
+PacketInfoDialog::PacketInfoDialog(const QVector<Packet>* vectPtr, const int packet_index, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::PacketInfoDialog) {
     ui->setupUi(this);
 
-    displayed_packet = packet;
+    const QVector<Packet> packet_array = *vectPtr;
+    displayed_packet = packet_array[packet_index];
 
     show_header_details();
     ui->groupBox_ip_header->setTitle(QString("IP Header (%1 bytes)").arg(displayed_packet.getIp_header_length()));

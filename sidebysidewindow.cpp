@@ -223,7 +223,7 @@ void SideBySideWindow::on_tableWidget_packets_cellDoubleClicked(int row) {
         ui->label_hint->hide();
 
         // Open dialog with packet details with an argument
-        PacketInfoDialog infoDialog(input_vect[row]);
+        PacketInfoDialog infoDialog(&input_vect, row);
         infoDialog.setModal(true);
         infoDialog.exec();
     } else {

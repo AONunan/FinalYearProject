@@ -12,7 +12,7 @@ class PacketInfoDialog : public QDialog {
     Q_OBJECT
 
 public:
-    explicit PacketInfoDialog(const Packet packet, QWidget *parent = 0);
+    explicit PacketInfoDialog(const QVector<Packet> *vectPtr, const int packet_index, QWidget *parent = 0);
     ~PacketInfoDialog();
 
     void show_header_field_names();

@@ -131,7 +131,7 @@ void MainWindow::on_tableWidget_packets_cellDoubleClicked(int row) {
         ui->label_hint->hide();
 
         // Open dialog with packet details with an argument
-        PacketInfoDialog infoDialog(captured_packets_vect[row]);
+        PacketInfoDialog infoDialog(&captured_packets_vect, row);
         infoDialog.setModal(true);
         infoDialog.exec();
 
