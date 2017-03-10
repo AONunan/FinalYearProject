@@ -127,6 +127,9 @@
             </item>
             <item>
              <widget class="QLabel" name="label_ip_header_length">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Header Length (4 bits)&lt;/p&gt;&lt;p&gt;The length of the IP header, given in bytes.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
               <property name="styleSheet">
                <string notr="true">background-color: rgb(255, 255, 255);</string>
               </property>
@@ -144,7 +147,7 @@
             <item>
              <widget class="QLabel" name="label_ip_type_of_service">
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;(8 bits)&lt;/p&gt;&lt;p&gt;Usually set to 0, but may indicate Quality of Service needs from the network. Defines the way routers should queue packets while they are waiting to be forwarded.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Type of Service (8 bits)&lt;/p&gt;&lt;p&gt;Usually set to 0, but may indicate Quality of Service needs from the network. Defines the way routers should queue packets while they are waiting to be forwarded.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="styleSheet">
                <string notr="true">background-color: rgb(255, 255, 255);</string>
@@ -163,7 +166,7 @@
             <item>
              <widget class="QLabel" name="label_ip_total_length">
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;(16 bits)&lt;/p&gt;&lt;p&gt;The total length of the header and the data in bytes.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="styleSheet">
                <string notr="true">background-color: rgb(255, 255, 255);</string>
@@ -189,7 +192,7 @@
             <item>
              <widget class="QLabel" name="label_ip_id">
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;(16 bits)&lt;/p&gt;&lt;p&gt;Used to identify the fragments of one datagram from those of another. This value is incremented each time an IP datagram is sent from source to the destination.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Identification (16 bits)&lt;/p&gt;&lt;p&gt;Used to identify the fragments of one datagram from those of another. This value is incremented each time an IP datagram is sent from source to the destination.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="styleSheet">
                <string notr="true">background-color: rgb(255, 255, 255);</string>
@@ -208,7 +211,7 @@
             <item>
              <widget class="QLabel" name="label_ip_flags">
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;(3 bits)&lt;/p&gt;&lt;p&gt;A set of three flags used to determine whether routers have permission to fragment a packet of data.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Flags (3 bits)&lt;/p&gt;&lt;p&gt;A set of three flags used to determine whether routers have permission to fragment a packet of data.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="styleSheet">
                <string notr="true">background-color: rgb(255, 255, 255);</string>
@@ -227,7 +230,7 @@
             <item>
              <widget class="QLabel" name="label_ip_offset">
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;(13 bits)&lt;/p&gt;&lt;p&gt;A byte count from the start of the original sent packet, set by any router which performs IP router fragmentation&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Fragment Offset (13 bits)&lt;/p&gt;&lt;p&gt;A byte count from the start of the original sent packet, set by any router which performs IP router fragmentation&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="styleSheet">
                <string notr="true">background-color: rgb(255, 255, 255);</string>
@@ -253,7 +256,7 @@
             <item>
              <widget class="QLabel" name="label_ip_ttl">
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;(8 bits)&lt;/p&gt;&lt;p&gt;Time To Live.&lt;/p&gt;&lt;p&gt;The hop limit that limits the lifespan of a packet. Each router that receives the packet subtracts from the TTL.&lt;/p&gt;&lt;p&gt;Can be set to any value between 1 and 255&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Time To Live (8 bits)&lt;/p&gt;&lt;p&gt;The hop limit that limits the lifespan of a packet. Each router that receives the packet subtracts from the TTL.&lt;/p&gt;&lt;p&gt;Can be set to any value between 1 and 255&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="styleSheet">
                <string notr="true">background-color: rgb(255, 255, 255);</string>
@@ -288,7 +291,7 @@
             <item>
              <widget class="QLabel" name="label_ip_checksum">
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;(16 bits)&lt;/p&gt;&lt;p&gt;Used to check for data corruption in the packet header, does not check the packet payload.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Header Checksum (16 bits)&lt;/p&gt;&lt;p&gt;Used to check for data corruption in the packet header, does not check the packet payload.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="styleSheet">
                <string notr="true">background-color: rgb(255, 255, 255);</string>
@@ -309,7 +312,7 @@
           <item>
            <widget class="QLabel" name="label_ip_src_address">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;(32 bits)&lt;/p&gt;&lt;p&gt;Source IPv4 address.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Source Address (32 bits)&lt;/p&gt;&lt;p&gt;Source IPv4 address.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="styleSheet">
              <string notr="true">background-color: rgb(255, 255, 255);</string>
@@ -328,7 +331,7 @@
           <item>
            <widget class="QLabel" name="label_ip_dst_address">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;(32 bits)&lt;/p&gt;&lt;p&gt;Destination IPv4 address.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Destination Address (32 bits)&lt;/p&gt;&lt;p&gt;Destination IPv4 address.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="styleSheet">
              <string notr="true">background-color: rgb(255, 255, 255);</string>
@@ -347,7 +350,7 @@
           <item>
            <widget class="QLabel" name="label_ip_options">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;(variable length)&lt;/p&gt;&lt;p&gt;Rarely used. In cases where options are used, the IP header will be longer than the usual 20 bytes.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Options (variable length)&lt;/p&gt;&lt;p&gt;Rarely used. In cases where options are used, the IP header will be longer than the usual 20 bytes.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="styleSheet">
              <string notr="true">background-color: rgb(255, 255, 255);</string>
@@ -421,7 +424,7 @@
           <item>
            <widget class="QLabel" name="label_tcp_sequence_number">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;(32 bits)&lt;/p&gt;&lt;p&gt;If the SYN flag TRUE, then this is the initial sequence number. The sequence number of the first data byte and the acknowledged number in the corresponding ACK equal this sequence number plus 1.&lt;/p&gt;&lt;p&gt;If the SYN flag is FALSE, then this is the accumulated sequence for the current session.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sequence Number (32 bits)&lt;/p&gt;&lt;p&gt;If the SYN bit is True, this is the first number in the TCP session. It is initally set to a random number.&lt;/p&gt;&lt;p&gt;If the SYN bit is False, this is the accumulated sequence number for the current TCP stream.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="styleSheet">
              <string notr="true">background-color: rgb(255, 255, 255);</string>
@@ -440,7 +443,7 @@
           <item>
            <widget class="QLabel" name="label_tcp_ack_number">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;(32 bits)&lt;/p&gt;&lt;p&gt;When the ACK flag is set, this field contains the value of the next sequence number the sender of the data is expecting to receive. Once a connection is established this is always sent.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Acknowledgement Number (32 bits)&lt;/p&gt;&lt;p&gt;If the ACK flag is True, this is the value of the next sequence number the sender is expecting to receive.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="styleSheet">
              <string notr="true">background-color: rgb(255, 255, 255);</string>
@@ -464,7 +467,7 @@
             <item>
              <widget class="QLabel" name="label_tcp_offset">
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;(4 bits)&lt;/p&gt;&lt;p&gt;The number of 32 bit words in the TCP header, indicating where the data begins.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Offset (4 bits)&lt;/p&gt;&lt;p&gt;The number of 32 bit words in the TCP header, indicating where the data begins.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="styleSheet">
                <string notr="true">background-color: rgb(255, 255, 255);</string>
@@ -483,7 +486,7 @@
             <item>
              <widget class="QLabel" name="label_tcp_reserved">
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;(6 bits)&lt;/p&gt;&lt;p&gt;Reserved for future use. Always set to 0.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Reserved (6 bits)&lt;/p&gt;&lt;p&gt;Reserved for future use. Always set to 0.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="styleSheet">
                <string notr="true">background-color: rgb(255, 255, 255);</string>
@@ -518,7 +521,7 @@
             <item>
              <widget class="QLabel" name="label_tcp_window">
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;(16 bits)&lt;/p&gt;&lt;p&gt;The number of data octets that the sender of this packet is willing to receive.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Window (16 bits)&lt;/p&gt;&lt;p&gt;The number of data octets that the sender of this packet is willing to receive.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="styleSheet">
                <string notr="true">background-color: rgb(255, 255, 255);</string>
@@ -544,7 +547,7 @@
             <item>
              <widget class="QLabel" name="label_tcp_checksum">
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;(16 bits)&lt;/p&gt;&lt;p&gt;Used to check for data corruption in the packet header AND in the packet payload.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Checksum (16 bits)&lt;/p&gt;&lt;p&gt;Used to check for data corruption in the packet header AND in the packet payload.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="styleSheet">
                <string notr="true">background-color: rgb(255, 255, 255);</string>
@@ -563,7 +566,7 @@
             <item>
              <widget class="QLabel" name="label_tcp_urgent_ptr">
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;(16 bits)&lt;/p&gt;&lt;p&gt;Only used when the URG flag is set. Contains the current value of the urgent pointer as an offset from the sequence number.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Urgent Pointer (16 bits)&lt;/p&gt;&lt;p&gt;Only used when the URG flag is set. Contains the current value of the urgent pointer as an offset from the sequence number.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="styleSheet">
                <string notr="true">background-color: rgb(255, 255, 255);</string>

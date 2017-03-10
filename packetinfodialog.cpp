@@ -12,6 +12,32 @@
 #define TCP_ECE 0x40
 #define TCP_CWR 0x80
 
+#define FIELD_IP_VERSION "Version"
+#define FIELD_IP_HEADER_LENGTH "Header Length"
+#define FIELD_IP_TYPE_OF_SERVICE "Type of Service"
+#define FIELD_IP_TOTAL_LENGTH "Total Length"
+#define FIELD_IP_ID "Identification"
+#define FIELD_IP_FLAGS "Flags"
+#define FIELD_IP_OFFSET "Fragment Offset"
+#define FIELD_IP_TTL "Time To Live"
+#define FIELD_IP_PROTOCOL "Protocol"
+#define FIELD_IP_CHECKSUM "Header Checksum"
+#define FIELD_IP_SRC_ADDRESS "Source Address"
+#define FIELD_IP_DST_ADDRESS "Destination Address"
+#define FIELD_IP_OPTIONS "Options"
+
+#define FIELD_TCP_SRC_PORT "Source Port"
+#define FIELD_TCP_DST_PORT "Destination Port"
+#define FIELD_TCP_SEQUENCE_NUMBER "Sequence Number"
+#define FIELD_TCP_ACK_NUMBER "Acknowledgement Number"
+#define FIELD_TCP_OFFSET "Offset"
+#define FIELD_TCP_RESERVED "Reserved"
+#define FIELD_TCP_FLAGS "Flags"
+#define FIELD_TCP_WINDOW "Window"
+#define FIELD_TCP_CHECKSUM "Checksum"
+#define FIELD_TCP_URGENT_PTR "Urgent Pointer"
+#define FIELD_TCP_OPTIONS "Options"
+
 PacketInfoDialog::PacketInfoDialog(const Packet packet, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::PacketInfoDialog) {
@@ -56,32 +82,32 @@ void PacketInfoDialog::show_header_field_names() {
     currently_showing_field_names = true;
 
     // Set IP fields
-    ui->label_ip_version->setText("Version");
-    ui->label_ip_header_length->setText("Header Length");
-    ui->label_ip_type_of_service->setText("Type of Service");
-    ui->label_ip_total_length->setText("Total Length");
-    ui->label_ip_id->setText("Identification");
-    ui->label_ip_flags->setText("Flags");
-    ui->label_ip_offset->setText("Fragment Offset");
-    ui->label_ip_ttl->setText("Time To Live");
-    ui->label_ip_protocol->setText("Protocol");
-    ui->label_ip_checksum->setText("Header Checksum");
-    ui->label_ip_src_address->setText("Source Address");
-    ui->label_ip_dst_address->setText("Destination Address");
-    ui->label_ip_options->setText("Options");
+    ui->label_ip_version->setText(FIELD_IP_VERSION);
+    ui->label_ip_header_length->setText(FIELD_IP_HEADER_LENGTH);
+    ui->label_ip_type_of_service->setText(FIELD_IP_TYPE_OF_SERVICE);
+    ui->label_ip_total_length->setText(FIELD_IP_TOTAL_LENGTH);
+    ui->label_ip_id->setText(FIELD_IP_ID);
+    ui->label_ip_flags->setText(FIELD_IP_FLAGS);
+    ui->label_ip_offset->setText(FIELD_IP_OFFSET);
+    ui->label_ip_ttl->setText(FIELD_IP_TTL);
+    ui->label_ip_protocol->setText(FIELD_IP_PROTOCOL);
+    ui->label_ip_checksum->setText(FIELD_IP_CHECKSUM);
+    ui->label_ip_src_address->setText(FIELD_IP_SRC_ADDRESS);
+    ui->label_ip_dst_address->setText(FIELD_IP_DST_ADDRESS);
+    ui->label_ip_options->setText(FIELD_IP_OPTIONS);
 
     // Set TCP fields
-    ui->label_tcp_src_port->setText("Source Port");
-    ui->label_tcp_dst_port->setText("Destination Port");
-    ui->label_tcp_sequence_number->setText("Sequence Number");
-    ui->label_tcp_ack_number->setText("Acknowledgement Number");
-    ui->label_tcp_offset->setText("Offset");
-    ui->label_tcp_reserved->setText("Reserved");
-    ui->label_tcp_flags->setText("Flags");
-    ui->label_tcp_window->setText("Window");
-    ui->label_tcp_checksum->setText("Checksum");
-    ui->label_tcp_urgent_ptr->setText("Urgent Pointer");
-    ui->label_tcp_options->setText("Options");
+    ui->label_tcp_src_port->setText(FIELD_TCP_SRC_PORT);
+    ui->label_tcp_dst_port->setText(FIELD_TCP_DST_PORT);
+    ui->label_tcp_sequence_number->setText(FIELD_TCP_SEQUENCE_NUMBER);
+    ui->label_tcp_ack_number->setText(FIELD_TCP_ACK_NUMBER);
+    ui->label_tcp_offset->setText(FIELD_TCP_OFFSET);
+    ui->label_tcp_reserved->setText(FIELD_TCP_RESERVED);
+    ui->label_tcp_flags->setText(FIELD_TCP_FLAGS);
+    ui->label_tcp_window->setText(FIELD_TCP_WINDOW);
+    ui->label_tcp_checksum->setText(FIELD_TCP_CHECKSUM);
+    ui->label_tcp_urgent_ptr->setText(FIELD_TCP_URGENT_PTR);
+    ui->label_tcp_options->setText(FIELD_TCP_OPTIONS);
 }
 
 void PacketInfoDialog::show_header_details() {
@@ -105,9 +131,16 @@ void PacketInfoDialog::show_header_details() {
     // TODO: Fill out options
 
     // Set IP field tooltips
-    ui->label_ip_version->setToolTip(QString("(4 bits)%1").arg((displayed_packet.getIp_version() == 4) ? "\n\nIP Version 4" : "")); // Set tooltip to IPv4 if ip_version == 4
-    ui->label_ip_header_length->setToolTip(QString("(4 bits)\n\nThe length of the IP header, given in bytes."));
-    ui->label_ip_protocol->setToolTip(QString("(8 bits)\n\n%1").arg(displayed_packet.getIp_protocol_string()));
+    ui->label_ip_version->setToolTip(QString("%1 (4 bits)"
+                                             "%2").arg(FIELD_IP_VERSION).arg((displayed_packet.getIp_version() == 4) ? "\n\nIP Version 4" : "")); // Set tooltip to IPv4 if ip_version == 4
+    ui->label_ip_total_length->setToolTip(QString("%1 (16 bits)\n"
+                                                  "The total length of the header and the data in bytes.\n\n"
+                                                  "IP header = %2 bytes\n"
+                                                  "TCP header = %3 bytes\n"
+                                                  "Payload = %4 bytes\n\n"
+                                                  "Total length = %1 + %2 + %3 = %5 bytes").arg(FIELD_IP_TOTAL_LENGTH).arg(displayed_packet.getIp_header_length()).arg(displayed_packet.getTcp_header_length()).arg(displayed_packet.getPayload_length()).arg(displayed_packet.getIp_length()));
+    ui->label_ip_protocol->setToolTip(QString("%1 (8 bits)\n\n"
+                                              "%2").arg(FIELD_IP_PROTOCOL).arg(displayed_packet.getIp_protocol_string()));
 
     // Set TCP field details
     ui->label_tcp_src_port->setText(QString::number(displayed_packet.getTcp_source_port()));
@@ -122,13 +155,15 @@ void PacketInfoDialog::show_header_details() {
     // TODO: Fill out options
 
     // Set TCP field tooltips
-    ui->label_tcp_src_port->setToolTip(QString("(16 bits)\n\n%1").arg(Packet::tcp_port_to_string(displayed_packet.getTcp_source_port())));
-    ui->label_tcp_dst_port->setToolTip(QString("(16 bits)\n\n%1").arg(Packet::tcp_port_to_string(displayed_packet.getTcp_destination_port())));
+    ui->label_tcp_src_port->setToolTip(QString("%1 (16 bits)\n\n"
+                                               "%2").arg(FIELD_TCP_SRC_PORT).arg(Packet::tcp_port_to_string(displayed_packet.getTcp_source_port())));
+    ui->label_tcp_dst_port->setToolTip(QString("%1 (16 bits)\n\n"
+                                               "%2").arg(FIELD_TCP_DST_PORT).arg(Packet::tcp_port_to_string(displayed_packet.getTcp_destination_port())));
     ui->label_tcp_flags->setToolTip(find_tcp_flag_string(displayed_packet.getTcp_flags()));
 }
 
 QString PacketInfoDialog::find_tcp_flag_string(int flags) {
-    QString result = "(6 bits)\n";
+    QString result = QString("%1 (6 bits)\n").arg(FIELD_TCP_FLAGS);
 
     result += "\nFIN = ";
     result += (flags & TCP_FIN) ? "1" : "0"; // If FIN bit is set, set to "True", otherwise "False"
