@@ -41,10 +41,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     row_count = 0;
 
-    // Hide the hint and loading gif
-    ui->label_hint->hide();
-    ui->label_loading->hide();
-
     // Get local IP address
     my_ip_address = find_my_ip_address();
 }
@@ -68,12 +64,6 @@ void MainWindow::on_button_capture_packet_clicked() {
 
 void MainWindow::capture_loop() {
     ui->statusBar->showMessage("Waiting for first packet.");
-
-    // Start the loading icon
-    ui->label_loading->show();
-    QMovie *movie = new QMovie("/home/alan/TEMP/loading.gif");
-    ui->label_loading->setMovie(movie);
-    movie->start();
 
     Packet my_captured_packet;
     int i;
@@ -104,8 +94,6 @@ void MainWindow::capture_loop() {
     }
 
     ui->statusBar->showMessage(QString("Finished capturing %1 packets.").arg(QString::number(no_of_packets)));
-    ui->label_loading->hide(); // Hide the loading gif
-    movie->stop(); // Stop the loading gif
 }
 
 QString MainWindow::find_my_ip_address()
@@ -239,7 +227,7 @@ void MainWindow::on_button_check_clicked()
 {
     QRegExp regex_ipv4("([\\d+]{1,3}\\.){3}[\\d+]{1,3}"); // Match IPv4 address, e.g. 93.184.216.34
     QRegExp regex_dns("(\\w+\\.)+\\w+"); // Match domain name, e.g. example.com
-    QRegExp regex_integer("(\\w+\\.)+\\w+"); // Match domain name, e.g. example.com
+    QRegExp regex_integer("\\d+"); // Match domain name, e.g. example.com
     QString host, port, protocol, filter_expression;
 
     // Host construction
