@@ -70,8 +70,8 @@ void PacketInfoDialog::set_up_display() {
     }
 
     show_header_details();
-    ui->groupBox_ip_header->setTitle(QString("IP Header (%1 bytes)").arg(displayed_packet.getIp_header_length()));
-    ui->groupBox_tcp_header->setTitle(QString("TCP Header (%1 bytes)").arg(displayed_packet.getTcp_header_length()));
+    ui->groupBox_ip_header->setTitle(QString("IP Header (%1 bytes, %2 bits, %3 32 bit words)").arg(displayed_packet.getIp_header_length()).arg(displayed_packet.getIp_header_length() * 8).arg(displayed_packet.getIp_header_length() / 4));
+    ui->groupBox_tcp_header->setTitle(QString("TCP Header (%1 bytes, %2 bits, %3 32 bit words)").arg(displayed_packet.getTcp_header_length()).arg(displayed_packet.getTcp_header_length() * 8).arg(displayed_packet.getTcp_header_length() / 4));
 
     // If payload exists, print out payload
     if(displayed_packet.getPayload_length() > 0) {
@@ -179,10 +179,14 @@ void PacketInfoDialog::show_header_details() {
     ui->label_tcp_dst_port->setToolTip(QString("%1 (16 bits)\n\n"
                                                "%2").arg(FIELD_TCP_DST_PORT).arg(Packet::tcp_port_to_string(displayed_packet.getTcp_destination_port())));
     ui->label_tcp_offset->setToolTip(QString("%1 (4 bits)\n\n"
-                                             "The number of 32 bit words in the TCP header, indicating where the data begins. This also indicates the TCP header length.\n\n"
+                                             "The number of 32 bit words in the TCP header, indicating where the data payload begins. This also indicates the TCP header length.\n\n"
                                              "%2 * 32 bits = %3 bits = %4 bytes = Offset of data = TCP header length\n\n"
                                              "This also tells us that the options field must be %5 bytes long (total length - 20 bytes for default TCP header)").arg(FIELD_TCP_OFFSET).arg(displayed_packet.getTcp_offset()).arg(displayed_packet.getTcp_offset() * 32).arg(displayed_packet.getTcp_offset() * 32 / 8).arg(displayed_packet.getTcp_header_length() - 20));
     ui->label_tcp_flags->setToolTip(find_tcp_flag_string(displayed_packet.getTcp_flags()));
+    ui->label_tcp_options->setToolTip(QString("%1 (%2 bits, variable length)\n\n"
+                                              "Options can be added at the end of the TCP header, to provide extra functionality.\n"
+                                              "E.g. maximum segment sizes, window scaling factor, selective acknowledgements, timestamps, etc."
+                                              "%3").arg(FIELD_TCP_OPTIONS).arg(displayed_packet.getTcp_header_length() - 20).arg((displayed_packet.getTcp_window_scale() != -1) ? QString("\n\nOptions for this packet (partial):\nWindow scaling factor = %1").arg(displayed_packet.getTcp_window_scale()) : ""));
 }
 
 QString PacketInfoDialog::find_tcp_flag_string(int flags) {
