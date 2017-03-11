@@ -97,6 +97,9 @@ public:
 
     static QString tcp_port_to_string(u_short port);
 
+    short getTcp_window_scale() const;
+    void setTcp_window_scale(const short &value);
+
 private:
     int total_header_length;
     int ip_header_length;
@@ -129,6 +132,9 @@ private:
     u_short tcp_window;
     u_short tcp_checksum;
     u_short tcp_urgent_pointer;
+
+    // TCP options
+    short tcp_window_scale;
 };
 
 #endif // PACKET_H

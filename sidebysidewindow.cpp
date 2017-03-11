@@ -75,11 +75,9 @@ void SideBySideWindow::populate_syn_ack() {
         ack_number,
         payload;
 
-    bool processing_twh, // Set to false until the three-way-handshake has been processed
-         currently_in_twh; // Set to True while processing three-way-handshake
+    bool processing_twh; // Set to false until the three-way-handshake has been processed
 
     processing_twh = false;
-    currently_in_twh = false;
     seq_number = -1;
     ack_number = -1;
 
@@ -91,7 +89,6 @@ void SideBySideWindow::populate_syn_ack() {
             all_row_entries[i].syn_ack_more_details = QString("The client wants to initialise a connection with the server. This connection is established in TCP via the three-way handshake.\n\nAs this is the first step of the three-way handshake, the client sets the sequence number (SEQ) to a random number, in this case: SEQ = %1.\n\nThe acknowledgement number is initally set to 0. ACK = 0").arg(input_vect[i].getTcp_sequence_number());
 
             processing_twh = true; // From now on, will not display "Insufficient data..." message
-            currently_in_twh = true;
 
         } else if((tcp_flags & TCP_SYN) && (tcp_flags & TCP_ACK)) { // SYN and ACK
             all_row_entries[i].syn_ack_details = "Three-way handshake (2): SYN-ACK";
@@ -105,7 +102,6 @@ void SideBySideWindow::populate_syn_ack() {
             all_row_entries[i].syn_ack_more_details = QString("The client acknowledges receiving the SYN-ACK packet and sets its ACK number to 1 + the SEQ number it just received.\n"
                                                               "ACK = 1 + %1 = %2.\n\n"
                                                               "The SEQ number the client sends is now %3 (note that this is in alignment with what the server says it is expecting in the SYN-ACK packet)").arg(seq_number).arg(input_vect[i].getTcp_acknowledgement_number()).arg(input_vect[i].getTcp_sequence_number());
-            currently_in_twh = false; // Set to false as we are finished processing the three-way-handshake
             ack_number = -1; // Reset
 
         } else if(processing_twh ==  false) {
@@ -135,34 +131,41 @@ void SideBySideWindow::populate_syn_ack() {
 }
 
 void SideBySideWindow::populate_windowing() {
-    u_int client_window_size, server_window_size;
-
-    client_window_size = 0;
-    server_window_size = 0;
+    int client_scaling_factor, server_scaling_factor;
 
     for(int i = 0; i < input_vect.length(); i++) {
         if(all_row_entries[i].local) { // Client
-            if(client_window_size != 0) {
-                if(input_vect[i].getTcp_window() < client_window_size) {
-                    all_row_entries[i].windowing_details = QString("Client window has reduced from %1 to %2.").arg(client_window_size).arg(input_vect[i].getTcp_window());
-                } else if(input_vect[i].getTcp_window() > client_window_size) {
-                    all_row_entries[i].windowing_details = QString("Client window has increased from %1 to %2.").arg(client_window_size).arg(input_vect[i].getTcp_window());
-                }
+            if((input_vect[i].getTcp_window_scale() != -1) && (input_vect[i].getTcp_window_scale() != client_scaling_factor)) {
+                client_scaling_factor = input_vect[i].getTcp_window_scale();
+                all_row_entries[i].windowing_details = QString("Client window scaling factor set to %1").arg(client_scaling_factor);
+                all_row_entries[i].windowing_more_details = QString("Window size = %1\n\n"
+                                                                    "New client scaling factor set for this session. From now on, we raise 2 to this power to get our window size multiplier.").arg(input_vect[i].getTcp_window());
+
+            } else if(input_vect[i].getTcp_window_scale() == -1) { // Scaling factor has not been changed
+                //all_row_entries[i].windowing_details = QString("Client window scaling factor set to %1").arg(client_scaling_factor);
+                all_row_entries[i].windowing_more_details = QString("Client scaling factor remains at %2. We raise 2 to this power to get our window size multiplier.\n\n"
+                                                                    "Window size = %1\n"
+                                                                    "Window multiplier = 2^%2 = %3\n"
+                                                                    "Window total size = %1 * %3 = %4").arg(input_vect[i].getTcp_window()).arg(client_scaling_factor).arg(pow(2, client_scaling_factor)).arg(input_vect[i].getTcp_window() << client_scaling_factor);
             }
-            client_window_size = input_vect[i].getTcp_window();
 
         } else { // Server
-            if(server_window_size != 0) {
-                if(input_vect[i].getTcp_window() < server_window_size) {
-                    all_row_entries[i].windowing_details = QString("Server window has reduced from %1 to %2.").arg(server_window_size).arg(input_vect[i].getTcp_window());
-                } else if(input_vect[i].getTcp_window() > server_window_size) {
-                    all_row_entries[i].windowing_details = QString("Server window has increased from %1 to %2.").arg(server_window_size).arg(input_vect[i].getTcp_window());
-                }
+            if((input_vect[i].getTcp_window_scale() != -1) && (input_vect[i].getTcp_window_scale() != server_scaling_factor)) {
+                server_scaling_factor = input_vect[i].getTcp_window_scale();
+                all_row_entries[i].windowing_details = QString("Server window scaling factor set to %1").arg(server_scaling_factor);
+                all_row_entries[i].windowing_more_details = QString("Window size = %1\n\n"
+                                                                    "New server scaling factor set for this session. From now on, we raise 2 to this power to get our window size multiplier.").arg(input_vect[i].getTcp_window());
+
+            } else if(input_vect[i].getTcp_window_scale() == -1) { // Scaling factor has not been changed
+                //all_row_entries[i].windowing_details = QString("Server window scaling factor set to %1").arg(server_scaling_factor);
+                all_row_entries[i].windowing_more_details = QString("Server scaling factor remains at %2. We raise 2 to this power to get our window size multiplier.\n\n"
+                                                                    "Window size = %1\n"
+                                                                    "Window multiplier = 2^%2 = %3\n"
+                                                                    "Window total size = %1 * %3 = %4").arg(input_vect[i].getTcp_window()).arg(server_scaling_factor).arg(pow(2, server_scaling_factor)).arg(input_vect[i].getTcp_window() << server_scaling_factor);
             }
-            server_window_size = input_vect[i].getTcp_window();
         }
 
-        all_row_entries[i].windowing_more_details = "Windowing more details";
+        //all_row_entries[i].windowing_more_details = "Windowing more details";
 
     }
 }

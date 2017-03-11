@@ -263,6 +263,16 @@ QString Packet::tcp_port_to_string(u_short port)
     }
 }
 
+short Packet::getTcp_window_scale() const
+{
+    return tcp_window_scale;
+}
+
+void Packet::setTcp_window_scale(const short &value)
+{
+    tcp_window_scale = value;
+}
+
 int Packet::getIp_header_length() const {
     return ip_header_length;
 }

@@ -70,6 +70,7 @@ Packet PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet, 
 
     const struct ip_header *ipPtr; // Pointer to beginning of IP header
     const struct tcp_header *tcpPtr; // Pointer to beginning of TCP header
+    uint8_t *tcp_next_option_ptr; // Pointer to beginning of TCP options
     const u_char *payloadPtr; // Pointer to beginning of packet payload
 
     int ip_header_length; // Length of IP header
@@ -165,6 +166,42 @@ Packet PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet, 
     } else {
         // Clear vector. Otherwise vectors that should be empty will have content
         working_packet.clearPayload_vect();
+    }
+
+    // Set TCP options if they exist
+    if(tcp_header_length > 20) {
+        /*
+         * Kinds obtained from https://www.iana.org/assignments/tcp-parameters/tcp-parameters.xhtml
+         * Kinds I am interested in:
+         *     No-operation        kind = 1    size = -
+         *     Window scale        kind = 3    size = 3
+         *
+         */
+
+        tcp_next_option_ptr = (uint8_t*)(packet + SIZE_ETHERNET + ip_header_length + 20);
+        uint16_t window_scale;
+
+        // Loop through the list of options, checking the kind each time.
+        // If the kind matches what I have am looking for, store value
+        while(tcp_next_option_ptr != payloadPtr) {
+            //qDebug() << "Entering while loop, *tcp_next_option_ptr =" << *tcp_next_option_ptr << ". tcp_next_option_ptr:" << tcp_next_option_ptr << ". payloadPtr:" << payloadPtr;
+            tcp_option *option = (tcp_option*)tcp_next_option_ptr;
+
+            if(option->kind == 1) {
+                tcp_next_option_ptr++; // Move on 1 byte
+                continue; // Jump back to beginning of WHILE loop
+            }
+
+            if(option->kind == 3) {
+                window_scale = *(tcp_next_option_ptr + sizeof(*option));
+                working_packet.setTcp_window_scale(window_scale);
+            }
+
+            tcp_next_option_ptr += option->size;
+        }
+
+    } else { // Set TCP options to NULL
+        working_packet.setTcp_window_scale(-1);
     }
 
     return working_packet;

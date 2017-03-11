@@ -72,6 +72,11 @@ private:
         u_short urgent_pointer;
     };
 
+    struct tcp_option {
+        uint8_t kind;
+        uint8_t size;
+    };
+
 };
 
 #endif // PACKETTRACER_H
