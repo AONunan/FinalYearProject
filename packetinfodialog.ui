@@ -335,7 +335,7 @@
                <number>0</number>
               </property>
               <item>
-               <widget class="QLabel" name="label_tcp_dst_port">
+               <widget class="QLabel" name="label_tcp_src_port">
                 <property name="autoFillBackground">
                  <bool>false</bool>
                 </property>
@@ -354,7 +354,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QLabel" name="label_tcp_src_port">
+               <widget class="QLabel" name="label_tcp_dst_port">
                 <property name="styleSheet">
                  <string notr="true">background-color: rgb(255, 255, 255);</string>
                 </property>
@@ -417,7 +417,7 @@
               <item>
                <widget class="QLabel" name="label_tcp_offset">
                 <property name="toolTip">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Offset (4 bits)&lt;/p&gt;&lt;p&gt;The number of 32 bit words in the TCP header, indicating where the data begins.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
                 <property name="styleSheet">
                  <string notr="true">background-color: rgb(255, 255, 255);</string>

@@ -145,7 +145,7 @@ Packet PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet, 
     working_packet.setTcp_destination_port(ntohs(tcpPtr->destination_port));
     working_packet.setTcp_sequence_number(ntohl(tcpPtr->sequence_number));
     working_packet.setTcp_acknowledgement_number(ntohl(tcpPtr->acknowledgement_number));
-    working_packet.setTcp_offset(tcpPtr->offset);
+    working_packet.setTcp_offset((tcpPtr->offset) >> 4);
     working_packet.setTcp_flags(tcpPtr->flags);
     working_packet.setTcp_window(ntohs(tcpPtr->window));
     working_packet.setTcp_checksum(ntohs(tcpPtr->checksum));

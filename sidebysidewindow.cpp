@@ -67,7 +67,6 @@ void SideBySideWindow::update_table() {
 
         row_count++;
     }
-
 }
 
 void SideBySideWindow::populate_syn_ack() {
