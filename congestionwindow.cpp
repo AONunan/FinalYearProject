@@ -7,13 +7,29 @@ CongestionWindow::CongestionWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    temp = 0;
+    reset_variables();
+}
 
+void CongestionWindow::reset_variables() {
+    tahoe_data.clear();
+    reno_data.clear();
+
+    // Add origin point (0, 0) to data
+    QVector<int> origin_point;
+    origin_point.append(0); // x-axis
+    origin_point.append(0); // y-aix
+
+    tahoe_data.append(origin_point);
+    reno_data.append(origin_point);
+
+    x_axis = 1;
+    tahoe_mss = 1;
 }
 
 void CongestionWindow::draw_plots() {
-    int i;
+    ui->pushButton_clear->setEnabled(true); // Enable the Clear button
 
+    int i;
 
     QLineSeries *series_tahoe = new QLineSeries();
     QLineSeries *series_reno = new QLineSeries();
@@ -44,19 +60,27 @@ CongestionWindow::~CongestionWindow()
 
 void CongestionWindow::on_pushButton_send_clicked()
 {
-    QVector<int> row_tahoe;
-    row_tahoe.append(temp);
-    row_tahoe.append(pow(temp, 2));
-    tahoe_data.append(row_tahoe);
-
-    QVector<int> row_reno;
-    row_reno.append(temp);
-    row_reno.append(pow(temp, 3));
-    reno_data.append(row_reno);
-
-    temp++;
+    update_tahoe_points();
+    update_reno_points();
 
     draw_plots();
+    x_axis++;
+}
+
+void CongestionWindow::update_tahoe_points() {
+    QVector<int> row_tahoe;
+    row_tahoe.append(x_axis); // x-axis
+    row_tahoe.append(tahoe_mss); // y-axis
+    tahoe_data.append(row_tahoe);
+
+    tahoe_mss *= 2; // Double the MSS
+}
+
+void CongestionWindow::update_reno_points() {
+    QVector<int> row_reno;
+    row_reno.append(x_axis); // x-axis
+    row_reno.append(pow(x_axis, 3)); // y-axis
+    reno_data.append(row_reno);
 }
 
 void CongestionWindow::on_pushButton_ack_clicked()
@@ -67,4 +91,15 @@ void CongestionWindow::on_pushButton_ack_clicked()
 void CongestionWindow::on_pushButton_drop_clicked()
 {
 
+}
+
+void CongestionWindow::on_pushButton_clear_clicked()
+{
+    ui->pushButton_clear->setEnabled(false); // Disable the Clear button
+    qDebug() << "Cleared the clear button";
+
+    // Reset all variables
+    reset_variables();
+
+    draw_plots(); // Redraw empty plots
 }

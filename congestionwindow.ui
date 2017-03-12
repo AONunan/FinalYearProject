@@ -33,6 +33,9 @@
           </item>
           <item>
            <widget class="QPushButton" name="pushButton_clear">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="text">
              <string>Clear</string>
             </property>
@@ -73,7 +76,7 @@
        </property>
        <layout class="QHBoxLayout" name="horizontalLayout_6">
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="1,2,1">
+         <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="2,3,2">
           <item>
            <widget class="QTextBrowser" name="textBrowser_tahoe_variables"/>
           </item>
@@ -95,7 +98,7 @@
        </property>
        <layout class="QHBoxLayout" name="horizontalLayout_7">
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_8" stretch="1,2,1">
+         <layout class="QHBoxLayout" name="horizontalLayout_8" stretch="2,3,2">
           <item>
            <widget class="QTextBrowser" name="textBrowser_reno_variables"/>
           </item>
@@ -126,7 +129,7 @@
         <item row="2" column="0">
          <widget class="QPushButton" name="pushButton_info_cwnd">
           <property name="text">
-           <string>Control window size</string>
+           <string>Congestion window</string>
           </property>
          </widget>
         </item>
