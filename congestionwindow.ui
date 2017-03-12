@@ -25,16 +25,9 @@
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout">
           <item>
-           <widget class="QPushButton" name="pushButton">
+           <widget class="QPushButton" name="pushButton_send">
             <property name="text">
-             <string>PushButton</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pushButton_2">
-            <property name="text">
-             <string>PushButton</string>
+             <string>Send data</string>
             </property>
            </widget>
           </item>
@@ -48,16 +41,16 @@
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_3">
           <item>
-           <widget class="QPushButton" name="pushButton_5">
+           <widget class="QPushButton" name="pushButton_ack">
             <property name="text">
-             <string>PushButton</string>
+             <string>ACK</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_6">
+           <widget class="QPushButton" name="pushButton_drop">
             <property name="text">
-             <string>PushButton</string>
+             <string>Drop packet</string>
             </property>
            </widget>
           </item>
@@ -97,13 +90,13 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_8">
           <item>
-           <widget class="QTextBrowser" name="textBrowser_tahoe_variables_2"/>
+           <widget class="QTextBrowser" name="textBrowser_reno_variables"/>
           </item>
           <item>
-           <widget class="QChartView" name="chart_tahoe_2" native="true"/>
+           <widget class="QChartView" name="chart_reno" native="true"/>
           </item>
           <item>
-           <widget class="QTextBrowser" name="textBrowser_tahoe_action_2"/>
+           <widget class="QTextBrowser" name="textBrowser_reno_action"/>
           </item>
          </layout>
         </item>
@@ -115,18 +108,46 @@
        <property name="title">
         <string>More info</string>
        </property>
-       <layout class="QHBoxLayout" name="horizontalLayout_9">
-        <item>
-         <widget class="QPushButton" name="pushButton_7">
+       <layout class="QGridLayout" name="gridLayout">
+        <item row="2" column="1">
+         <widget class="QPushButton" name="pushButton_info_frft">
           <property name="text">
-           <string>PushButton</string>
+           <string>Fast recovery/Fast retransmit</string>
           </property>
          </widget>
         </item>
-        <item>
-         <widget class="QPushButton" name="pushButton_8">
+        <item row="2" column="0">
+         <widget class="QPushButton" name="pushButton_info_cwnd">
           <property name="text">
-           <string>PushButton</string>
+           <string>Control window size</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QPushButton" name="pushButton_info_congestion_vs_flow">
+          <property name="text">
+           <string>Congestion Control vs Flow Control</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QPushButton" name="pushButton_info_t_vs_r">
+          <property name="text">
+           <string>Tahoe vs Reno</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="2">
+         <widget class="QPushButton" name="pushButton_info_cong_avoid">
+          <property name="text">
+           <string>Congestion avoidance</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="2">
+         <widget class="QPushButton" name="pushButton_info_slow_start">
+          <property name="text">
+           <string>Slow start</string>
           </property>
          </widget>
         </item>

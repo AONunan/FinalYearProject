@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <QtCharts>
+#include <QVector>
 
 namespace Ui {
 class CongestionWindow;
@@ -16,11 +17,22 @@ public:
     explicit CongestionWindow(QWidget *parent = 0);
     ~CongestionWindow();
 
+private slots:
+    void on_pushButton_send_clicked();
+
+    void on_pushButton_ack_clicked();
+
+    void on_pushButton_drop_clicked();
+
 private:
     Ui::CongestionWindow *ui;
 
-//    QGridLayout *main_layout;
-//    QChartView *chart_view;
+    QLineSeries *series_tahoe;
+    QLineSeries *series_reno;
+
+    QVector<QVector<int>> tahoe_data;
+
+    int temp;
 };
 
 #endif // CONGESTIONWINDOW_H
