@@ -28,7 +28,7 @@ private slots:
     void on_pushButton_statistics_clicked();
     void on_pushButton_clear_clicked();
     void on_pushButton_side_by_side_clicked();
-    void on_pushButton_test_clicked();
+    void on_pushButton_congestion_clicked();
     void on_button_check_clicked();
     void on_button_applyFilter_clicked();
     void on_button_clear_settings_fields_clicked();

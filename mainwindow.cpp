@@ -37,8 +37,7 @@ MainWindow::MainWindow(QWidget *parent) :
     handle = packetTracer.open_for_sniffing(dev);
 
     // Apply the filter
-    packetTracer.apply_filter(handle, &filter_expression, net, "host 216.59.56.71");
-//    packetTracer.apply_filter(handle, &filter_expression, net, "host 93.184.216.34");
+    packetTracer.apply_filter(handle, &filter_expression, net, "ip");
 
     row_count = 0;
 
@@ -174,6 +173,7 @@ void MainWindow::on_pushButton_side_by_side_clicked()
     QString server_address;
     int current_row = ui->tableWidget_packets->currentRow();
     QVector<QString> temp_hosts;
+    int i;
 
     if(current_row != -1) { // Check that a row is actually selected
         // Look for server address (by checking that each side is not equal to my_ip_address
@@ -192,7 +192,7 @@ void MainWindow::on_pushButton_side_by_side_clicked()
 
     } else { // No row selected
         // Find all possible server addresses
-        for(int i = 0; i < ui->tableWidget_packets->rowCount(); i++) {
+        for(i = 0; i < ui->tableWidget_packets->rowCount(); i++) {
             // Check for source hosts
             if(!(temp_hosts.contains(captured_packets_vect[i].getIp_source_address())) && (captured_packets_vect[i].getIp_source_address() != my_ip_address)) { // Check if host in vector
                 temp_hosts.append(captured_packets_vect[i].getIp_source_address()); // If host isn't in vector, add it
@@ -215,10 +215,7 @@ void MainWindow::on_pushButton_side_by_side_clicked()
     }
 }
 
-/*
- * For testing purposes
- */
-void MainWindow::on_pushButton_test_clicked()
+void MainWindow::on_pushButton_congestion_clicked()
 {
     CongestionWindow congestionWindow;
     congestionWindow.setModal(true);
@@ -240,7 +237,15 @@ void MainWindow::on_button_check_clicked()
         } else if(regex_dns.exactMatch(ui->lineEdit_host->text())) { // Check if domain name
             // Need to perform DNS lookup
             QHostInfo host_info = QHostInfo::fromName(ui->lineEdit_host->text());
-            QString ipv4_addr = host_info.addresses()[0].toString();
+            QString ipv4_addr = "";
+
+            int i = 0;
+
+            // Loop until IPv4 address found, disregard IPv6 addresses
+            while(!regex_ipv4.exactMatch(ipv4_addr)) {
+                ipv4_addr = host_info.addresses()[i].toString();
+                i++;
+            }
 
             host = QString("%1host %2").arg(ui->checkBox_host->isChecked() ? "not " : "").arg(ipv4_addr);
 

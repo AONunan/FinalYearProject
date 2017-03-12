@@ -180,7 +180,8 @@ void PacketInfoDialog::show_header_details() {
     ui->label_tcp_dst_port->setToolTip(QString("%1 (16 bits)\n\n"
                                                "%2").arg(FIELD_TCP_DST_PORT).arg(Packet::tcp_port_to_string(displayed_packet.getTcp_destination_port())));
     ui->label_tcp_offset->setToolTip(QString("%1 (4 bits)\n\n"
-                                             "The number of 32 bit words in the TCP header, indicating where the data payload begins. This also indicates the TCP header length.\n\n"
+                                             "The number of 32 bit words in the TCP header, indicating where the data payload begins.\n"
+                                             "This also indicates the TCP header length.\n\n"
                                              "%2 * 32 bits = %3 bits = %4 bytes = Offset of data = TCP header length\n\n"
                                              "This also tells us that the options field must be %5 bytes long (total length - 20 bytes for default TCP header)").arg(FIELD_TCP_OFFSET).arg(displayed_packet.getTcp_offset()).arg(displayed_packet.getTcp_offset() * 32).arg(displayed_packet.getTcp_offset() * 32 / 8).arg(displayed_packet.getTcp_header_length() - 20));
     ui->label_tcp_flags->setToolTip(find_tcp_flag_string(displayed_packet.getTcp_flags()));

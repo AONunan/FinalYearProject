@@ -41,6 +41,7 @@ private:
     QVector<QVector<int>> reno_data;
 
     int x_axis;
+
     int tahoe_cwnd; // Congestion Window size
     int tahoe_mss; // Max Segment Size
     bool tahoe_slow_start; // Flag to decide if we are in slow start
