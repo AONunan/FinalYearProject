@@ -12,6 +12,7 @@
 #include "packetinfodialog.h"
 #include "statwindow.h"
 #include "sidebysidewindow.h"
+#include "congestionwindow.h"
 
 // These correspond to the columns in the table
 #define HEADER_TIMESTAMP 0
@@ -219,8 +220,9 @@ void MainWindow::on_pushButton_side_by_side_clicked()
  */
 void MainWindow::on_pushButton_test_clicked()
 {
-    /*pid_t pid = fork();
-    qDebug() << pid;*/
+    CongestionWindow congestionWindow;
+    congestionWindow.setModal(true);
+    congestionWindow.exec();
 }
 
 void MainWindow::on_button_check_clicked()

@@ -22,16 +22,19 @@ SOURCES += main.cpp\
     packet.cpp \
     packetinfodialog.cpp \
     statwindow.cpp \
-    sidebysidewindow.cpp
+    sidebysidewindow.cpp \
+    congestionwindow.cpp
 
 HEADERS  += mainwindow.h \
     packettracer.h \
     packet.h \
     packetinfodialog.h \
     statwindow.h \
-    sidebysidewindow.h
+    sidebysidewindow.h \
+    congestionwindow.h
 
 FORMS    += mainwindow.ui \
     packetinfodialog.ui \
     statwindow.ui \
-    sidebysidewindow.ui
+    sidebysidewindow.ui \
+    congestionwindow.ui

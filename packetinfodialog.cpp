@@ -10,31 +10,31 @@
 #define TCP_ACK 0x10 // 0b010000
 #define TCP_URG 0x20 // 0b100000
 
-#define FIELD_IP_VERSION          "Version"
-#define FIELD_IP_HEADER_LENGTH    "Header Length"
-#define FIELD_IP_TYPE_OF_SERVICE  "Type of Service"
-#define FIELD_IP_TOTAL_LENGTH     "Total Length"
-#define FIELD_IP_ID               "Identification"
-#define FIELD_IP_FLAGS            "Flags"
-#define FIELD_IP_OFFSET           "Fragment Offset"
-#define FIELD_IP_TTL              "Time To Live"
-#define FIELD_IP_PROTOCOL         "Protocol"
-#define FIELD_IP_CHECKSUM         "Header Checksum"
-#define FIELD_IP_SRC_ADDRESS      "Source Address"
-#define FIELD_IP_DST_ADDRESS      "Destination Address"
-#define FIELD_IP_OPTIONS          "Options"
+#define FIELD_IP_VERSION           "Version"
+#define FIELD_IP_HEADER_LENGTH     "Header Length"
+#define FIELD_IP_TYPE_OF_SERVICE   "Type of Service"
+#define FIELD_IP_TOTAL_LENGTH      "Total Length"
+#define FIELD_IP_ID                "Identification"
+#define FIELD_IP_FLAGS             "Flags"
+#define FIELD_IP_OFFSET            "Fragment Offset"
+#define FIELD_IP_TTL               "Time To Live"
+#define FIELD_IP_PROTOCOL          "Protocol"
+#define FIELD_IP_CHECKSUM          "Header Checksum"
+#define FIELD_IP_SRC_ADDRESS       "Source Address"
+#define FIELD_IP_DST_ADDRESS       "Destination Address"
+#define FIELD_IP_OPTIONS           "Options"
 
-#define FIELD_TCP_SRC_PORT        "Source Port"
-#define FIELD_TCP_DST_PORT        "Destination Port"
-#define FIELD_TCP_SEQUENCE_NUMBER "Sequence Number"
-#define FIELD_TCP_ACK_NUMBER      "Acknowledgement Number"
-#define FIELD_TCP_OFFSET          "Offset"
-#define FIELD_TCP_RESERVED        "Reserved"
-#define FIELD_TCP_FLAGS           "Flags"
-#define FIELD_TCP_WINDOW          "Window"
-#define FIELD_TCP_CHECKSUM        "Checksum"
-#define FIELD_TCP_URGENT_PTR      "Urgent Pointer"
-#define FIELD_TCP_OPTIONS         "Options"
+#define FIELD_TCP_SRC_PORT         "Source Port"
+#define FIELD_TCP_DST_PORT         "Destination Port"
+#define FIELD_TCP_SEQUENCE_NUMBER  "Sequence Number"
+#define FIELD_TCP_ACK_NUMBER       "Acknowledgement Number"
+#define FIELD_TCP_OFFSET           "Offset"
+#define FIELD_TCP_RESERVED         "Reserved"
+#define FIELD_TCP_FLAGS            "Flags"
+#define FIELD_TCP_WINDOW           "Window"
+#define FIELD_TCP_CHECKSUM         "Checksum"
+#define FIELD_TCP_URGENT_PTR       "Urgent Pointer"
+#define FIELD_TCP_OPTIONS          "Options"
 
 PacketInfoDialog::PacketInfoDialog(QVector<Packet>* input_vect_ptr, const int input_packet_index, QWidget *parent) :
     QDialog(parent),
@@ -57,6 +57,7 @@ void PacketInfoDialog::set_up_display() {
 
     vect_length = packet_vect.length();
 
+    // Set window title
     QDialog::setWindowTitle(QString("Packet %1 of %2").arg(current_index + 1).arg(vect_length));
 
     // Decide if any buttons need to be disabled
