@@ -120,16 +120,9 @@
        </property>
        <layout class="QGridLayout" name="gridLayout">
         <item row="2" column="1">
-         <widget class="QPushButton" name="pushButton_info_frft">
+         <widget class="QPushButton" name="pushButton_info_ssthresh">
           <property name="text">
-           <string>Fast recovery/Fast retransmit</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QPushButton" name="pushButton_info_cwnd">
-          <property name="text">
-           <string>Congestion window</string>
+           <string>Slow Start threshold (ssthresh)</string>
           </property>
          </widget>
         </item>
@@ -137,13 +130,6 @@
          <widget class="QPushButton" name="pushButton_info_congestion_vs_flow">
           <property name="text">
            <string>Congestion Control vs Flow Control</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QPushButton" name="pushButton_info_t_vs_r">
-          <property name="text">
-           <string>Tahoe vs Reno</string>
           </property>
          </widget>
         </item>
@@ -158,6 +144,20 @@
          <widget class="QPushButton" name="pushButton_info_slow_start">
           <property name="text">
            <string>Slow start</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QPushButton" name="pushButton_info_t_vs_r">
+          <property name="text">
+           <string>Tahoe vs Reno</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QPushButton" name="pushButton_info_cwnd">
+          <property name="text">
+           <string>Congestion window</string>
           </property>
          </widget>
         </item>

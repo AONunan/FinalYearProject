@@ -27,6 +27,12 @@ private slots:
     void on_pushButton_drop_clicked();
 
     void on_pushButton_clear_clicked();
+    void on_pushButton_info_congestion_vs_flow_clicked();
+    void on_pushButton_info_cwnd_clicked();
+    void on_pushButton_info_t_vs_r_clicked();
+    void on_pushButton_info_ssthresh_clicked();
+    void on_pushButton_info_slow_start_clicked();
+    void on_pushButton_info_cong_avoid_clicked();
 
 private:
     Ui::CongestionWindow *ui;
