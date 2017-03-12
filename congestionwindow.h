@@ -2,6 +2,7 @@
 #define CONGESTIONWINDOW_H
 
 #include <QDialog>
+#include <QtCharts>
 
 namespace Ui {
 class CongestionWindow;
@@ -17,6 +18,9 @@ public:
 
 private:
     Ui::CongestionWindow *ui;
+
+//    QGridLayout *main_layout;
+//    QChartView *chart_view;
 };
 
 #endif // CONGESTIONWINDOW_H
