@@ -7,34 +7,34 @@ CongestionWindow::CongestionWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    // Store the line data
-    QLineSeries *series_tcp = new QLineSeries();
-
-    series_tahoe = new QLineSeries();
-    series_reno = new QLineSeries();
-
-    // Test data
-    series_tcp->append(0, 5);
-    series_tcp->append(1, 7);
-    series_tcp->append(2, 4);
-
-    QChart *chart = new QChart();
-    chart->legend()->hide();
-    chart->addSeries(series_tcp);
-    chart->createDefaultAxes();
-    chart->setTitle("Testing");
-
-    ui->chart_reno->setChart(chart);
-
-    QChart *tahoe_points = new QChart();
-    tahoe_points->legend()->hide();
-    tahoe_points->addSeries(series_tahoe);
-    tahoe_points->createDefaultAxes();
-    ui->chart_tahoe->setChart(tahoe_points);
-
-
     temp = 0;
 
+}
+
+void CongestionWindow::draw_plots() {
+    int i;
+
+
+    QLineSeries *series_tahoe = new QLineSeries();
+    QLineSeries *series_reno = new QLineSeries();
+
+    // Add all data to line series
+    for(i = 0; i < tahoe_data.length(); i++) {
+        series_tahoe->append(tahoe_data[i][0], tahoe_data[i][1]);
+        series_reno->append(reno_data[i][0], reno_data[i][1]);
+    }
+
+    QChart *tahoe_chart = new QChart();
+    tahoe_chart->legend()->hide();
+    tahoe_chart->addSeries(series_tahoe);
+    tahoe_chart->createDefaultAxes();
+    ui->chart_widget_tahoe->setChart(tahoe_chart);
+
+    QChart *reno_chart = new QChart();
+    reno_chart->legend()->hide();
+    reno_chart->addSeries(series_reno);
+    reno_chart->createDefaultAxes();
+    ui->chart_widget_reno->setChart(reno_chart);
 }
 
 CongestionWindow::~CongestionWindow()
@@ -44,13 +44,19 @@ CongestionWindow::~CongestionWindow()
 
 void CongestionWindow::on_pushButton_send_clicked()
 {
-    QVector<int> row;
-    row.append(1 * temp);
-    row.append(2 * temp);
-    temp++;
-    tahoe_data.append(row);
+    QVector<int> row_tahoe;
+    row_tahoe.append(temp);
+    row_tahoe.append(pow(temp, 2));
+    tahoe_data.append(row_tahoe);
 
-    series_tahoe->append(tahoe_data[tahoe_data.length() - 1][0], tahoe_data[tahoe_data.length() - 1][1]);
+    QVector<int> row_reno;
+    row_reno.append(temp);
+    row_reno.append(pow(temp, 3));
+    reno_data.append(row_reno);
+
+    temp++;
+
+    draw_plots();
 }
 
 void CongestionWindow::on_pushButton_ack_clicked()

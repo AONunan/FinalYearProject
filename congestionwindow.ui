@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>719</width>
-    <height>469</height>
+    <width>835</width>
+    <height>539</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -28,6 +28,13 @@
            <widget class="QPushButton" name="pushButton_send">
             <property name="text">
              <string>Send data</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_clear">
+            <property name="text">
+             <string>Clear</string>
             </property>
            </widget>
           </item>
@@ -66,12 +73,12 @@
        </property>
        <layout class="QHBoxLayout" name="horizontalLayout_6">
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_5">
+         <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="1,2,1">
           <item>
            <widget class="QTextBrowser" name="textBrowser_tahoe_variables"/>
           </item>
           <item>
-           <widget class="QChartView" name="chart_tahoe" native="true"/>
+           <widget class="QChartView" name="chart_widget_tahoe" native="true"/>
           </item>
           <item>
            <widget class="QTextBrowser" name="textBrowser_tahoe_action"/>
@@ -88,12 +95,12 @@
        </property>
        <layout class="QHBoxLayout" name="horizontalLayout_7">
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_8">
+         <layout class="QHBoxLayout" name="horizontalLayout_8" stretch="1,2,1">
           <item>
            <widget class="QTextBrowser" name="textBrowser_reno_variables"/>
           </item>
           <item>
-           <widget class="QChartView" name="chart_reno" native="true"/>
+           <widget class="QChartView" name="chart_widget_reno" native="true"/>
           </item>
           <item>
            <widget class="QTextBrowser" name="textBrowser_reno_action"/>
@@ -157,15 +164,6 @@
     </layout>
    </item>
   </layout>
-  <zorder>chart_tahoe</zorder>
-  <zorder>groupBox</zorder>
-  <zorder>groupBox_2</zorder>
-  <zorder>groupBox_3</zorder>
-  <zorder>textBrowser_tahoe_variables</zorder>
-  <zorder>textBrowser_tahoe_action</zorder>
-  <zorder>textBrowser_tahoe_variables</zorder>
-  <zorder>groupBox_4</zorder>
-  <zorder>groupBox_5</zorder>
  </widget>
  <customwidgets>
   <customwidget>

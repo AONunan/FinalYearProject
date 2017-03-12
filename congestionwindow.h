@@ -17,20 +17,17 @@ public:
     explicit CongestionWindow(QWidget *parent = 0);
     ~CongestionWindow();
 
+    void draw_plots();
 private slots:
     void on_pushButton_send_clicked();
-
     void on_pushButton_ack_clicked();
-
     void on_pushButton_drop_clicked();
 
 private:
     Ui::CongestionWindow *ui;
 
-    QLineSeries *series_tahoe;
-    QLineSeries *series_reno;
-
     QVector<QVector<int>> tahoe_data;
+    QVector<QVector<int>> reno_data;
 
     int temp;
 };
