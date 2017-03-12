@@ -39,6 +39,11 @@ private:
     int tahoe_mss; // Max Segment Size
     bool tahoe_slow_start; // Flag to decide if we are in slow start
     int tahoe_ssthresh; // Slow Start threshold
+
+    int reno_cwnd; // Congestion Window size
+    int reno_mss; // Max Segment Size
+    bool reno_slow_start; // Flag to decide if we are in slow start
+    int reno_ssthresh; // Slow Start threshold
 };
 
 #endif // CONGESTIONWINDOW_H
