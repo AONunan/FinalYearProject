@@ -159,7 +159,7 @@ void PacketInfoDialog::show_header_details() {
                                                   "IP header = %2 bytes\n"
                                                   "TCP header = %3 bytes\n"
                                                   "Payload = %4 bytes\n\n"
-                                                  "Total length = %1 + %2 + %3 = %5 bytes").arg(FIELD_IP_TOTAL_LENGTH).arg(displayed_packet.getIp_header_length()).arg(displayed_packet.getTcp_header_length()).arg(displayed_packet.getPayload_length()).arg(displayed_packet.getIp_length()));
+                                                  "Total length = %2 + %3 + %4 = %5 bytes").arg(FIELD_IP_TOTAL_LENGTH).arg(displayed_packet.getIp_header_length()).arg(displayed_packet.getTcp_header_length()).arg(displayed_packet.getPayload_length()).arg(displayed_packet.getIp_length()));
     ui->label_ip_protocol->setToolTip(QString("%1 (8 bits)\n\n"
                                               "%2").arg(FIELD_IP_PROTOCOL).arg(displayed_packet.getIp_protocol_string()));
 

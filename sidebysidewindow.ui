@@ -33,11 +33,6 @@
            <string>Windowing</string>
           </property>
          </item>
-         <item>
-          <property name="text">
-           <string>Testing</string>
-          </property>
-         </item>
         </widget>
        </item>
        <item>

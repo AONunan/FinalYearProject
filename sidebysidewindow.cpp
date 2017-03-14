@@ -142,7 +142,6 @@ void SideBySideWindow::populate_windowing() {
                                                                     "New client scaling factor set for this session. From now on, we raise 2 to this power to get our window size multiplier.").arg(input_vect[i].getTcp_window());
 
             } else if(input_vect[i].getTcp_window_scale() == -1) { // Scaling factor has not been changed
-                //all_row_entries[i].windowing_details = QString("Client window scaling factor set to %1").arg(client_scaling_factor);
                 all_row_entries[i].windowing_more_details = QString("Client scaling factor remains at %2. We raise 2 to this power to get our window size multiplier.\n\n"
                                                                     "Window size = %1\n"
                                                                     "Window multiplier = 2^%2 = %3\n"
@@ -157,16 +156,12 @@ void SideBySideWindow::populate_windowing() {
                                                                     "New server scaling factor set for this session. From now on, we raise 2 to this power to get our window size multiplier.").arg(input_vect[i].getTcp_window());
 
             } else if(input_vect[i].getTcp_window_scale() == -1) { // Scaling factor has not been changed
-                //all_row_entries[i].windowing_details = QString("Server window scaling factor set to %1").arg(server_scaling_factor);
                 all_row_entries[i].windowing_more_details = QString("Server scaling factor remains at %2. We raise 2 to this power to get our window size multiplier.\n\n"
                                                                     "Window size = %1\n"
                                                                     "Window multiplier = 2^%2 = %3\n"
-                                                                    "Window total size = %1 * %3 = %4").arg(input_vect[i].getTcp_window()).arg(server_scaling_factor).arg(pow(2, server_scaling_factor)).arg(input_vect[i].getTcp_window() << server_scaling_factor);
+                                                                    "Window total size = %1 * %3 = %4 bytes").arg(input_vect[i].getTcp_window()).arg(server_scaling_factor).arg(pow(2, server_scaling_factor)).arg(input_vect[i].getTcp_window() << server_scaling_factor);
             }
         }
-
-        //all_row_entries[i].windowing_more_details = "Windowing more details";
-
     }
 }
 
