@@ -185,7 +185,7 @@ void PacketInfoDialog::show_header_details() {
                                              "%2 * 32 bits = %3 bits = %4 bytes = Offset of data = TCP header length\n\n"
                                              "This also tells us that the options field must be %5 bytes long (total length - 20 bytes for default TCP header)").arg(FIELD_TCP_OFFSET).arg(displayed_packet.getTcp_offset()).arg(displayed_packet.getTcp_offset() * 32).arg(displayed_packet.getTcp_offset() * 32 / 8).arg(displayed_packet.getTcp_header_length() - 20));
     ui->label_tcp_flags->setToolTip(find_tcp_flag_string(displayed_packet.getTcp_flags()));
-    ui->label_tcp_options->setToolTip(QString("%1 (%2 bits, variable length)\n\n"
+    ui->label_tcp_options->setToolTip(QString("%1 (%2 bytes, variable length)\n\n"
                                               "Options can be added at the end of the TCP header, to provide extra functionality.\n"
                                               "E.g. maximum segment sizes, window scaling factor, selective acknowledgements, timestamps, etc."
                                               "%3").arg(FIELD_TCP_OPTIONS).arg(displayed_packet.getTcp_header_length() - 20).arg((displayed_packet.getTcp_window_scale() != -1) ? QString("\n\nOptions for this packet (partial):\nWindow scaling factor = %1").arg(displayed_packet.getTcp_window_scale()) : ""));
