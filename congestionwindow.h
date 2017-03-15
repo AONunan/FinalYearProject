@@ -9,8 +9,7 @@ namespace Ui {
 class CongestionWindow;
 }
 
-class CongestionWindow : public QDialog
-{
+class CongestionWindow : public QDialog {
     Q_OBJECT
 
 public:

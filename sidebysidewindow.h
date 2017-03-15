@@ -9,8 +9,7 @@ namespace Ui {
 class SideBySideWindow;
 }
 
-class SideBySideWindow : public QDialog
-{
+class SideBySideWindow : public QDialog {
     Q_OBJECT
 
 public:

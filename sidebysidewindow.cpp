@@ -15,8 +15,7 @@
 
 SideBySideWindow::SideBySideWindow(QVector<Packet> vect, const QString input_server_address, QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::SideBySideWindow)
-{
+    ui(new Ui::SideBySideWindow) {
     ui->setupUi(this);
 
     // Set class member variables to input variables
@@ -33,8 +32,7 @@ SideBySideWindow::SideBySideWindow(QVector<Packet> vect, const QString input_ser
 
 }
 
-SideBySideWindow::~SideBySideWindow()
-{
+SideBySideWindow::~SideBySideWindow() {
     delete ui;
 }
 
@@ -257,19 +255,16 @@ void SideBySideWindow::on_tableWidget_packets_cellDoubleClicked(int row) {
     }
 }
 
-void SideBySideWindow::on_tableWidget_packets_itemSelectionChanged()
-{
+void SideBySideWindow::on_tableWidget_packets_itemSelectionChanged() {
     int row = ui->tableWidget_packets->currentRow();
     ui->textBrowser_more_details->setText(get_more_details(row));
 }
 
-void SideBySideWindow::on_comboBox_choice_currentTextChanged(const QString &current_choice)
-{
+void SideBySideWindow::on_comboBox_choice_currentTextChanged(const QString &current_choice) {
     ui->label_hint->hide();
     set_details(current_choice); // Set the more_details textbox contents
 }
 
-void SideBySideWindow::on_pushButton_more_info_clicked()
-{
+void SideBySideWindow::on_pushButton_more_info_clicked() {
     QMessageBox::information(this, "More info", more_info_popup_text);
 }

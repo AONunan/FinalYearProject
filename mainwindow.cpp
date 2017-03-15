@@ -96,8 +96,7 @@ void MainWindow::capture_loop() {
     ui->statusBar->showMessage(QString("Finished capturing %1 packets.").arg(QString::number(no_of_packets)));
 }
 
-QString MainWindow::find_my_ip_address()
-{
+QString MainWindow::find_my_ip_address() {
     QList<QHostAddress> ip_addr_list = QNetworkInterface::allAddresses();
 
     // Loop through list of local addresses to find non-loopback, IPv4 address
@@ -168,8 +167,7 @@ void MainWindow::on_pushButton_clear_clicked() {
  * - If no row is selected, check if only 1 possible server address exists. If so, open with this address.
  * - Otherwise display error message
  */
-void MainWindow::on_pushButton_side_by_side_clicked()
-{
+void MainWindow::on_pushButton_side_by_side_clicked() {
     QString server_address;
     int current_row = ui->tableWidget_packets->currentRow();
     QVector<QString> temp_hosts;
@@ -215,15 +213,13 @@ void MainWindow::on_pushButton_side_by_side_clicked()
     }
 }
 
-void MainWindow::on_pushButton_congestion_clicked()
-{
+void MainWindow::on_pushButton_congestion_clicked() {
     CongestionWindow congestionWindow;
     congestionWindow.setModal(true);
     congestionWindow.exec();
 }
 
-void MainWindow::on_button_check_clicked()
-{
+void MainWindow::on_button_check_clicked() {
     QRegExp regex_ipv4("([\\d+]{1,3}\\.){3}[\\d+]{1,3}"); // Match IPv4 address, e.g. 93.184.216.34
     QRegExp regex_dns("(\\w+\\.)+\\w+"); // Match domain name, e.g. example.com
     QRegExp regex_integer("\\d+"); // Match domain name, e.g. example.com
@@ -303,8 +299,7 @@ void MainWindow::on_button_check_clicked()
     ui->button_applyFilter->setEnabled(true);
 }
 
-void MainWindow::on_button_applyFilter_clicked()
-{
+void MainWindow::on_button_applyFilter_clicked() {
     if(constructed_filter_string.length() == 0) { // i.e. No filter specified
         packetTracer.apply_filter(handle, &filter_expression, net, "ip");
     } else {

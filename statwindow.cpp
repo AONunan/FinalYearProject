@@ -6,8 +6,7 @@
 
 StatWindow::StatWindow(QVector<Packet> vect, QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::StatWindow)
-{
+    ui(new Ui::StatWindow) {
     ui->setupUi(this);
 
     // Set class member variable to input vect
@@ -28,13 +27,11 @@ StatWindow::StatWindow(QVector<Packet> vect, QWidget *parent) :
     }
 }
 
-StatWindow::~StatWindow()
-{
+StatWindow::~StatWindow() {
     delete ui;
 }
 
-void StatWindow::on_comboBox_display_choice_currentIndexChanged(const QString &menu_value)
-{
+void StatWindow::on_comboBox_display_choice_currentIndexChanged(const QString &menu_value) {
     if(menu_value == "TCP vs UDP (Line Chart)") {
         display_tcp_vs_udp_line();
     } else if(menu_value == "TCP vs UDP (Bar Chart)") {

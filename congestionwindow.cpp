@@ -5,8 +5,7 @@
 
 CongestionWindow::CongestionWindow(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::CongestionWindow)
-{
+    ui(new Ui::CongestionWindow) {
     ui->setupUi(this);
 
     reset_variables();
@@ -75,13 +74,11 @@ QString CongestionWindow::construct_vars_window(int cwnd, int ssthresh, bool slo
                    "Strategy = %3").arg(cwnd).arg(ssthresh).arg((slow_start) ? "Slow Start" : "Congestion Avoidance");
 }
 
-CongestionWindow::~CongestionWindow()
-{
+CongestionWindow::~CongestionWindow() {
     delete ui;
 }
 
-void CongestionWindow::on_pushButton_send_clicked()
-{
+void CongestionWindow::on_pushButton_send_clicked() {
     // Update Tahoe action window
     ui->textBrowser_tahoe_action->setText(send_data(tahoe_cwnd, tahoe_ssthresh, tahoe_slow_start));
 
@@ -125,8 +122,7 @@ void CongestionWindow::update_data_points() {
     reno_data.append(row_reno);
 }
 
-void CongestionWindow::on_pushButton_ack_clicked()
-{
+void CongestionWindow::on_pushButton_ack_clicked() {
     ui->textBrowser_tahoe_action->setText(ack_data(&tahoe_cwnd, tahoe_ssthresh, &tahoe_slow_start));
     ui->textBrowser_reno_action->setText(ack_data(&reno_cwnd, reno_ssthresh, &reno_slow_start));
 
@@ -162,8 +158,7 @@ QString CongestionWindow::ack_data(int *cwndPtr, int ssthresh, bool *slow_startP
     return explanation;
 }
 
-void CongestionWindow::on_pushButton_drop_clicked()
-{
+void CongestionWindow::on_pushButton_drop_clicked() {
     /******************** Tahoe ********************/
     QString tahoe_explanation;
 
@@ -196,30 +191,26 @@ void CongestionWindow::on_pushButton_drop_clicked()
     ui->pushButton_drop->setEnabled(false);
 }
 
-void CongestionWindow::on_pushButton_clear_clicked()
-{
+void CongestionWindow::on_pushButton_clear_clicked() {
     // Reset all variables
     reset_variables();
 
     draw_plots(); // Redraw empty plots
 }
 
-void CongestionWindow::on_pushButton_info_congestion_vs_flow_clicked()
-{
+void CongestionWindow::on_pushButton_info_congestion_vs_flow_clicked() {
     QMessageBox::information(this, ui->pushButton_info_congestion_vs_flow->text(), // Get title from text on button
                              "Flow control is set by the window size field in the receiver's TCP header. This limits how much data the receiver is willing to receive at any given time.\n\n"
                              "But what if the receive window is too large? For example, if the receive window allows for 50 packets but the physical limitations of the network can only carry across 20 packets before a timeout occurs. The sender sends all 50 packets but 30 are lost due to congestion on the router for example. These missing packets will need to be resent. This can lead to a huge amount of resending packets which slows down the network.\n\n"
                              "Congestion control limits the flow of packets on the sender's side by testing the limits to see how much the network is able to handle.");
 }
 
-void CongestionWindow::on_pushButton_info_cwnd_clicked()
-{
+void CongestionWindow::on_pushButton_info_cwnd_clicked() {
     QMessageBox::information(this, ui->pushButton_info_cwnd->text(),
                              "The congestion window is dynamically adjusted based on how much data the network is able to transfer across before packet loss occurs. This, of course, changes over time and TCP uses congestion control strategies (TCP Tahoe and TCP Reno discussed here) to deal with this problem.");
 }
 
-void CongestionWindow::on_pushButton_info_t_vs_r_clicked()
-{
+void CongestionWindow::on_pushButton_info_t_vs_r_clicked() {
     QMessageBox::information(this, ui->pushButton_info_t_vs_r->text(),
                              "TCP Tahoe is a congestion control mechanism that was introduced in 1987. It implements a slow start strategy at the beginning of a connection or at packet loss. Once the congestion window is greater than the slow start threshold (ssthresh), it switches to congestion avoidance.\n"
                              "On packet loss, the congestion window is reset and the ssthresh is set to half the previous congestion window. It re-enters the slow start state.\n\n"
@@ -227,8 +218,7 @@ void CongestionWindow::on_pushButton_info_t_vs_r_clicked()
                              "However, unlike Tahoe, Reno does not re-enter the slow start state. It sets both the ssthresh AND the congestion window to half the previous congestion window and resumes congestion avoidance. This is known as fast retransmit and recovery.");
 }
 
-void CongestionWindow::on_pushButton_info_ssthresh_clicked()
-{
+void CongestionWindow::on_pushButton_info_ssthresh_clicked() {
     QMessageBox::information(this, ui->pushButton_info_ssthresh->text(),
                              "This value is used to determine whether or not TCP should use slow start or congestion avoidance.\n\n"
                              "It is initially set to a large number and adjusted as required.\n\n"
@@ -238,8 +228,7 @@ void CongestionWindow::on_pushButton_info_ssthresh_clicked()
                              "    Use congestion avoidance");
 }
 
-void CongestionWindow::on_pushButton_info_slow_start_clicked()
-{
+void CongestionWindow::on_pushButton_info_slow_start_clicked() {
     QMessageBox::information(this, ui->pushButton_info_slow_start->text(),
                              "Slow start is a congestion control strategy. It begins by setting the congestion window to a low number (1 or 2 for example). As ACKs are received, the congestion window is doubled for each round-trip, thus leading to an exponential-growth.\n\n"
                              "This will continue until either:\n"
@@ -249,8 +238,7 @@ void CongestionWindow::on_pushButton_info_slow_start_clicked()
                              "If the ssthresh is reached, the congestion control strategy switches to congestion avoidance.");
 }
 
-void CongestionWindow::on_pushButton_info_cong_avoid_clicked()
-{
+void CongestionWindow::on_pushButton_info_cong_avoid_clicked() {
     QMessageBox::information(this, ui->pushButton_info_cong_avoid->text(),
                              "Congestion avoidance takes a more conservative approach. When the congestion window is above the ssthresh, it means that the network limit could be close.\n\n"
                              "Congestion avoidance increases the congestion window size linearly (rather than exponentially like slow start).");

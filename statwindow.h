@@ -10,8 +10,7 @@ namespace Ui {
 class StatWindow;
 }
 
-class StatWindow : public QDialog
-{
+class StatWindow : public QDialog {
     Q_OBJECT
 
 public:
