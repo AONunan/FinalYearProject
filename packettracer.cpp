@@ -179,25 +179,28 @@ Packet PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet, 
          *
          */
 
-        tcp_next_option_ptr = (uint8_t*)(packet + SIZE_ETHERNET + ip_header_length + 20);
+        tcp_next_option_ptr = (uint8_t*)(packet + SIZE_ETHERNET + ip_header_length + 20); // Unsigned 8-bit integer, i.e. a byte
         uint16_t window_scale;
 
         // Loop through the list of options, checking the kind each time.
         // If the kind matches what I have am looking for, store value
-        while(tcp_next_option_ptr != payloadPtr) {
-            tcp_option *option = (tcp_option*)tcp_next_option_ptr;
+        while(tcp_next_option_ptr != payloadPtr) { // Loop until the pointer reaches the beginning of the payload
+            tcp_option *option = (tcp_option*)tcp_next_option_ptr; // Declare the next option
 
-            if(option->kind == 1) { // No-operation
+            // No-operation
+            if(option->kind == 1) {
                 tcp_next_option_ptr++; // Move on 1 byte
                 continue; // Jump back to beginning of WHILE loop
             }
 
-            if(option->kind == 3) { // Window scale
-                window_scale = *(tcp_next_option_ptr + sizeof(*option));
+            // Window scale
+            if(option->kind == 3) {
+                window_scale = *(tcp_next_option_ptr + sizeof(*option)); // As the "kind" and the "length" are stored before the actual value, calculate the offset of the window scale value
                 working_packet.setTcp_window_scale(window_scale);
                 qDebug() << "Setting value:" << window_scale;
             }
 
+            // Advance the pointer to the next option
             tcp_next_option_ptr += option->size;
         }
 

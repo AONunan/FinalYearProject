@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include "packet.h"
+#include <QtCharts>
 
 namespace Ui {
 class SideBySideWindow;
@@ -45,6 +46,7 @@ private:
 
         QString windowing_details;
         QString windowing_more_details;
+        int window_size;
     };
 
     QVector<Packet> input_vect;

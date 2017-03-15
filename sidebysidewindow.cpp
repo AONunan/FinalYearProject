@@ -133,42 +133,70 @@ void SideBySideWindow::populate_syn_ack() {
 void SideBySideWindow::populate_windowing() {
     int client_scaling_factor, server_scaling_factor;
 
+    QLineSeries *series_client = new QLineSeries();
+    QLineSeries *series_server = new QLineSeries();
+
+    // Add origin to graph
+    series_client->append(0, 0);
+    series_server->append(0, 0);
+
     for(int i = 0; i < input_vect.length(); i++) {
         if(all_row_entries[i].local) { // Client
             if((input_vect[i].getTcp_window_scale() != -1) && (input_vect[i].getTcp_window_scale() != client_scaling_factor)) {
+                all_row_entries[i].window_size = input_vect[i].getTcp_window();
                 client_scaling_factor = input_vect[i].getTcp_window_scale();
                 all_row_entries[i].windowing_details = QString("Client window scaling factor set to %1").arg(client_scaling_factor);
-                all_row_entries[i].windowing_more_details = QString("Window size = %1\n\n"
-                                                                    "New client scaling factor set for this session. From now on, we raise 2 to this power to get our window size multiplier.").arg(input_vect[i].getTcp_window());
+                all_row_entries[i].windowing_more_details = "New client scaling factor set for this session. From now on, we raise 2 to this power to get our window size multiplier.";
 
             } else if(input_vect[i].getTcp_window_scale() == -1) { // Scaling factor has not been changed
+                all_row_entries[i].window_size = input_vect[i].getTcp_window() << client_scaling_factor;
                 all_row_entries[i].windowing_more_details = QString("Client scaling factor remains at %2. We raise 2 to this power to get our window size multiplier.\n\n"
                                                                     "Window size = %1\n"
                                                                     "Window multiplier = 2^%2 = %3\n"
-                                                                    "Window total size = %1 * %3 = %4").arg(input_vect[i].getTcp_window()).arg(client_scaling_factor).arg(pow(2, client_scaling_factor)).arg(input_vect[i].getTcp_window() << client_scaling_factor);
+                                                                    "Window total size = %1 * %3 = %4 bytes").arg(input_vect[i].getTcp_window()).arg(client_scaling_factor).arg(pow(2, client_scaling_factor)).arg(all_row_entries[i].window_size);
+            }
+
+            if(all_row_entries[i].window_size > 0) {
+                series_client->append(i, all_row_entries[i].window_size);
+                qDebug() << "Plotting client:" << i << all_row_entries[i].window_size;
             }
 
         } else { // Server
             if((input_vect[i].getTcp_window_scale() != -1) && (input_vect[i].getTcp_window_scale() != server_scaling_factor)) {
+                all_row_entries[i].window_size = input_vect[i].getTcp_window();
                 server_scaling_factor = input_vect[i].getTcp_window_scale();
                 all_row_entries[i].windowing_details = QString("Server window scaling factor set to %1").arg(server_scaling_factor);
-                all_row_entries[i].windowing_more_details = QString("Window size = %1\n\n"
-                                                                    "New server scaling factor set for this session. From now on, we raise 2 to this power to get our window size multiplier.").arg(input_vect[i].getTcp_window());
+                all_row_entries[i].windowing_more_details = "New server scaling factor set for this session. From now on, we raise 2 to this power to get our window size multiplier.";
 
             } else if(input_vect[i].getTcp_window_scale() == -1) { // Scaling factor has not been changed
+                all_row_entries[i].window_size = input_vect[i].getTcp_window() << server_scaling_factor;
                 all_row_entries[i].windowing_more_details = QString("Server scaling factor remains at %2. We raise 2 to this power to get our window size multiplier.\n\n"
                                                                     "Window size = %1\n"
                                                                     "Window multiplier = 2^%2 = %3\n"
-                                                                    "Window total size = %1 * %3 = %4 bytes").arg(input_vect[i].getTcp_window()).arg(server_scaling_factor).arg(pow(2, server_scaling_factor)).arg(input_vect[i].getTcp_window() << server_scaling_factor);
+                                                                    "Window total size = %1 * %3 = %4 bytes").arg(input_vect[i].getTcp_window()).arg(server_scaling_factor).arg(pow(2, server_scaling_factor)).arg(all_row_entries[i].window_size);
+            }
+
+            if(all_row_entries[i].window_size > 0) {
+                series_server->append(i, all_row_entries[i].window_size);
+                qDebug() << "Plotting server:" << i << all_row_entries[i].window_size;
             }
         }
     }
+
+    // Draw charts
+    QChart *window_chart = new QChart();
+    window_chart->legend()->hide();
+    window_chart->addSeries(series_client);
+    window_chart->addSeries(series_server);
+    window_chart->createDefaultAxes();
+    ui->widget_window_size->setChart(window_chart);
 }
 
 void SideBySideWindow::set_details(QString choice) {
     QString details_field;
 
     if(choice == "SYN-ACK") {
+        ui->widget_window_size->hide();
         ui->pushButton_more_info->setText("More info on three-way-handshake and SEQ, ACK numbers");
         more_info_popup_text = "The three-way handshake is used to when setting up a TCP connection between two entities on a network (host A and B). It works as follows:\n"
                                "1. Host A sends a SYN (synchronise) packet\n"
@@ -177,6 +205,7 @@ void SideBySideWindow::set_details(QString choice) {
                                "Now that a connection is established, data transfer can begin. Sequence numbers and acknowledgement numbers are used to ensure packets arrive correctly. If either side determines that a packet has been lost, the missing data will be reset.";
 
     } else if(choice == "Windowing") {
+        ui->widget_window_size->show();
         ui->pushButton_more_info->setText("More info on windowing and flow control");
         more_info_popup_text = "Windowing is a type of flow control used in TCP. It determines how much data can be sent before requiring an acknowledgement.\n"
                                "If window sizes are small, it can really slow down network traffic if window sizes are small. However, if window sizes are too large, more data will need to be resent if a packet is dropped.";

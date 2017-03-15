@@ -105,11 +105,18 @@
       </widget>
      </item>
      <item>
-      <widget class="QTextBrowser" name="textBrowser_more_details">
-       <property name="placeholderText">
-        <string>Select a packet to see more details</string>
-       </property>
-      </widget>
+      <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,1">
+       <item>
+        <widget class="QChartView" name="widget_window_size" native="true"/>
+       </item>
+       <item>
+        <widget class="QTextBrowser" name="textBrowser_more_details">
+         <property name="placeholderText">
+          <string>Select a packet to see more details</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
      <item>
       <widget class="QLabel" name="label_hint">
@@ -127,6 +134,14 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QChartView</class>
+   <extends>QWidget</extends>
+   <header>qchartview.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
