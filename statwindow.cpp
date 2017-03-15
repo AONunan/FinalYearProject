@@ -31,18 +31,22 @@ StatWindow::~StatWindow() {
     delete ui;
 }
 
+/*
+ * Get choice from combo box
+ */
 void StatWindow::on_comboBox_display_choice_currentIndexChanged(const QString &menu_value) {
     if(menu_value == "TCP vs UDP (Line Chart)") {
         display_tcp_vs_udp_line();
     } else if(menu_value == "TCP vs UDP (Bar Chart)") {
         display_tcp_vs_udp_bar();
-    } else if(menu_value == "Chart 2") {
-        display_graph_temp();
     } else {
         qDebug() << "Unknown choice";
     }
 }
 
+/*
+ * Display line chart
+ */
 void StatWindow::display_tcp_vs_udp_line() {
     int i, j, // Counters
         initial_time, final_time;
@@ -121,6 +125,9 @@ void StatWindow::display_tcp_vs_udp_line() {
     chart_view->setChart(chart);
 }
 
+/*
+ * Display bar chart
+ */
 void StatWindow::display_tcp_vs_udp_bar() {
     int i, tcp_count, udp_count;
 
@@ -157,28 +164,4 @@ void StatWindow::display_tcp_vs_udp_bar() {
 
     qDebug() << "TCP count:" << tcp_count;
     qDebug() << "UDP count:" << udp_count;
-}
-
-void StatWindow::display_graph_temp() {
-    // Store the line data
-    QLineSeries *series_tcp = new QLineSeries();
-    QLineSeries *series_udp = new QLineSeries();
-
-    // Test data
-    series_tcp->append(0, 5);
-    series_tcp->append(1, 7);
-    series_tcp->append(2, 4);
-
-    series_udp->append(0, 9);
-    series_udp->append(1, -5);
-    series_udp->append(2, 5);
-
-    QChart *chart = new QChart();
-    chart->legend()->hide();
-    chart->addSeries(series_tcp);
-    chart->addSeries(series_udp);
-    chart->createDefaultAxes();
-    chart->setTitle("Testing");
-
-    chart_view->setChart(chart);
 }

@@ -5,6 +5,21 @@ Packet::Packet() {
     reset_values();
 }
 
+/*
+ * Reset to default values, called when new object is created
+ */
+void Packet::reset_values() {
+    total_header_length = 0;
+    ip_header_length = 0;
+    tcp_header_length = 0;
+    payload_length = 0;
+    protocol = "unknown";
+    current_time = 0;
+}
+
+/*
+ * Static function to get timestamp as string
+ */
 QString Packet::timestamp_to_string(int input_time) {
     // Get packet timestamp
     tm *ltm;
@@ -15,14 +30,7 @@ QString Packet::timestamp_to_string(int input_time) {
 
 }
 
-void Packet::reset_values() {
-    total_header_length = 0;
-    ip_header_length = 0;
-    tcp_header_length = 0;
-    payload_length = 0;
-    protocol = "unknown";
-    current_time = 0;
-}
+// Getters and Setters below
 
 u_int Packet::getTcp_sequence_number() const {
     return tcp_sequence_number;
@@ -132,6 +140,9 @@ u_char Packet::getIp_protocol() const {
     return ip_protocol;
 }
 
+/*
+ * Find IP protocol
+ */
 void Packet::setIp_protocol(const u_char &value) {
     ip_protocol = value;
 

@@ -36,6 +36,9 @@ SideBySideWindow::~SideBySideWindow() {
     delete ui;
 }
 
+/*
+ * Update the struct values for each row
+ */
 void SideBySideWindow::populate_entries() {
     int i;
 
@@ -54,6 +57,9 @@ void SideBySideWindow::populate_entries() {
     }
 }
 
+/*
+ * Add items to table in UI
+ */
 void SideBySideWindow::update_table() {
     for(int i = 0; i < input_vect.length(); i++) {
         // Create new row and scroll to bottom of table
@@ -67,6 +73,9 @@ void SideBySideWindow::update_table() {
     }
 }
 
+/*
+ * Populate SYN-ACK struct details
+ */
 void SideBySideWindow::populate_syn_ack() {
     u_int tcp_flags,
         seq_number,
@@ -128,6 +137,9 @@ void SideBySideWindow::populate_syn_ack() {
     }
 }
 
+/*
+ * Populate windowing struct details
+ */
 void SideBySideWindow::populate_windowing() {
     int client_scaling_factor, server_scaling_factor;
 
@@ -190,6 +202,9 @@ void SideBySideWindow::populate_windowing() {
     ui->widget_window_size->setChart(window_chart);
 }
 
+/*
+ * Set the details field
+ */
 void SideBySideWindow::set_details(QString choice) {
     QString details_field;
 
@@ -230,6 +245,9 @@ void SideBySideWindow::set_details(QString choice) {
 
 }
 
+/*
+ * Add detailed text explanation at bottom of screen
+ */
 QString SideBySideWindow::get_more_details(int row) {
     QString choice = ui->comboBox_choice->currentText();
 
@@ -242,6 +260,9 @@ QString SideBySideWindow::get_more_details(int row) {
     }
 }
 
+/*
+ * Open PacketInfoDialog
+ */
 void SideBySideWindow::on_tableWidget_packets_cellDoubleClicked(int row) {
     if(input_vect[row].getIp_protocol() ==  6) { // If user has clicked on a TCP packet
         ui->label_hint->hide();
@@ -255,16 +276,25 @@ void SideBySideWindow::on_tableWidget_packets_cellDoubleClicked(int row) {
     }
 }
 
+/*
+ * Change what detailed text is displayed at the bottom of the screen
+ */
 void SideBySideWindow::on_tableWidget_packets_itemSelectionChanged() {
     int row = ui->tableWidget_packets->currentRow();
     ui->textBrowser_more_details->setText(get_more_details(row));
 }
 
+/*
+ * Switch between modes
+ */
 void SideBySideWindow::on_comboBox_choice_currentTextChanged(const QString &current_choice) {
     ui->label_hint->hide();
     set_details(current_choice); // Set the more_details textbox contents
 }
 
+/*
+ * Display more info message box
+ */
 void SideBySideWindow::on_pushButton_more_info_clicked() {
     QMessageBox::information(this, "More info", more_info_popup_text);
 }

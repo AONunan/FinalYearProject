@@ -9,6 +9,9 @@ PacketTracer::PacketTracer() {
 
 }
 
+/*
+ * Get network interface device attacked to PC
+ */
 char* PacketTracer::get_network_interface_device() {
     char *dev = NULL;
     char errbuf[PCAP_ERRBUF_SIZE]; // To hold any error messages
@@ -24,6 +27,9 @@ char* PacketTracer::get_network_interface_device() {
     return dev;
 }
 
+/*
+ * Set network mask and IP address
+ */
 void PacketTracer::set_mask_and_ip(char* dev, bpf_u_int32* netPtr, bpf_u_int32* maskPtr) {
     char errbuf[PCAP_ERRBUF_SIZE];
 
@@ -35,6 +41,9 @@ void PacketTracer::set_mask_and_ip(char* dev, bpf_u_int32* netPtr, bpf_u_int32* 
     }
 }
 
+/*
+ * Open pcap handle
+ */
 pcap_t* PacketTracer::open_for_sniffing(char* dev) {
     char errbuf[PCAP_ERRBUF_SIZE];
     pcap_t *handle;
@@ -48,6 +57,9 @@ pcap_t* PacketTracer::open_for_sniffing(char* dev) {
     return handle;
 }
 
+/*
+ * Apply filter expression string
+ */
 void PacketTracer::apply_filter(pcap_t *handle, bpf_program *filter_expressionPtr, bpf_u_int32 net, char filter_expression_string[]) {
     //char filter_expession_string[] = "host 93.184.216.34";
     qDebug() << "Applying filter:" << filter_expression_string;
@@ -65,6 +77,9 @@ void PacketTracer::apply_filter(pcap_t *handle, bpf_program *filter_expressionPt
     }
 }
 
+/*
+ * Handle captured packet
+ */
 Packet PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet, Packet working_packet) {
     working_packet.setCurrent_time(time(0));
 
@@ -209,6 +224,9 @@ Packet PacketTracer::captured_packet(pcap_pkthdr *header, const u_char *packet, 
     return working_packet;
 }
 
+/*
+ * Get packet payload
+ */
 QVector<short> PacketTracer::print_payload(const u_char *payloadPtr, int payload_length) {
     const u_char *next_char = payloadPtr; // Each character of the payload, initally a pointer to memory location of start of payload
     QVector<short> total_payload;

@@ -11,6 +11,10 @@ CongestionWindow::CongestionWindow(QWidget *parent) :
     reset_variables();
 }
 
+/*
+ * Reset all variables backt to default values and reset the UI
+ * Called when window is opened and on pressing Clear
+ */
 void CongestionWindow::reset_variables() {
     ui->pushButton_send->setEnabled(true);
     ui->pushButton_clear->setEnabled(false);
@@ -35,6 +39,10 @@ void CongestionWindow::reset_variables() {
     reno_ssthresh = 12;
 }
 
+/*
+ * Draw the Tahoe and Reno plots with the most up to date plot data
+ * Also updates the variables window
+ */
 void CongestionWindow::draw_plots() {
     ui->pushButton_clear->setEnabled(true); // Enable the Clear button
 
@@ -68,6 +76,9 @@ void CongestionWindow::draw_plots() {
     ui->textBrowser_reno_variables->setText(construct_vars_window(reno_cwnd, reno_ssthresh, reno_slow_start));
 }
 
+/*
+ * Construct var window string for Tahoe and Reno
+ */
 QString CongestionWindow::construct_vars_window(int cwnd, int ssthresh, bool slow_start) {
     return QString("Congestion Window = %1\n"
                    "Slow Start threshold = %2\n"
@@ -78,6 +89,12 @@ CongestionWindow::~CongestionWindow() {
     delete ui;
 }
 
+/*
+ * On pressing the Send button, do the following:
+ *     Update the action window and modify the variables
+ *     Update the plot points
+ *     Disable Send button, enable ACK and Drop button
+ */
 void CongestionWindow::on_pushButton_send_clicked() {
     // Update Tahoe action window
     ui->textBrowser_tahoe_action->setText(send_data(tahoe_cwnd, tahoe_ssthresh, tahoe_slow_start));
@@ -95,6 +112,9 @@ void CongestionWindow::on_pushButton_send_clicked() {
     x_axis++;
 }
 
+/*
+ * Construct string description of sent text.
+ */
 QString CongestionWindow::send_data(int cwnd, int ssthresh, bool slow_start) {
     QString explanation;
 
@@ -110,6 +130,9 @@ QString CongestionWindow::send_data(int cwnd, int ssthresh, bool slow_start) {
     return explanation;
 }
 
+/*
+ * Add the most recent data to the plot data
+ */
 void CongestionWindow::update_data_points() {
     QVector<int> row_tahoe;
     row_tahoe.append(x_axis); // x-axis
@@ -122,6 +145,10 @@ void CongestionWindow::update_data_points() {
     reno_data.append(row_reno);
 }
 
+/*
+ * On pressing ACK, update the description window and update the cwdn and decide if still in slow start
+ * Enable/disable buttons
+ */
 void CongestionWindow::on_pushButton_ack_clicked() {
     ui->textBrowser_tahoe_action->setText(ack_data(&tahoe_cwnd, tahoe_ssthresh, &tahoe_slow_start));
     ui->textBrowser_reno_action->setText(ack_data(&reno_cwnd, reno_ssthresh, &reno_slow_start));
@@ -131,6 +158,10 @@ void CongestionWindow::on_pushButton_ack_clicked() {
     ui->pushButton_drop->setEnabled(false);
 }
 
+/*
+ * Construct string used when ACKing data
+ * Modify cwnd and slow_start bool. Pass by reference to update these values
+ */
 QString CongestionWindow::ack_data(int *cwndPtr, int ssthresh, bool *slow_startPtr) {
     QString explanation;
 
@@ -158,6 +189,9 @@ QString CongestionWindow::ack_data(int *cwndPtr, int ssthresh, bool *slow_startP
     return explanation;
 }
 
+/*
+ * On dropping a packet, different action depending if Tahoe or Reno
+ */
 void CongestionWindow::on_pushButton_drop_clicked() {
     /******************** Tahoe ********************/
     QString tahoe_explanation;
@@ -191,12 +225,19 @@ void CongestionWindow::on_pushButton_drop_clicked() {
     ui->pushButton_drop->setEnabled(false);
 }
 
+/*
+ * On pressing Clear, reset everything
+ */
 void CongestionWindow::on_pushButton_clear_clicked() {
     // Reset all variables
     reset_variables();
 
     draw_plots(); // Redraw empty plots
 }
+
+/*
+ * From this point down, all functions deal with info pop-ups
+ */
 
 void CongestionWindow::on_pushButton_info_congestion_vs_flow_clicked() {
     QMessageBox::information(this, ui->pushButton_info_congestion_vs_flow->text(), // Get title from text on button

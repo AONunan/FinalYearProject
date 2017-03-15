@@ -4,9 +4,7 @@
 #include <QTableWidget>
 #include <QDateTime>
 #include <QNetworkInterface>
-#include <thread>
 #include <QMessageBox>
-#include <unistd.h>
 
 #include "packet.h"
 #include "packetinfodialog.h"
@@ -62,6 +60,9 @@ void MainWindow::on_button_capture_packet_clicked() {
     ui->label_hint->show();
 }
 
+/*
+ * Begin the capture loop to capture the required amount of packets. Store each packet in a QVector
+ */
 void MainWindow::capture_loop() {
     ui->statusBar->showMessage("Waiting for first packet.");
 
@@ -96,6 +97,9 @@ void MainWindow::capture_loop() {
     ui->statusBar->showMessage(QString("Finished capturing %1 packets.").arg(QString::number(no_of_packets)));
 }
 
+/*
+ * Find this device's IPv4 address
+ */
 QString MainWindow::find_my_ip_address() {
     QList<QHostAddress> ip_addr_list = QNetworkInterface::allAddresses();
 
@@ -110,6 +114,9 @@ QString MainWindow::find_my_ip_address() {
     return "IP_ADDRESS_ERROR";
 }
 
+/*
+ * Update the table with captured packets
+ */
 void MainWindow::update_table(Packet packet) {
     // Create new row and scroll to bottom of table
     ui->tableWidget_packets->setRowCount(row_count + 1);
@@ -125,6 +132,9 @@ void MainWindow::update_table(Packet packet) {
     row_count++;
 }
 
+/*
+ * Open packet details on double click
+ */
 void MainWindow::on_tableWidget_packets_cellDoubleClicked(int row) {
     if(captured_packets_vect[row].getIp_protocol() ==  6) { // If user has clicked on a TCP packet
         ui->label_hint->hide();
@@ -139,6 +149,9 @@ void MainWindow::on_tableWidget_packets_cellDoubleClicked(int row) {
     }
 }
 
+/*
+ * Open stats window
+ */
 void MainWindow::on_pushButton_statistics_clicked() {
     // Open dialog with packet details with an argument
     StatWindow statWindow(captured_packets_vect);
@@ -146,6 +159,9 @@ void MainWindow::on_pushButton_statistics_clicked() {
     statWindow.exec();
 }
 
+/*
+ * Clear all data
+ */
 void MainWindow::on_pushButton_clear_clicked() {
     // Empty the vector
     captured_packets_vect.clear();
@@ -213,12 +229,18 @@ void MainWindow::on_pushButton_side_by_side_clicked() {
     }
 }
 
+/*
+ * Open congestion control window
+ */
 void MainWindow::on_pushButton_congestion_clicked() {
     CongestionWindow congestionWindow;
     congestionWindow.setModal(true);
     congestionWindow.exec();
 }
 
+/*
+ * Check filter input and generate filter expression string
+ */
 void MainWindow::on_button_check_clicked() {
     QRegExp regex_ipv4("([\\d+]{1,3}\\.){3}[\\d+]{1,3}"); // Match IPv4 address, e.g. 93.184.216.34
     QRegExp regex_dns("(\\w+\\.)+\\w+"); // Match domain name, e.g. example.com
@@ -299,6 +321,9 @@ void MainWindow::on_button_check_clicked() {
     ui->button_applyFilter->setEnabled(true);
 }
 
+/*
+ * Apply the filter expression string
+ */
 void MainWindow::on_button_applyFilter_clicked() {
     if(constructed_filter_string.length() == 0) { // i.e. No filter specified
         packetTracer.apply_filter(handle, &filter_expression, net, "ip");
@@ -314,6 +339,9 @@ void MainWindow::on_button_applyFilter_clicked() {
     ui->statusBar->showMessage("Filter set.");
 }
 
+/*
+ * Clear filter fields
+ */
 void MainWindow::on_button_clear_settings_fields_clicked() {
     ui->lineEdit_host->clear();
     ui->checkBox_host->setChecked(false);

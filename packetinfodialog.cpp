@@ -51,6 +51,9 @@ PacketInfoDialog::~PacketInfoDialog() {
     delete ui;
 }
 
+/*
+ * Set up the header fields/packet payload
+ */
 void PacketInfoDialog::set_up_display() {
     QVector<Packet> packet_vect = *vect_ptr; // Set up QVector from pointer
     displayed_packet = packet_vect[current_index]; // Get the required packet from the offset
@@ -93,6 +96,9 @@ void PacketInfoDialog::set_up_display() {
     }
 }
 
+/*
+ * Switch between displaying header field names and details
+ */
 void PacketInfoDialog::on_pushButton_change_view_clicked() {
     if(currently_showing_field_names) {
         show_header_details();
@@ -101,6 +107,9 @@ void PacketInfoDialog::on_pushButton_change_view_clicked() {
     }
 }
 
+/*
+ * Show field names
+ */
 void PacketInfoDialog::show_header_field_names() {
     ui->pushButton_change_view->setText("Show field values");
     currently_showing_field_names = true;
@@ -134,6 +143,9 @@ void PacketInfoDialog::show_header_field_names() {
     ui->label_tcp_options->setText(FIELD_TCP_OPTIONS);
 }
 
+/*
+ * Show field values and set tooltips
+ */
 void PacketInfoDialog::show_header_details() {
     ui->pushButton_change_view->setText("Show field names");
     currently_showing_field_names = false;
@@ -191,6 +203,9 @@ void PacketInfoDialog::show_header_details() {
                                               "%3").arg(FIELD_TCP_OPTIONS).arg(displayed_packet.getTcp_header_length() - 20).arg((displayed_packet.getTcp_window_scale() != -1) ? QString("\n\nOptions for this packet (partial):\nWindow scaling factor = %1").arg(displayed_packet.getTcp_window_scale()) : ""));
 }
 
+/*
+ * Get the tooltip string for TCP flags
+ */
 QString PacketInfoDialog::find_tcp_flag_string(int flags) {
     QString result = QString("%1 (6 bits)\n").arg(FIELD_TCP_FLAGS);
 
@@ -221,12 +236,18 @@ QString PacketInfoDialog::find_tcp_flag_string(int flags) {
     return result;
 }
 
+/*
+ * Display the offset, hex and ASCII
+ */
 void PacketInfoDialog::print_payload() {
     ui->groupBox_payload->setTitle(QString("Payload (%1 bytes)").arg(displayed_packet.getPayload_length()));
     print_payload_offset();
     print_payload_hex_ascii();
 }
 
+/*
+ * Display the offset
+ */
 void PacketInfoDialog::print_payload_offset() {
     int i;
     int row_count = 0;
@@ -238,6 +259,9 @@ void PacketInfoDialog::print_payload_offset() {
     }
 }
 
+/*
+ * Display the hex data and the ASCII format
+ */
 void PacketInfoDialog::print_payload_hex_ascii() {
     // No need to increase table row count in this function, that was done in print_payload_offset()
 
@@ -282,11 +306,17 @@ void PacketInfoDialog::print_payload_hex_ascii() {
     ui->tableWidget_payload->setItem(current_row, 2, new QTableWidgetItem(ascii_line));
 }
 
+/*
+ * Go to next packet
+ */
 void PacketInfoDialog::on_pushButton_next_packet_clicked() {
     current_index++;
     set_up_display();
 }
 
+/*
+ * Go to previous packet
+ */
 void PacketInfoDialog::on_pushButton_previous_packet_clicked() {
     current_index--;
     set_up_display();
